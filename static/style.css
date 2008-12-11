@@ -1,0 +1,113 @@
+
+ul{
+	margin-left: 0px;
+	padding-left: 20px;
+}
+
+a:visited{
+	color:blue;
+}
+
+table.aligner td{
+
+	text-align: left;
+}
+
+table.aligner td:first-child{
+
+	text-align: right;
+}
+
+
+.layout td {
+	background-color: #FFFFFF;
+}
+.blueback td {
+	background-color:#E8E8FF;
+}
+.greenback td {
+	background-color:#DDFFDD;
+}
+.redback td {
+	background-color:#FFDDDD;
+}
+.yellowback td{
+background-color: #FFFFD2;
+}
+td.errorback, .errorback td{
+	background-color:#FF9999;
+}
+.errortext {
+	color:#FF0000;
+	font-weight: bold;
+}
+
+
+body {
+background-color: #CCCCFF;
+font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.green {
+	color:#008800;
+}
+.red {
+	color:#CC0000;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.center td{
+text-align: center;
+}
+
+.header {
+font-family: Georgia, "Times New Roman", Times, serif;
+font-size: x-large;
+font-weight: bold;
+color: #993300;
+}
+.name {
+font-family: Georgia, "Times New Roman", Times, serif;
+font-size: large;
+}
+.bigname {
+font-family: Georgia, "Times New Roman", Times, serif;
+font-size: x-large;
+}
+.dbheader {
+font-family: Georgia, "Times New Roman", Times, serif;
+font-size: x-large;
+font-weight: bold;
+color: #0000FF;
+}
+.text {  
+font-family: Georgia, "Times New Roman", Times, serif;
+}
+.tabular_list th {
+	border:1px solid;
+	border-color:#ddd #999 #888 #ddd;
+	background-color:#ddd;
+	font-weight:bold;
+	text-align:center;
+	color:#003;
+	padding:2px;
+	padding-bottom:0px;
+	font-size:.9em;
+}
+
+
+
+.tabular_list td {
+	border:1px solid;
+	text-align:center;
+	border-color:#fff #bbb #bbb #fff;
+	padding:1px;
+	font-size:.9em;
+}
+
+
+
+

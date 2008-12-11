@@ -19,9 +19,26 @@ class Event(models.Model):
     def __str__(self):
         return self.name
 
+    def render_region(self):
+        if self.max_region == 0:
+            return '-'
+        if self.max_region == -1:
+            return '?'
+        return self.max_region
+    def render_state(self):
+        if self.max_state == -1:
+            return 'Q'
+        return self.max_state
+    def render_nation(self):
+        if self.max_nation == 0:
+            return '-'
+        if self.max_nation < 0:
+            return '%d/s' % -self.max_nation
+        return self.max_nation
+
 
 class Team(models.Model):
-    event = models.ForeignKey(Event)
+    event = models.ForeignKey(Event, related_name='teams')
     team_id = models.CharField(max_length=100, null=True, blank=True)
     info = models.TextField(null=True, blank=True)
     members = models.ManyToManyField(User, related_name='teams')
