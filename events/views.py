@@ -1,5 +1,5 @@
 # Django imports
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.db.models import Q
 from django.db import transaction
@@ -40,7 +40,60 @@ def index(request):
 
 @login_required
 def update_indi(request):
+    if request.method == 'POST':
+        eid = int(request.POST['add_indi_event'])
+        if eid != -1:
+            e = Event.objects.get(id=eid)
+            e.entrants.add(request.user)
+        for key in [k for k in request.POST.keys() if k.startswith('remove')]:
+            junk, eid = key.split('_')
+            e = Event.objects.get(id=int(eid))
+            e.entrants.remove(request.user)
     return index(request)
+
+@login_required
+def join_team(request):
+    eid = request.REQUEST['event_id']
+    e = Event.objects.get(id=eid)
+    if request.method == 'POST':
+        t = Team(event=e)
+        t.save()
+        t.members.add(request.user)
+        return HttpResponseRedirect('/')
+    return render_template('join_team.mako',user=request.user, teams=Team.objects.filter(event=e), event=e)
+
+@login_required
+def view_team(request, tid):
+    return render_template('view_team.mako', team=Team.objects.get(id=tid), user=request.user)
+
+@login_required
+def update_team(request, tid):
+    action = request.REQUEST['action']
+    team = Team.objects.get(id=tid)
+    if action == 'join':
+        if team.entry_locked:
+            return HttpResponse('Error: Team is locked; nobody may join')
+        team.members.add(request.user)
+        team.save()
+        return HttpResponseRedirect('/teams/%d/' % team.id)
+    if request.user not in team.members.all() and not request.user.is_superuser:
+        return HttpResponse('ACCESS DENIED: You are not in the team you are trying to update.')
+    if action == 'lock_team':
+        team.entry_locked = not team.entry_locked
+        team.save()
+    if action == 'add_member':
+        u = User.objects.get(id=int(request.REQUEST['user_id']))
+        team.members.add(u)
+        team.save()
+    if action == 'remove_member':
+        u = User.objects.get(id=int(request.REQUEST['user_id']))
+        if 'confirm' not in request.REQUEST:
+            return HttpResponse('Confirm removal of %s %s from team:<br><a href="/teams/%d/update/?action=remove_member&user_id=%d&confirm=yes">Confirm</a><br><a href="/teams/%d/>Back</a>'
+                % (u.first_name, u.last_name, team.id, u.id, team.id))
+        team.members.remove(u)
+        team.save()
+    #return view_team(request, tid)
+    return HttpResponseRedirect('/teams/%d/' % team.id)
 
 @login_required
 def event_list(request):

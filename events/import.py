@@ -4,6 +4,8 @@ from tsa.config import *
 
 from tsa.events.models import Event
 
+Event.objects.all().delete()
+
 reader = csv.reader(file('events.csv'))
 reader.next()
 for line in reader:
@@ -13,7 +15,7 @@ for line in reader:
     name = line[1]
     if line[2] == '?':
         reg = -1
-    elif line[2] == ' ':
+    elif line[2] == ' ' or line[2] == '':
         reg = 0
     else:
         reg = int(line[2])

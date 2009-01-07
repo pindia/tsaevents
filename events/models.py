@@ -43,5 +43,7 @@ class Team(models.Model):
     info = models.TextField(null=True, blank=True)
     members = models.ManyToManyField(User, related_name='teams')
     entry_locked = models.BooleanField(default=False)
+    def members_list(self):
+        return ','.join(['%s %s.' % (member.first_name, member.last_name[0]) for member in self.members.all()])
 
 
