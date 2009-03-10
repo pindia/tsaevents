@@ -5,6 +5,7 @@
 
 <table class="tabular_list" align="center">
   <tr>
+    <th>Lock</th>
     <th>Name</th>
     <th>Num</th>
     <th>Reg</th>
@@ -17,7 +18,7 @@
         n = event.teams.count()
       else:
         n = event.entrants.count()
-      if event.max_region >= 0 and n > event.max_region:
+      if event.max_state >= 0 and n > event.max_state:
         cellclass = 'errorback'
       else:
         cellclass = ''
@@ -29,6 +30,7 @@
         rowclass = 'greenback'
     %>
     <tr class='${rowclass}'>
+      <td><a href="/event_list?action=lock_event&event_id=${event.id}">${'Yes' if event.entry_locked else 'No'}</a></td>
       <td>${event.name}</td>
       <td class='${cellclass}'>
       ${n}

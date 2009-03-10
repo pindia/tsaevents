@@ -20,6 +20,7 @@
         <ul class="text">
           <li> <a href='/'>Your&nbsp;Events</a></li>
           <li> <a href='/event_list'>Event&nbsp;List</a></li>
+          <li> <a href='/member_list'>Member&nbsp;List</a></li>
         </ul>
       </td>
       <td align="left" height="20">

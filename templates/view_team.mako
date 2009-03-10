@@ -2,7 +2,27 @@
 
 <%def name='title()'>Team</%def> <%%>
 
+<script language="javascript">
+function confirmRemove(name, target)
+{
+  var ok = confirm('Confirm removal of ' + name + ' from team.');
+  if(ok)
+    location.href=target;
+
+}
+function confirmDelete(id)
+{
+  var ok = confirm('Confirm deletion of team.');
+  if(ok)
+    location.href='/teams/'+ id + '/update?action=delete_team';
+
+}
+</script>
+
+
 <h2>${team.event.name} Team</h2>
+<p>Team ID: ${team.team_id or 'Unknown'}</p>
+<h3>Members</h3>
 <table class="tabular_list" align="center">
   <tr>
     <th>Name</th><th>Remove</th>
@@ -10,7 +30,7 @@
   % for member in team.members.all():
   <tr>
     <td>${member.first_name} ${member.last_name}</td>
-    <td><a href="/teams/${team.id}/update/?action=remove_member&user_id=${member.id}">Remove</a></td>
+    <td><a onclick="confirmRemove('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=remove_member&user_id=${member.id}')" href="javascript:void(0)">Remove</a></td>
   </tr>
   % endfor
 </table>
@@ -21,12 +41,14 @@
       <option value="${u.id}">${u.first_name} ${u.last_name}</option>
     % endfor
   </select>
-  <input type="hidden" name="action" value="add_member">
-  <input type="submit" value="Add">
+  <input type="submit" name="action" value="Add Member">
 </p>
-</form>
+<h3>Administration</h3>
 % if team.entry_locked:
   <p>Team is locked: Nobody may join. <a href="/teams/${team.id}/update/?action=lock_team">Unlock</a>
 % else:
   <p>Team is unlocked: Anybody may join. <a href="/teams/${team.id}/update/?action=lock_team">Lock</a>
 % endif.
+<br>
+<input id="delete_button" onclick="confirmDelete(${team.id})" type="button" value="Delete Team">
+</form>

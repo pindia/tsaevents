@@ -59,7 +59,7 @@ def join_team(request):
         t = Team(event=e)
         t.save()
         t.members.add(request.user)
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/teams/%d' % t.id)
     return render_template('join_team.mako',user=request.user, teams=Team.objects.filter(event=e), event=e)
 
 @login_required
@@ -81,20 +81,31 @@ def update_team(request, tid):
     if action == 'lock_team':
         team.entry_locked = not team.entry_locked
         team.save()
-    if action == 'add_member':
+    if action == 'Add Member':
         u = User.objects.get(id=int(request.REQUEST['user_id']))
         team.members.add(u)
         team.save()
     if action == 'remove_member':
         u = User.objects.get(id=int(request.REQUEST['user_id']))
-        if 'confirm' not in request.REQUEST:
-            return HttpResponse('Confirm removal of %s %s from team:<br><a href="/teams/%d/update/?action=remove_member&user_id=%d&confirm=yes">Confirm</a><br><a href="/teams/%d/>Back</a>'
-                % (u.first_name, u.last_name, team.id, u.id, team.id))
         team.members.remove(u)
         team.save()
+    if action == 'delete_team':
+        team.delete()
+        return HttpResponseRedirect('/')
     #return view_team(request, tid)
     return HttpResponseRedirect('/teams/%d/' % team.id)
 
 @login_required
 def event_list(request):
-    return render_template('event_list.mako',user=request.user,events=Event.objects.all()) 
+    if request.REQUEST.get('action','') == 'lock_event':
+        if not request.user.is_superuser:
+            return render_template('event_list.mako',user=request.user,events=Event.objects.all(),
+                msg='You do not have permission to lock and unlock events')
+        e = Event.objects.get(id=int(request.REQUEST['event_id']))
+        e.entry_locked = not e.entry_locked
+        e.save()
+    return render_template('event_list.mako',user=request.user,events=Event.objects.all())
+    
+@login_required
+def member_list(request):
+    return render_template('member_list.mako',user=request.user,members=User.objects.all())

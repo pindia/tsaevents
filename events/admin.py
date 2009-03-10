@@ -19,7 +19,9 @@ class EventAdmin(admin.ModelAdmin):
      list_filter = ('is_team', 'entry_locked')
 
 class TeamAdmin(admin.ModelAdmin):
-    filter_horizontal = ('members',)
+     list_display = ('event','team_id')
+     list_filter = ('event',)
+     filter_horizontal = ('members',)
 
 
 admin.site.register(Event, EventAdmin)

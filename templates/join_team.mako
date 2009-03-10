@@ -23,5 +23,9 @@
       <tr><td colspan="2">No teams found</td></tr>
     % endif
   </table>
-  Don't see your team? <form action="/join_team" method="post"><input type="hidden" name="event_id" value="${event.id}"><input type="submit" value="Create new team"></form>
+  Don't see your team?
+  <form action="/join_team" method="post">
+  <input type="hidden" name="event_id" value="${event.id}">
+  <input type="submit" value="Create new team" ${'disabled' if event.entry_locked else ''}>
+  </form>
 % endif
