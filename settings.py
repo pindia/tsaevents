@@ -1,6 +1,16 @@
 import config
 # Django settings for tsa project.
 
+MODE = 'region'
+
+MODE_ABBR =dict(
+    region='Reg',
+    state='Sta',
+    nation='Nat'
+)
+
+
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -78,6 +88,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
+    #'django.contrib.sites',
     'tsa.events',
 )

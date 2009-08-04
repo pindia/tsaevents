@@ -1,6 +1,9 @@
 <%inherit file='base.mako' />
 
-<%def name='title()'>Home</%def> <%%>
+<%def name='title()'>Home </%def> <% %>
+
+
+<h2>${event.name} Teams</h2>
 
 % if user.teams.filter(event=event).count() != 0:
   <i>You are already in a team for this event.</i>
@@ -12,7 +15,9 @@
     % for team in teams:
       <td>${team.members_list()}</td>
       <td>
-      % if team.entry_locked:
+      % if team.senior != user.profile.senior:
+        <i>Wrong chapter</i>
+      % elif team.entry_locked:
         <i>Locked</i>
       % else:
         <a href="/teams/${team.id}/update/?action=join">Join</a>

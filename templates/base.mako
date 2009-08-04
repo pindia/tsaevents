@@ -1,9 +1,9 @@
 
 <html>
   <head>
-    <link rel="stylesheet" href="/static/farm/style.css">
+    <link rel="stylesheet" href="/static/tsa/style.css">
     <title>${self.title()}</title>
-    <script type="text/javascript" src="/static/farm/jquery.js"></script>
+    <script type="text/javascript" src="/static/tsa/jquery.js"></script>
     ${self.scripts()}
     % if msg:
       <!-- <script language="javascript">alert("${msg}");</script> -->
@@ -21,16 +21,32 @@
           <li> <a href='/'>Your&nbsp;Events</a></li>
           <li> <a href='/event_list'>Event&nbsp;List</a></li>
           <li> <a href='/member_list'>Member&nbsp;List</a></li>
+          <li> <a href='/team_list'>Team&nbsp;List</a></li>
         </ul>
       </td>
       <td align="left" height="20">
-        Logged in as ${user} - Events: ${user.events.all().count()} Teams: ${user.teams.all().count()}
+        Logged in as ${user}
+        % if user.is_superuser:
+          <b>[Admin]</b>
+        % endif
+        -
+        % if not user.profile.is_member:
+          Nonmember
+        % elif user.profile.senior:
+          11/12 Chapter
+        % else:
+          9/10 Chapter
+        % endif
+        -
+        Events: ${user.events.all().count()} Teams: ${user.teams.all().count()}
       </td>
     </tr>
     <tr class="center"> 
       <td width="100%" valign="top">
-          % if msg:
-          <p class="red bold">${msg}</p>
+          % if messages:
+            % for message in messages:
+              <div class="${'error' if message.startswith('Error:') else 'info'}">${message}</div>
+            % endfor
           % endif
           ${next.body()}
       </td>

@@ -86,6 +86,9 @@ color: #0000FF;
 .text {  
 font-family: Georgia, "Times New Roman", Times, serif;
 }
+img {
+	border:none;
+}
 .tabular_list th {
 	border:1px solid;
 	border-color:#ddd #999 #888 #ddd;
@@ -106,6 +109,23 @@ font-family: Georgia, "Times New Roman", Times, serif;
 	border-color:#fff #bbb #bbb #fff;
 	padding:1px;
 	font-size:.9em;
+}
+
+/* Error message style */
+.error{
+	margin: 20px;
+	text-align: center;
+	/*background: #FFCE7B;*/
+	background: #FFCCCC;
+	border: 1px solid red;
+}
+
+/* Error message style */
+.info {
+	margin: 20px;
+	text-align: center;
+	background: #E0FEE1;
+	border: 1px solid #CCCCCC;
 }
 
 

@@ -12,6 +12,7 @@ urlpatterns = patterns('tsa.events.views',
     (r'^update_indi$', 'update_indi'),
     (r'^event_list$', 'event_list'),
     (r'^member_list$', 'member_list'),
+    (r'^team_list$', 'team_list'),
     (r'^join_team$', 'join_team'),
     (r'^teams/(\d+)/$', 'view_team'),
     (r'^teams/(\d+)/update/$', 'update_team'),
@@ -28,5 +29,5 @@ urlpatterns += patterns('',
 
 if not config.DEPLOYED:
     urlpatterns += patterns('',
-    (r'^static/farm/(.*)$', 'django.views.static.serve', {'document_root': config.STATIC_DIR }),
+    (r'^static/tsa/(.*)$', 'django.views.static.serve', {'document_root': config.STATIC_DIR }),
     )
