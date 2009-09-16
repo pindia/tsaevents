@@ -1,17 +1,23 @@
 <%inherit file="base.mako" />
+<%
+from tsa.events.views import login_url
+%>
 
 <%def name="title()">Member List</%def>
     
 <%def name="render_list(members)">
     <table class="tabular_list" align="center">
       <tr>
-        <th>Name</th>
         <th>ID</th>
+        <th>Name</th>
+        <th>TSA ID</th>
         <th>Individual</th>
         <th>Team</th>
+        <th>URL</th>
       </tr>
     % for member in members:
         <tr>
+            <td>${member.username}</td>
             <td>${member.first_name} ${member.last_name}</td>
             <td>${member.profile.indi_id or '-'}</td>
             <td>|
@@ -24,17 +30,37 @@
                     <a href="/teams/${team.id}">${team.event.name}</a>|
                 % endfor
             </td>
+            <td>
+                % if not user.is_superuser:
+                    -
+                % elif member.is_superuser:
+                    -
+                % else:
+                    <a href="${login_url(member)}">Login</a>
+                % endif
+            </td>
         </tr>
     % endfor
     </table>
 </%def>
 
 <h3>9/10 Chapter</h3>
-${render_list(members.filter(profile__senior=False))}
+${render_list(members.filter(profile__senior=False,profile__is_member=True))}
 
 <h3>11/12 Chapter</h3>
-${render_list(members.filter(profile__senior=True))}
+${render_list(members.filter(profile__senior=True,profile__is_member=True))}
 
-<hr>
-<a href="/admin/auth/user/">Edit Users</a> - <a href="/admin/events/userprofile">Edit Chapter Assignment</a>
+% if user.is_superuser:
 
+    <hr>
+    <h3>Add User</h3>
+    
+    <form action="/member_list" method="POST">
+    <table align="center">${ form.as_table() }</table>
+    <input type="submit" value="Submit" />
+    </form>
+    
+    <hr>
+    <a href="/admin/auth/user/">Edit Users</a> - <a href="/admin/events/userprofile">Edit Chapters/TSA IDs</a>
+
+% endif

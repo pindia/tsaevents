@@ -65,4 +65,10 @@ class Team(models.Model):
     def members_list(self):
         return ', '.join(['%s %s' % (member.first_name, member.last_name[0]) for member in self.members.all()])
     members_list.short_description='Members'
+    
+class TeamPost(models.Model):
+    team = models.ForeignKey(Team, related_name='posts')
+    author = models.ForeignKey(User, related_name='posts')
+    date = models.DateTimeField(auto_now_add=True)
+    text = models.TextField()
 

@@ -1,4 +1,3 @@
-
 <html>
   <head>
     <link rel="stylesheet" href="/static/tsa/style.css">
@@ -25,7 +24,7 @@
         </ul>
       </td>
       <td align="left" height="20">
-        Logged in as ${user}
+        Logged in as ${user.username}
         % if user.is_superuser:
           <b>[Admin]</b>
         % endif
@@ -39,6 +38,8 @@
         % endif
         -
         Events: ${user.events.all().count()} Teams: ${user.teams.all().count()}
+        -
+        <a href="/accounts/logout">Logout</a>
       </td>
     </tr>
     <tr class="center"> 

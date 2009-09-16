@@ -59,7 +59,11 @@ font-family: Georgia, "Times New Roman", Times, serif;
 	font-weight: bold;
 }
 
-.center td{
+td.right{
+text-align: right;
+}
+
+.center > td{
 text-align: center;
 }
 

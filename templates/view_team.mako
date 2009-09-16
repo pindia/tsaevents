@@ -1,6 +1,14 @@
 <%inherit file='base.mako' />
 
-<%def name='title()'>Team</%def> <%%>
+
+<%def name='title()'>Team</%def>
+<%
+import datetime
+def frmt_datetime(dtime):
+    delta = datetime.timedelta( hours=-5 )
+    dtime = dtime + delta
+    return dtime.strftime("%a, %b %d %I:%M %p")
+%>
 
 <script language="javascript">
 function confirmLeave(name, target)
@@ -31,14 +39,23 @@ function confirmDelete(id)
     location.href='/teams/'+ id + '/update?action=delete_team';
 
 }
+function confirmDeletePost(target)
+{
+  var ok = confirm('Are you sure you want to delete the post?');
+  if(ok)
+    location.href=target;
+
+}
 </script>
 
 
 <h2>${team.event.name} Team</h2>
-<p>
-  Team Chapter: ${'11/12' if team.senior else '9/10'} <br>
-  Team ID: ${team.team_id or 'Unknown'}
-</p>
+
+<table align="center">
+  <tr><td class="right">Team ID:</td><td>${team.team_id or 'Unknown'}</td></tr>
+  <tr><td class="right">Team Chapter:</td><td>${'11/12' if team.senior else '9/10'}</td></tr>
+</table>
+
 <h3>Members</h3>
 Maximum team size: ${team.event.team_size}
 <table class="tabular_list" align="center">
@@ -71,7 +88,7 @@ Maximum team size: ${team.event.team_size}
   <form action="/teams/${team.id}/update">
   <p>Add member:
     <select name="user_id">
-      % for u in user.__class__.objects.filter(profile__senior=team.senior):
+      % for u in user.__class__.objects.filter(profile__senior=team.senior,profile__is_member=True):
         <option value="${u.id}">${u.first_name} ${u.last_name}</option>
       % endfor
     </select>
@@ -82,6 +99,51 @@ Maximum team size: ${team.event.team_size}
 % else:
   <p><a href="/teams/${team.id}/update?action=join">Join this team</a></p>
 % endif
+
+
+<h3>Message Board</h3>
+
+<table border=1 width="80%" cellpadding=5 align="center">
+  <tr>
+    <!--<td width="20%">Post:</td>-->
+    <td colspan=2>
+      <textarea name="message" rows=2 style="width: 90%"></textarea>
+      <input type="submit" name="action" value="Post">
+    </td>
+  </tr>
+% for msg in team.posts.order_by('-date'):
+  <tr>
+    <td width="20%">
+    <span class="name">${msg.author.first_name} ${msg.author.last_name}</span><br>
+    
+    <span style="font-size:0.7em; font-style:italic;">
+    % if msg.author.is_superuser:
+      Site Admin
+    % elif team.captain == user:
+      Team Captain
+    % elif user in team.members.all():
+      Team Member
+    % else:
+      Former Member
+    % endif
+    </span><br>
+      
+    ${frmt_datetime(msg.date)}<br>
+    % if msg.author == user or user == team.captain or user.is_superuser:
+    <span style="font-size:0.75em;">
+      <a href="javascript:confirmDeletePost('/teams/${team.id}/update?action=delete_post&id=${msg.id}');">Delete</a>
+    </span>
+    % endif
+    </td>
+    <td style="text-align: left;">${msg.text | h}</td>
+  </tr>
+% endfor
+% if not team.posts.count():
+  <tr><td colspan=2><div align="center">No posts.</div></td></tr>
+% endif
+</table>
+
+
 
 % if team.captain == user:
   <h3>Administration</h3>

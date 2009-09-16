@@ -1,0 +1,24 @@
+<html>
+<head>
+<link rel="stylesheet" href="/static/tsa/style.css">
+</head>
+<body>
+    
+  {% if form.errors %}
+    <p class="error">Sorry, that's not a valid username or password</p>
+  {% endif %}
+  
+  
+  <h2>Login</h2>
+  
+  <form action='/accounts/login/' method='post'>
+    <label for="username">User name:</label>
+    <input type="text" name="username" value="" id="username"><br>
+    <label for="password">Password:</label>
+    <input type="password" name="password" value="" id="password"><br>
+
+    <input type="submit" value="login" />
+    <input type="hidden" name="next" value="/" />
+  </form>
+</body>
+</html>

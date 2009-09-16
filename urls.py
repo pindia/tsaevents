@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import *
+from django.contrib.auth.views import login, logout, password_reset
 import config
 
 # Uncomment the next two lines to enable the admin:
@@ -9,6 +10,7 @@ admin.autodiscover()
 urlpatterns = patterns('tsa.events.views',
 
     (r'^$', 'index'),
+    (r'^quick_login$', 'quick_login'),
     (r'^update_indi$', 'update_indi'),
     (r'^event_list$', 'event_list'),
     (r'^member_list$', 'member_list'),
@@ -16,6 +18,11 @@ urlpatterns = patterns('tsa.events.views',
     (r'^join_team$', 'join_team'),
     (r'^teams/(\d+)/$', 'view_team'),
     (r'^teams/(\d+)/update/$', 'update_team'),
+)
+
+urlpatterns += patterns('',
+    (r'^accounts/login/$',  login),
+    (r'^accounts/logout/$', logout, {'template_name':'registration/login.html'}),
 )
 
 urlpatterns += patterns('',

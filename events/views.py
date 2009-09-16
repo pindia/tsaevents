@@ -3,9 +3,11 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.db.models import Q
 from django.db import transaction
+from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.db import connection
+from django import forms
 
 # Mako imports
 from mako.template import Template
@@ -13,7 +15,7 @@ from mako import exceptions
 from mako.lookup import TemplateLookup
 
 # Standard library imports
-import time, datetime, os, timeit
+import time, datetime, os, timeit, string, random
 from itertools import *
 
 # Project-specific imports
@@ -41,6 +43,14 @@ def render_template(name,request,**kwds):
 def message(request, msg):
     request.user.message_set.create(message=msg)
 
+def login_url(user):
+    return '/quick_login?user=%s&auth=%s' % (user.id, user.password.split('$')[2])
+    
+def generate_password():
+    c, v = 'bcdfghjklmnpqrstvwxz', 'aeiou'
+    return random.choice(c) + random.choice(v) + random.choice(c) + str(random.randint(100,999))
+    
+
 
 
 @login_required
@@ -50,7 +60,18 @@ def index(request):
             user.profile
         except UserProfile.DoesNotExist:
             UserProfile(user=user, is_member=True, senior=False).save()
-    return render_template('index.mako',request, events=Event.objects.all())
+    return render_template('index.mako',request, events=Event.objects.all(), url=login_url(request.user))
+
+def quick_login(request):
+    user = User.objects.get(id=int(request.GET['user']))
+    if user.is_superuser and DEPLOYED:
+        return HttpResponse('Error: Admins cannot login using the quick links for security reasons.')
+    if user.password.split('$')[2] == request.GET['auth']:
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        login(request, user)
+        return HttpResponseRedirect('/')
+    else:
+        return HttpResponse('Error: Auth token is invalid.')
 
 @login_required
 def update_indi(request):
@@ -95,13 +116,15 @@ def update_team(request, tid):
     action = request.REQUEST['action']
     team = Team.objects.get(id=tid)
     
+    redirect =  HttpResponseRedirect('/teams/%d/' % team.id)       
+    
     if action == 'join':
         if team.entry_locked:
             return HttpResponse('Error: Team is locked; nobody may join')
         team.members.add(request.user)
         team.save()
         message(request, 'You have joined this team.')
-        return HttpResponseRedirect('/teams/%d/' % team.id)
+        return redirect
         
     if action == 'remove_member' and int(request.REQUEST['user_id']) == request.user.id:
         # The logged in user is leaving the team
@@ -116,21 +139,36 @@ def update_team(request, tid):
             message(request, '%s %s is the new team captain.' % (team.captain.first_name, team.captain.last_name))
         return HttpResponseRedirect('/')
         
+    if action == 'delete_post':
+        post = TeamPost.objects.get(id=int(request.REQUEST['id']))
+        if request.user == post.author or request.user == team.captain or request.user.is_superuser:
+            post.delete()
+            message(request, 'The post has been deleted.')
+        else:
+            message(request, 'Error: you do not have permission to delete the post.')
+        return redirect
+        
     if request.user not in team.members.all() and not request.user.is_superuser:
         message(request, 'Error: you are not in this team.')
-        return HttpResponseRedirect('/teams/%d/' % team.id)
+        return redirect
     # All actions beyond this point require team membership
+    
+    if action == 'Post':
+        post = TeamPost(team=team, author=request.user, text=request.REQUEST['message'])
+        post.save()
+        message(request, 'Message posted.')
+        return redirect
         
     if action == 'Add Member':
         u = User.objects.get(id=int(request.REQUEST['user_id']))
         team.members.add(u)
         team.save()
         message(request, '%s %s has been added to the team.' % (u.first_name, u.last_name))
-        return HttpResponseRedirect('/teams/%d/' % team.id)
+        return redirect
         
     if request.user != team.captain and not request.user.is_superuser:
         message(request, 'Error: you are not the team captain.')
-        return HttpResponseRedirect('/teams/%d/' % team.id)
+        return redirect
     # All actions beyond this point require team captain
     
     if action == 'lock_team':
@@ -155,7 +193,7 @@ def update_team(request, tid):
         return HttpResponseRedirect('/')
         message(request, 'The team has been deleted.')
 
-    return HttpResponseRedirect('/teams/%d/' % team.id)
+    return redirect
 
 @login_required
 def event_list(request):
@@ -173,9 +211,31 @@ def event_list(request):
         message(request, '%d events updated.' % i)
     return render_template('event_list.mako',request,events=Event.objects.all())
     
+class NewUserForm(forms.Form):
+        username = forms.CharField()
+        first_name = forms.CharField()
+        last_name = forms.CharField()
+        email = forms.EmailField()
+        chapter = forms.ChoiceField(choices=[('under','9/10'),('senior','11/12'),('none','None')])
+    
+
 @login_required
 def member_list(request):
-    return render_template('member_list.mako',request,members=User.objects.all())
+    if request.method == 'POST':
+        form = NewUserForm(request.POST)
+        if form.is_valid():
+            d = form.cleaned_data
+            password = generate_password()
+            user = User(username=d['username'], first_name=d['first_name'], last_name=d['last_name'], email=d['email'])
+            user.set_password(password)
+            user.save()
+            profile = UserProfile(is_member = (d['chapter'] != 'none'), senior = (d['chapter'] == 'senior'), user=user)
+            profile.save()
+            message(request, 'New user "%s" created. Generated password: "%s"' % (d['username'], password))
+            form = NewUserForm()
+    else:
+        form = NewUserForm()
+    return render_template('member_list.mako',request,members=User.objects.all(),form=form)
     
 @login_required
 def team_list(request):
