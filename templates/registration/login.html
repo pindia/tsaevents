@@ -9,16 +9,39 @@
   {% endif %}
   
   
-  <h2>Login</h2>
+  <h2>Log In</h2>
+  
+  <p>Log in below with your username and password, or simply use the link in your email.</p>
   
   <form action='/accounts/login/' method='post'>
     <label for="username">User name:</label>
-    <input type="text" name="username" value="" id="username"><br>
+      <input type="text" name="username" value="" id="username"><br>
     <label for="password">Password:</label>
-    <input type="password" name="password" value="" id="password"><br>
+      <input type="password" name="password" value="" id="password"><br>
 
-    <input type="submit" value="login" />
+    <input type="submit" value="Log in" />
     <input type="hidden" name="next" value="/" />
   </form>
+  
+  <h2>Create Account</h2>
+  
+  <form action="/accounts/create/" method='post'>
+    <label for="first_name">First name:</label>
+      <input type="text" name="first_name" value="" id="first_name"><br>
+    <label for="last_name">Last name:</label>
+      <input type="text" name="last_name" value="" id="last_name"><br>
+    <label for="email"><em>School</em> email:</label>
+      <input type="text" name="email" value="" id="email"><br>
+    <label for="chapter">Chapter:</label>
+      <select name="chapter">
+        <option name="910">9/10</option>
+        <option name="1112">11/12</option>
+      </select><br>    
+
+    <input type="submit" value="Log in" />
+    <input type="hidden" name="next" value="/" /> 
+    
+  </form>
+  
 </body>
 </html>

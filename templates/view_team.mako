@@ -94,6 +94,8 @@ Maximum team size: ${team.event.team_size}
     </select>
     <input type="submit" name="action" value="Add Member">
   </p>
+% elif not user.is_member:
+  <p>You cannot join teams.</p>
 % elif team.entry_locked:
   <p>This team is not accepting new members.</p>
 % else:

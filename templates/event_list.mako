@@ -51,8 +51,8 @@
         % endif
       </td>
       <td>${event.name}</td>
-      <td>${n[0]}</td>
-      <td>${n[1]}</td>
+      <td>${n[0] or '-'}</td>
+      <td>${n[1] or '-'}</td>
       <!--<td>${event.render_region()}</td>
       <td>${event.render_state()}</td>
       <td>${event.render_nation()}</td>-->
@@ -74,6 +74,7 @@
   
   % if user.is_superuser:
     <input type="submit" value="Save">
+      <p><a href="/admin/events/event">Edit Events</a></p>
   % endif
   
 </form>
