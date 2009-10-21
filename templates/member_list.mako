@@ -11,6 +11,8 @@ from tsa.events.views import login_url
         <th>ID</th>
         <th>Name</th>
         <th>TSA ID</th>
+        <th># E</th>
+        <th># T</th>
         <th>Individual</th>
         <th>Team</th>
         <th>URL</th>
@@ -20,6 +22,8 @@ from tsa.events.views import login_url
             <td>${member.username}</td>
             <td>${member.first_name} ${member.last_name}</td>
             <td>${member.profile.indi_id or '-'}</td>
+            <td>${member.events.count()}</td>
+            <td>${member.teams.count()}</td>
             <td>|
                 % for event in member.events.all():
                     ${event.name}|

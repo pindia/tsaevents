@@ -66,6 +66,12 @@
 
 <form action="/event_list" method="post">
 
+  <p>This page is currently set to display information for the "${MODE}" level.</p>
+  <ul>
+  <li>Red events are not offered at this level or have filled up and can no longer be entered.
+  <li>Yellow events still have space for entry, and must be entered at this level if you want to qualify for the next level of competition in that event.
+  <li>Green events still have space for entry, and are not required to be entered to qualify for the next level.
+  </ul>
   <h2>Individual Events</h2>
   ${render_table(events.filter(is_team=False))}
   

@@ -3,11 +3,20 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+EMAIL_CHOICES = (
+    (0,'None'),
+    (1,'Digest'),
+    (2,'Immediate')
+)
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
     is_member = models.BooleanField()
     senior = models.BooleanField()
     indi_id = models.CharField(max_length=100, blank=True)
+    
+    notify_email = models.IntegerField(choices=EMAIL_CHOICES)
+    posts_email = models.IntegerField(choices=EMAIL_CHOICES)
     
     def name(self):
         return '%s %s' % (self.user.first_name, self.user.last_name[0])
