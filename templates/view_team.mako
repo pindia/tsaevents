@@ -94,7 +94,7 @@ Maximum team size: ${team.event.team_size}
     </select>
     <input type="submit" name="action" value="Add Member">
   </p>
-% elif not user.is_member:
+% elif not user.profile.is_member:
   <p>You cannot join teams.</p>
 % elif team.entry_locked:
   <p>This team is not accepting new members.</p>
@@ -102,6 +102,7 @@ Maximum team size: ${team.event.team_size}
   <p><a href="/teams/${team.id}/update?action=join">Join this team</a></p>
 % endif
 
+% if not team.entry_locked or user in team.members.all():
 
 <h3>Message Board</h3>
 
@@ -146,8 +147,10 @@ Maximum team size: ${team.event.team_size}
 </table>
 
 
+% endif
 
-% if team.captain == user:
+
+% if team.captain == user or user.is_superuser:
   <h3>Administration</h3>
   % if team.entry_locked:
     <p>Team is locked: Nobody may join. <a href="/teams/${team.id}/update/?action=lock_team">Unlock</a>

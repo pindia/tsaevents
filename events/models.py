@@ -15,8 +15,8 @@ class UserProfile(models.Model):
     senior = models.BooleanField()
     indi_id = models.CharField(max_length=100, blank=True)
     
-    notify_email = models.IntegerField(choices=EMAIL_CHOICES)
-    posts_email = models.IntegerField(choices=EMAIL_CHOICES)
+    #notify_email = models.IntegerField(choices=EMAIL_CHOICES)
+    #posts_email = models.IntegerField(choices=EMAIL_CHOICES)
     
     def name(self):
         return '%s %s' % (self.user.first_name, self.user.last_name[0])

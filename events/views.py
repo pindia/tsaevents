@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.db import connection
 from django import forms
+from django.core.mail import send_mail
 
 # Mako imports
 from mako.template import Template
@@ -48,7 +49,8 @@ def login_url(user):
     
 def generate_password():
     c, v = 'bcdfghjklmnpqrstvwxz', 'aeiou'
-    return random.choice(c) + random.choice(v) + random.choice(c) + str(random.randint(100,999))
+    r = random.choice
+    return r(c) + r(v) + r(c) + r(v) + r(c) + str(random.randint(100,999))
     
 
 
@@ -243,3 +245,31 @@ def member_list(request):
 @login_required
 def team_list(request):
     return render_template('team_list.mako',request,teams=Team.objects.all())
+    
+def create_account(request):
+    email = request.POST['email']
+    if '@' not in email:
+        return HttpResponse('Error: Email is invalid.')
+    username, domain = email.split('@')
+    #if domain != 'scasd.org':
+    #    return HttpResponse('Error: Email must be @scasd.org')
+    first_name = request.POST['first_name']
+    last_name = request.POST['last_name']
+    chapter = request.POST['chapter']
+    password = generate_password()
+
+    u = User(username=username, first_name=first_name, last_name=last_name, email=email)
+    u.set_password(password)
+    u.save()
+    profile = UserProfile(is_member=True, senior= (chapter == '1112'), user=u)
+    profile.save()
+
+    url = login_url(u)
+    
+    t = get_template('email/newuser.mako')
+    body = t.render(name=first_name, username=username, password=password, login_url=url)
+    
+
+    send_mail('TSA Event Registration Login', body, 'State High TSA <scahs-tsa@pindi.us>', [email])
+    
+    return HttpResponse('Your account has been created. Check your email for login details.')

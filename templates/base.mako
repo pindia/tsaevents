@@ -24,9 +24,9 @@
         </ul>
       </td>
       <td align="left" height="20">
-        Logged in as ${user.username}
+        Logged in as ${user.first_name} ${user.last_name} (${user.username})
         % if user.is_superuser:
-          <b>[Admin]</b>
+          <b>[A]</b>
         % endif
         -
         % if not user.profile.is_member:

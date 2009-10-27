@@ -55,7 +55,7 @@ ${render_list(members.filter(profile__senior=False,profile__is_member=True))}
 ${render_list(members.filter(profile__senior=True,profile__is_member=True))}
 
 % if user.is_superuser:
-
+<!--
     <hr>
     <h3>Add User</h3>
     
@@ -66,5 +66,6 @@ ${render_list(members.filter(profile__senior=True,profile__is_member=True))}
     
     <hr>
     <a href="/admin/auth/user/">Edit Users</a> - <a href="/admin/events/userprofile">Edit Chapters/TSA IDs</a>
-
+-->
+<a href='/admin/auth/user'>Edit Users</a> - <a href='/admin/events/userprofile'>Edit Chapters/IDs</a>
 % endif

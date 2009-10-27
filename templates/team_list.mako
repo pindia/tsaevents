@@ -19,3 +19,7 @@
         </tr>
     % endfor
 </table>
+
+% if user.is_superuser:
+<a href="/admin/events/team">Edit Teams</a>
+% endif
