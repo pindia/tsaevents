@@ -13,6 +13,7 @@
       <th>Members</th><th>Join</th>
     </tr>
     % for team in teams:
+	<tr>
       <td>${team.members_list()}</td>
       <td>
       % if team.senior != user.profile.senior:
@@ -23,6 +24,7 @@
         <a href="/teams/${team.id}/update/?action=join">Join</a>
       % endif
       </td>
+	</tr>
     % endfor
     % if not teams:
       <tr><td colspan="2">No teams found</td></tr>
