@@ -28,7 +28,7 @@
         % if user.is_superuser:
           <b>[A]</b>
         % endif
-        -
+        |
         % if not user.profile.is_member:
           Nonmember
         % elif user.profile.senior:
@@ -36,9 +36,10 @@
         % else:
           9/10 Chapter
         % endif
-        -
+        |
         Events: ${user.events.all().count()} Teams: ${user.teams.all().count()}
-        -
+        |
+        <a href="/settings">Settings</a>
         <a href="/accounts/logout">Logout</a>
       </td>
     </tr>

@@ -122,9 +122,9 @@ Maximum team size: ${team.event.team_size}
     <span style="font-size:0.7em; font-style:italic;">
     % if msg.author.is_superuser:
       Site Admin
-    % elif team.captain == user:
+    % elif team.captain == msg.author:
       Team Captain
-    % elif user in team.members.all():
+    % elif msg.author in team.members.all():
       Team Member
     % else:
       Former Member

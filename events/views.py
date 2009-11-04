@@ -62,7 +62,7 @@ def index(request):
             user.profile
         except UserProfile.DoesNotExist:
             UserProfile(user=user, is_member=True, senior=False).save()
-    return render_template('index.mako',request, events=Event.objects.all(), url=login_url(request.user))
+    return render_template('index.mako',request, events=Event.objects.all())
 
 def quick_login(request):
     user = User.objects.get(id=int(request.GET['user']))
@@ -71,9 +71,9 @@ def quick_login(request):
     if user.password.split('$')[2] == request.GET['auth']:
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, user)
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect(request.GET.get('next','/'))
     else:
-        return HttpResponse('Error: Auth token is invalid.')
+        return HttpResponse('Error: Authentication token is invalid. Either you\'re trying to login as someone else using your authentication token (nice try), or your password has been reset since this link was generated.')
 
 @login_required
 def update_indi(request):
@@ -156,8 +156,16 @@ def update_team(request, tid):
     # All actions beyond this point require team membership
     
     if action == 'Post':
-        post = TeamPost(team=team, author=request.user, text=request.REQUEST['message'])
+        text = request.REQUEST['message']
+        post = TeamPost(team=team, author=request.user, text=text)
         post.save()
+        for member in team.members.all():
+            if member.id == request.user.id:
+                continue
+            if member.profile.posts_email == 2:
+                t = get_template('email/posts_email.mako')
+                body = t.render(name=member.first_name, poster=request.user.first_name, team=team, text=text, login_url=login_url(member))
+                send_mail('%s Post' % team.event.name, body, 'State High TSA <scahs-tsa@pindi.us>', [member.email])
         message(request, 'Message posted.')
         return redirect
         
@@ -246,13 +254,35 @@ def member_list(request):
 def team_list(request):
     return render_template('team_list.mako',request,teams=Team.objects.all())
     
+def settings(request):
+    if request.method == 'POST':
+        if request.POST['action'] == 'Regenerate Password':
+            password = generate_password()
+            u = request.user
+            u.set_password(password)
+            u.save()
+            url = login_url(u)
+            body = get_template('email/reset_password.mako').render(name=u.first_name, username=u.username, password=password, login_url=url)
+            send_mail('TSA Event Registration Login', body, 'State High TSA <scahs-tsa@pindi.us>', [u.email])
+            message(request, 'Your password has been reset. Check your email for your new information.')
+        else:
+            p = request.user.profile
+            print request.POST
+            if 'posts_email' in request.POST:
+                p.posts_email = 2
+            else:
+                p.posts_email = 0
+            p.save()
+            message(request, 'Your settings have been updated.')
+    return render_template('settings.mako',request, url=login_url(request.user))
+
 def create_account(request):
     email = request.POST['email']
     if '@' not in email:
         return HttpResponse('Error: Email is invalid.')
     username, domain = email.split('@')
-    #if domain != 'scasd.org':
-    #    return HttpResponse('Error: Email must be @scasd.org')
+    if domain != 'scasd.org':
+        return HttpResponse('Error: Email must be @scasd.org')
     first_name = request.POST['first_name']
     last_name = request.POST['last_name']
     chapter = request.POST['chapter']

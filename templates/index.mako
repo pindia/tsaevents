@@ -74,7 +74,6 @@ function confirmRemove(name, target)
     </select>
     <input type="submit" value="Submit">
   </p>
-  <a href="${url}">${url}</a>
 </form>
 
 % else:
