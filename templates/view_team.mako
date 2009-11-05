@@ -84,8 +84,9 @@ Maximum team size: ${team.event.team_size}
   % endfor
 </table>
 
+<form action="/teams/${team.id}/update">
+
 % if user in team.members.all():
-  <form action="/teams/${team.id}/update">
   <p>Add member:
     <select name="user_id">
       % for u in user.__class__.objects.filter(profile__senior=team.senior,profile__is_member=True):

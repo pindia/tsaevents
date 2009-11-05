@@ -36,6 +36,7 @@ class Event(models.Model):
 
     entrants = models.ManyToManyField(User, related_name='events', help_text='Do NOT add entrants if this is a team event. Create teams for the event and add members to them instead!', blank=True)
     entry_locked = models.BooleanField(default=False, help_text='Check to prevent signups for this event. Use when it is full and any conflicts between possible entrants are resolved.')
+    #entry_locked_senior = models.BooleanField(default=False)
     def __str__(self):
         return self.name
 

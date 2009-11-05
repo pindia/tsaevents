@@ -7,11 +7,14 @@
     % if msg:
       <!-- <script language="javascript">alert("${msg}");</script> -->
     % endif
+    % if not DEPLOYED:
+      <style>body {background-color: green;}</style>
+    % endif
   </head>
     <body>
   <table width="100%" class="layout">
     <tr class="center"><td class="header" colspan="2">
-      TSA Event Registration - ${self.title()}
+      DEBUG MODE - ${self.title()}
     </td></tr>
     <tr>
       <td valign="top" rowspan="3">

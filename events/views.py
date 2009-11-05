@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import connection
 from django import forms
 from django.core.mail import send_mail
+from django.utils.html import escape
 
 # Mako imports
 from mako.template import Template
@@ -33,7 +34,8 @@ def render_template(name,request,**kwds):
         kwds.update(dict(
             user=request.user,
             messages=request.user.get_and_delete_messages(),
-            MODE = tsa.settings.MODE
+            MODE = tsa.settings.MODE,
+            DEPLOYED = DEPLOYED
         ))
         t = get_template(name)
         txt = t.render(**kwds)
@@ -107,7 +109,7 @@ def join_team(request):
         t.members.add(request.user)
         message(request, 'New team created.')
         return HttpResponseRedirect('/teams/%d' % t.id)
-    return render_template('join_team.mako',request, teams=Team.objects.filter(event=e), event=e)
+    return render_template('join_team.mako',request, teams=Team.objects.filter(event=e).order_by('senior'), event=e)
 
 @login_required
 def view_team(request, tid):
@@ -273,6 +275,18 @@ def settings(request):
             else:
                 p.posts_email = 0
             p.save()
+            u = request.user
+            u.first_name = escape(request.POST['first_name'])
+            u.last_name = escape(request.POST['last_name'])
+            u.email = request.POST['email']
+            if request.POST['new_password'] and not u.check_password(request.POST['old_password']):
+                message(request, 'Error: Old password is not correct.')
+            elif request.POST['new_password'] != request.POST['confirm_password']:
+                message(request, 'Error: Password do not match.')
+            elif request.POST['new_password']:
+                u.set_password(request.POST['new_password'])
+                message(request, 'Your password has been changed.')
+            u.save()
             message(request, 'Your settings have been updated.')
     return render_template('settings.mako',request, url=login_url(request.user))
 
@@ -283,8 +297,8 @@ def create_account(request):
     username, domain = email.split('@')
     if domain != 'scasd.org':
         return HttpResponse('Error: Email must be @scasd.org')
-    first_name = request.POST['first_name']
-    last_name = request.POST['last_name']
+    first_name = escape(request.POST['first_name'])
+    last_name = escape(request.POST['last_name'])
     chapter = request.POST['chapter']
     password = generate_password()
 

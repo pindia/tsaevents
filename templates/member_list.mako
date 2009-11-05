@@ -8,7 +8,7 @@ from tsa.events.views import login_url
 <%def name="render_list(members)">
     <table class="tabular_list" align="center">
       <tr>
-        <th>ID</th>
+        <!--<th>ID</th>-->
         <th>Name</th>
         <th>TSA ID</th>
         <th># E</th>
@@ -19,7 +19,7 @@ from tsa.events.views import login_url
       </tr>
     % for member in members:
         <tr>
-            <td>${member.username}</td>
+            <!--<td>${member.username}</td>-->
             <td>${member.first_name} ${member.last_name}</td>
             <td>${member.profile.indi_id or '-'}</td>
             <td>${member.events.count()}</td>
