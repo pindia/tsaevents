@@ -14,7 +14,7 @@
     <body>
   <table width="100%" class="layout">
     <tr class="center"><td class="header" colspan="2">
-      DEBUG MODE - ${self.title()}
+      TSA Event Registration - ${self.title()}
     </td></tr>
     <tr>
       <td valign="top" rowspan="3">

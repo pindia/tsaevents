@@ -5,7 +5,7 @@
 <%
 import datetime
 def frmt_datetime(dtime):
-    delta = datetime.timedelta( hours=-5 )
+    delta = datetime.timedelta( hours=+1 )
     dtime = dtime + delta
     return dtime.strftime("%a, %b %d %I:%M %p")
 %>

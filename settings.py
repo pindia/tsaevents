@@ -31,7 +31,7 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 EMAIL_HOST = 'smtp.webfaction.com'
 EMAIL_PORT = 25
 EMAIL_HOST_USER = 'pindi'
-EMAIL_HOST_PASSWORD = open('password.txt','rt').read().strip()
+EMAIL_HOST_PASSWORD = open(config.paths(config.CURR_DIR,'password.txt'),'rt').read().strip()
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
