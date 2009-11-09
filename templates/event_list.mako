@@ -51,8 +51,20 @@
         % endif
       </td>
       <td>${event.name}</td>
-      <td>${n[0] or '-'}</td>
-      <td>${n[1] or '-'}</td>
+      <td>
+        % if not n[0]:
+          -
+        % else:
+          <a href="/${'team_list' if event.is_team else 'member_list'}?event=${event.id}">${n[0]}</a>
+        % endif
+      </td>
+      <td>
+        % if not n[1]:
+          -
+        % else:
+          <a href="/${'team_list' if event.is_team else 'member_list'}?event=${event.id}">${n[1]}</a>
+        % endif
+      </td>
       <!--<td>${event.render_region()}</td>
       <td>${event.render_state()}</td>
       <td>${event.render_nation()}</td>-->

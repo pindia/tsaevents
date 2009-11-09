@@ -51,6 +51,8 @@ function confirmDeletePost(target)
 
 <h2>${team.event.name} Team</h2>
 
+
+
 <table align="center">
   <tr><td class="right">Team ID:</td><td>${team.team_id or 'Unknown'}</td></tr>
   <tr><td class="right">Team Chapter:</td><td>${'11/12' if team.senior else '9/10'}</td></tr>
@@ -147,6 +149,8 @@ Maximum team size: ${team.event.team_size}
 % endif
 </table>
 
+% else:
+    You do not have permission to view this team's message board.
 
 % endif
 

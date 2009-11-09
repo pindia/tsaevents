@@ -250,11 +250,28 @@ def member_list(request):
             form = NewUserForm()
     else:
         form = NewUserForm()
-    return render_template('member_list.mako',request,members=User.objects.all(),form=form)
+    if request.GET.get('event'):
+        e = Event.objects.get(id=request.GET['event'])
+        members = e.entrants
+    else:
+        members = User.objects.all()
+    return render_template('member_list.mako',request,
+                           members=members,
+                           selected_event = request.GET.get('event'),
+                           events=Event.objects.filter(is_team=False),
+                           form=form)
     
 @login_required
 def team_list(request):
-    return render_template('team_list.mako',request,teams=Team.objects.all())
+    if request.GET.get('event'):
+        teams = Team.objects.filter(event__id=int(request.GET['event']))
+    else:
+        teams = Team.objects.all().order_by('event')
+    return render_template('team_list.mako',request,
+                           teams=teams,
+                           selected_event = request.GET.get('event'),
+                           events=Event.objects.filter(is_team=True),
+                           )
     
 def settings(request):
     if request.method == 'POST':

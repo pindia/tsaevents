@@ -48,6 +48,20 @@ from tsa.events.views import login_url
     </table>
 </%def>
 
+<br>
+
+<form action="/member_list" method="get">
+Filter by Event:
+<select name="event">
+    <option value="">-----All-----</option>
+    % for event in events:
+        <option value="${event.id}" ${'selected="yes"' if str(event.id) == selected_event else ''}>${event.name}</option>
+    % endfor
+</select>
+<input type="submit" value="Filter">
+
+</form>
+
 <h3>9/10 Chapter</h3>
 ${render_list(members.filter(profile__senior=False,profile__is_member=True))}
 
