@@ -42,10 +42,13 @@
   <!--Don't see your team?-->
   <form action="/join_team" method="post">
   <input type="hidden" name="event_id" value="${event.id}">
-  % if event.entry_locked:
+  % if event.is_locked(user):
     <!--<input type="submit" value="Cannot create new team" disabled='yes'>-->
-    You cannot create a new team for this event. Either it is not offered at the current level ("${MODE}"), requires qualification to compete in at this level, or has filled up and been locked by an administrator.
+    You cannot create a new team for this event. Either it requires qualification to compete in at the current level (${MODE}), or has filled up and been locked by an administrator.
   % else:
+    % if MODE == 'region' and event.max_region == 0:
+      Note: This event is not offered at Regionals. You may create a team, but you will not compete until States.<br>
+    % endif
     <input type="submit" value="Create new team">
   % endif
   </form>

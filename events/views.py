@@ -30,6 +30,17 @@ def get_template(name):
     return mylookup.get_template(name)
 
 def render_template(name,request,**kwds):
+    if 'ENABLE_ADMIN' in request.GET and request.user.is_superuser:
+        request.session['DISABLE_ADMIN'] = False
+    '''if 'ENABLE_ADMIN' in request.GET and request.session.get('ADMIN_ID'):
+        user = User.objects.get(id=int(request.session.get('ADMIN_ID')))
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        login(request, user)
+        return HttpResponseRedirect('/')'''
+    if 'DISABLE_ADMIN' in request.GET or request.session.get('DISABLE_ADMIN'):
+        request.user.is_superuser = False
+        request.user.admin_disabled = True
+        request.session['DISABLE_ADMIN'] = True
     try:
         kwds.update(dict(
             user=request.user,
@@ -83,7 +94,7 @@ def update_indi(request):
         eid = int(request.POST['add_indi_event'])
         if eid != -1:
             e = Event.objects.get(id=eid)
-            if e.entry_locked:
+            if e.is_locked(request.user):
                 message(request, 'Error: Event is locked')
             elif request.user in e.entrants.all():
                 message(request, 'Error: You are already in that event.')
@@ -221,6 +232,14 @@ def event_list(request):
                 i += 1
             elif not event.entry_locked and 'lock_%d' % event.id in request.POST:
                 event.entry_locked = True
+                event.save()
+                i += 1
+            if event.entry_locked_senior and not 'senior_lock_%d' % event.id in request.POST:
+                event.entry_locked_senior = False
+                event.save()
+                i += 1
+            elif not event.entry_locked_senior and 'senior_lock_%d' % event.id in request.POST:
+                event.entry_locked_senior = True
                 event.save()
                 i += 1
         message(request, '%d events updated.' % i)

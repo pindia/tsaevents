@@ -26,12 +26,12 @@ from tsa.events.views import login_url
             <td>${member.teams.count()}</td>
             <td>|
                 % for event in member.events.all():
-                    ${event.name}|
+                    ${event.short_name}|
                 % endfor
             </td>
             <td>|
                 % for team in member.teams.all():
-                    <a href="/teams/${team.id}">${team.event.name}</a>|
+                    <a href="/teams/${team.id}">${team.event.short_name}</a>|
                 % endfor
             </td>
             <td>

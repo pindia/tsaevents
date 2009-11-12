@@ -25,10 +25,11 @@ class UserProfile(models.Model):
 
 class Event(models.Model):
     name = models.CharField(max_length=100)
-    #short_name = models.CharField(max_length=100)
+    short_name = models.CharField(max_length=100)
 
     is_team = models.BooleanField(help_text='Check if team event, leave blank if individual')
     team_size = models.IntegerField(help_text='Number of people allowed on a team')
+    min_team_size = models.IntegerField(default=1)
 
     max_region = models.IntegerField(help_text='Number of entrants or teams allowed at Regionals')
     max_state = models.IntegerField(help_text='Number of entrants or teams allowed at States. -1 if it is a qualification required event.')
@@ -36,6 +37,7 @@ class Event(models.Model):
 
     entrants = models.ManyToManyField(User, related_name='events', help_text='Do NOT add entrants if this is a team event. Create teams for the event and add members to them instead!', blank=True)
     entry_locked = models.BooleanField(default=False, help_text='Check to prevent signups for this event. Use when it is full and any conflicts between possible entrants are resolved.')
+    entry_locked_senior = models.BooleanField(default=False)
     #entry_locked_senior = models.BooleanField(default=False)
     def __str__(self):
         return self.name
@@ -59,6 +61,9 @@ class Event(models.Model):
             return '%d/s' % -self.max_nation
         return self.max_nation
     render_nation.short_description='Max nation'
+    
+    def is_locked(self, user):
+        return (user.profile.senior and self.entry_locked_senior) or (not user.profile.senior and self.entry_locked)
 
 
 class Team(models.Model):

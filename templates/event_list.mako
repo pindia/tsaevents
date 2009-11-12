@@ -5,7 +5,10 @@
 
 <table class="tabular_list" align="center">
   <tr>
-    <th>Lock</th>
+    % if user.is_superuser:
+      <th>9/10</th>
+      <th>11/12</th>
+    % endif
     <th>Name</th>
     <th>9/10</th>
     <th>11/12</th>
@@ -37,12 +40,13 @@
         rowclass = 'yellowback'
       if MODE == 'state' and event.max_nation < 0:
         rowclass = 'yellowback'
-      if event.entry_locked:
+      if (not user.profile.senior and event.entry_locked) or (user.profile.senior and event.entry_locked_senior):
         rowclass = 'redback'
         
     %>
     <tr class='${rowclass}'>
       <!--<td><a href="/event_list?action=lock_event&event_id=${event.id}">${'Yes' if event.entry_locked else 'No'}</a></td>-->
+      % if user.is_superuser:
       <td>
         % if user.is_superuser:
           <input type="checkbox" name="lock_${event.id}" ${'checked="true"' if event.entry_locked else ''}>
@@ -50,6 +54,14 @@
           ${'<img src="/static/tsa/icons/lock.png">' if event.entry_locked else '-'}
         % endif
       </td>
+      <td>
+        % if user.is_superuser:
+          <input type="checkbox" name="senior_lock_${event.id}" ${'checked="true"' if event.entry_locked_senior else ''}>
+        % else:
+          ${'<img src="/static/tsa/icons/lock.png">' if event.entry_locked_senior else '-'}
+        % endif
+      </td>
+      % endif
       <td>${event.name}</td>
       <td>
         % if not n[0]:

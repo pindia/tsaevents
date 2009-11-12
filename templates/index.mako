@@ -40,7 +40,7 @@ function confirmRemove(name, target)
     <select name="add_indi_event">
         <option value="-1">----------</option>
       % for event in events.filter(is_team=False):
-        <option ${"disabled='yes'" if event.entry_locked else ''} value="${event.id}">${event.name}</option>
+        <option ${"disabled='yes'" if event.is_locked(user) else ''} value="${event.id}">${event.name}</option>
       % endfor
     </select>
     <input type="submit" value="Submit">
