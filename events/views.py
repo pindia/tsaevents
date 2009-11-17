@@ -177,12 +177,7 @@ def update_team(request, tid):
         else:
             message(request, 'Error: you do not have permission to delete the post.')
         return redirect
-        
-    if request.user not in team.members.all() and not request.user.is_superuser:
-        message(request, 'Error: you are not in this team.')
-        return redirect
-    # All actions beyond this point require team membership
-    
+            
     if action == 'Post':
         text = request.REQUEST['message']
         post = TeamPost(team=team, author=request.user, text=text)
@@ -197,6 +192,11 @@ def update_team(request, tid):
         message(request, 'Message posted.')
         log(request, 'team_post', '%s posted to their %s' % (name(request.user), team.link()))
         return redirect
+
+    if request.user not in team.members.all() and not request.user.is_superuser:
+        message(request, 'Error: you are not in this team.')
+        return redirect
+    # All actions beyond this point require team membership
         
     if action == 'Add Member':
         u = User.objects.get(id=int(request.REQUEST['user_id']))
