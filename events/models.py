@@ -81,9 +81,21 @@ class Team(models.Model):
         return ', '.join(['%s %s' % (member.first_name, member.last_name[0]) for member in self.members.all()])
     members_list.short_description='Members'
     
+    def link(self):
+        return '<a href="/teams/%d">%s team</a>' % (self.id, self.event.name)
+    
 class TeamPost(models.Model):
     team = models.ForeignKey(Team, related_name='posts')
     author = models.ForeignKey(User, related_name='posts')
     date = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
+    
+class SystemLog(models.Model):
+    user = models.ForeignKey(User, related_name='log_actions')
+    affected = models.ForeignKey(User, related_name='log_entries')
+    type = models.CharField(max_length='20')
+    text = models.CharField(max_length='100')
+    date = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+    
 

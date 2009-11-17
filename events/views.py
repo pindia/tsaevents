@@ -57,6 +57,12 @@ def render_template(name,request,**kwds):
 def message(request, msg):
     request.user.message_set.create(message=msg)
 
+def log(request, type, text, affected=None):
+    SystemLog(user=request.user, type=type, text=text, affected=(affected or request.user)).save()
+
+def name(user):
+    return '%s %s' % (user.first_name, user.last_name)
+
 def login_url(user):
     return '/quick_login?user=%s&auth=%s' % (user.id, user.password.split('$')[2])
     
@@ -101,11 +107,13 @@ def update_indi(request):
             else:
                 e.entrants.add(request.user)
                 message(request, 'Individual event "%s" added.' % e.name)
+                log(request, 'event_add', '%s added the individual event %s.' % (name(request.user), e.name))
     if 'delete_event' in request.GET:
         eid = int(request.GET['delete_event'])
         e = Event.objects.get(id=eid)
         e.entrants.remove(request.user)
         message(request, 'Individual event "%s" removed.' % e.name)
+        log(request, 'event_remove', '%s removed the individual event %s.' % (name(request.user), e.name))
     return index(request)
 
 @login_required
@@ -119,6 +127,7 @@ def join_team(request):
         t.save()
         t.members.add(request.user)
         message(request, 'New team created.')
+        log(request, 'team_create', '%s created a new <a href="/teams/%d">%s team</a>.' % (name(request.user), t.id, e.name))
         return HttpResponseRedirect('/teams/%d' % t.id)
     return render_template('join_team.mako',request, teams=Team.objects.filter(event=e).order_by('senior'), event=e)
 
@@ -139,19 +148,24 @@ def update_team(request, tid):
         team.members.add(request.user)
         team.save()
         message(request, 'You have joined this team.')
+        log(request, 'team_join', '%s joined a %s.' % (name(request.user), team.link()))
         return redirect
         
     if action == 'remove_member' and int(request.REQUEST['user_id']) == request.user.id:
         # The logged in user is leaving the team
         team.members.remove(request.user)
         message(request, 'You have left the team.')
+        log(request, 'team_leave', '%s left their %s.' % (name(request.user), team.link()))
         if team.members.count() == 0:
+            event = team.event.name
             team.delete()
             message(request, 'The team has been deleted because you were the last member.')
+            log(request, 'team_delete', 'A %s team has been deleted.' % event)
         elif request.user == team.captain:
             team.captain = team.members.all()[0]
             team.save()
             message(request, '%s %s is the new team captain.' % (team.captain.first_name, team.captain.last_name))
+            log(request, 'team_promote', '%s has been promoted to captain of %s.' % (name(team.captain), team.link()), affected=team.captain)
         return HttpResponseRedirect('/')
         
     if action == 'delete_post':
@@ -159,6 +173,7 @@ def update_team(request, tid):
         if request.user == post.author or request.user == team.captain or request.user.is_superuser:
             post.delete()
             message(request, 'The post has been deleted.')
+            log(request, 'team_post_delete', '%s deleted a post in a %s.' % (name(request.user), team.link()))
         else:
             message(request, 'Error: you do not have permission to delete the post.')
         return redirect
@@ -180,6 +195,7 @@ def update_team(request, tid):
                 body = t.render(name=member.first_name, poster=request.user.first_name, team=team, text=text, login_url=login_url(member))
                 send_mail('%s Post' % team.event.name, body, 'State High TSA <scahs-tsa@pindi.us>', [member.email])
         message(request, 'Message posted.')
+        log(request, 'team_post', '%s posted to their %s' % (name(request.user), team.link()))
         return redirect
         
     if action == 'Add Member':
@@ -190,6 +206,7 @@ def update_team(request, tid):
         team.members.add(u)
         team.save()
         message(request, '%s %s has been added to the team.' % (u.first_name, u.last_name))
+        log(request, 'team_join', '%s has been added to a %s.' % (name(u), team.link()), affected=u)
         return redirect
         
     if request.user != team.captain and not request.user.is_superuser:
@@ -209,15 +226,19 @@ def update_team(request, tid):
         team.members.remove(u)
         team.save()
         message(request, '%s %s has been removed from the team.' % (u.first_name, u.last_name))
+        log(request, 'team_remove', '%s has been removed from their %s.' % (name(u), team.link()), affected=u)
     if action == 'promote_member':
         u = User.objects.get(id=int(request.REQUEST['user_id']))
         team.captain = u
         team.save()
         message(request, '%s %s has been promoted to team captain.' % (u.first_name, u.last_name))
+        log(request, 'team_promote', '%s has been promoted to captain of their %s.' % (name(u), team.link()), affected=u)
     if action == 'delete_team':
+        event = team.event.name
         team.delete()
         return HttpResponseRedirect('/')
         message(request, 'The team has been deleted.')
+        log(request, 'team_delete', 'A %s team has been deleted.' % event)
 
     return redirect
 
@@ -243,6 +264,8 @@ def event_list(request):
                 event.save()
                 i += 1
         message(request, '%d events updated.' % i)
+        if i > 0:
+            log(request, 'admin_lock', '%s updated the lock status of %d events.' % (name(request.user), i))
     return render_template('event_list.mako',request,events=Event.objects.all())
     
 class NewUserForm(forms.Form):
@@ -291,7 +314,7 @@ def team_list(request):
                            selected_event = request.GET.get('event'),
                            events=Event.objects.filter(is_team=True),
                            )
-    
+@login_required 
 def settings(request):
     if request.method == 'POST':
         if request.POST['action'] == 'Regenerate Password':
@@ -322,6 +345,7 @@ def settings(request):
             elif request.POST['new_password']:
                 u.set_password(request.POST['new_password'])
                 message(request, 'Your password has been changed.')
+                log(request, 'password_change', '%s changed their password.' % (name(request.user)))
             u.save()
             message(request, 'Your settings have been updated.')
     return render_template('settings.mako',request, url=login_url(request.user))
@@ -351,5 +375,11 @@ def create_account(request):
     
 
     send_mail('TSA Event Registration Login', body, 'State High TSA <scahs-tsa@pindi.us>', [email])
-    
+        
+    SystemLog(user=u, affected=u, type='new_user', text='New user %s registered.' % name(u)).save()
+        
     return HttpResponse('Your account has been created. Check your email for login details.')
+    
+@login_required
+def system_log(request):
+    return render_template('system_log.mako', request, logs=SystemLog.objects.order_by('-date'))

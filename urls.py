@@ -19,6 +19,7 @@ urlpatterns = patterns('tsa.events.views',
     (r'^teams/(\d+)/$', 'view_team'),
     (r'^teams/(\d+)/update/$', 'update_team'),
     (r'^settings$', 'settings'),
+    (r'^system_log$', 'system_log'),
 )
 
 urlpatterns += patterns('',

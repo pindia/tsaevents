@@ -24,6 +24,9 @@
           <li> <a href='/event_list'>Event&nbsp;List</a></li>
           <li> <a href='/member_list'>Member&nbsp;List</a></li>
           <li> <a href='/team_list'>Team&nbsp;List</a></li>
+          % if user.is_superuser:
+          <li> <a href='/system_log'>System&nbsp;Log</a></li>
+          % endif
         </ul>
       </td>
       <td align="left" height="20">
