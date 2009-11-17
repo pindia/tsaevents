@@ -236,9 +236,9 @@ def update_team(request, tid):
     if action == 'delete_team':
         event = team.event.name
         team.delete()
-        return HttpResponseRedirect('/')
         message(request, 'The team has been deleted.')
         log(request, 'team_delete', 'A %s team has been deleted.' % event)
+        return HttpResponseRedirect('/')
 
     return redirect
 
