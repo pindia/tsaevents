@@ -55,7 +55,7 @@ function confirmDeletePost(target)
 
 <table align="center">
   <tr><td class="right">Team ID:</td><td>${team.team_id or 'Unknown'}</td></tr>
-  <tr><td class="right">Team Chapter:</td><td>${'11/12' if team.senior else '9/10'}</td></tr>
+  <tr><td class="right">Team Chapter:</td><td>${team.chapter.name}</td></tr>
 </table>
 
 <h3>Members</h3>
@@ -91,7 +91,7 @@ Maximum team size: ${team.event.team_size}
 % if user in team.members.all():
   <p>Add member:
     <select name="user_id">
-      % for u in user.__class__.objects.filter(profile__senior=team.senior,profile__is_member=True):
+      % for u in user.__class__.objects.filter(profile__chapter=team.chapter,profile__is_member=True):
         <option value="${u.id}">${u.first_name} ${u.last_name}</option>
       % endfor
     </select>

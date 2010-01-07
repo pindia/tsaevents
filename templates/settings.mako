@@ -14,15 +14,17 @@
 <tr><td>Email:</td><td><input type="entry" name="email" value="${user.email}"></td></tr>
 <tr><td>Account Type:</td>
 <td>
-    % if not user.profile.is_member:
+    % if user.is_superuser:
+    System Administrator
+    % elif not user.profile.is_member:
     Advisor
-    % elif user.is_superuser:
+    % elif user.profile.chapter_admin:
     Administrator
     % else:
     Member
     % endif
 </td></tr>
-<tr><td>Chapter:</td><td>${'11/12' if user.profile.senior else '9/10'}</td></tr>
+<tr><td>Chapter:</td><td>${chapter}</td></tr>
 </table>
 
 <h3>Email Settings</h3>

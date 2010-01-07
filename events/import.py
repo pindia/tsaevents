@@ -2,9 +2,12 @@ import os, random, csv
 os.environ['DJANGO_SETTINGS_MODULE'] = 'tsa.settings'
 from tsa.config import *
 
-from tsa.events.models import Event
+from tsa.events.models import Event, EventSet
 
-#Event.objects.all().delete()
+Event.objects.all().delete()
+
+hs = EventSet(level='HS', state='PA', region='Region 8')
+hs.save()
 
 reader = csv.reader(file('events.csv'))
 reader.next()
@@ -34,6 +37,6 @@ for line in reader:
         nation = -int(line[4][0])
     else:
         nation = int(line[4])
-    e = Event(name=name, is_team = team, team_size=n, max_region=reg, max_state=state, max_nation=nation, short_name=short_name)
+    e = Event(event_set = hs, name=name, is_team = team, team_size=n, max_region=reg, max_state=state, max_nation=nation, short_name=short_name)
     e.save()
    

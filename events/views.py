@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.db import transaction
 from django.contrib.auth import login
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import connection
 from django import forms
 from django.core.mail import send_mail
@@ -24,6 +24,12 @@ from itertools import *
 from models import *
 from tsa.config import *
 import tsa.settings
+
+# Define decorators
+
+chapter_admin_required = user_passes_test(lambda u: u.is_authenticated() and u.profile.is_admin)
+system_admin_required = user_passes_test(lambda u: u.is_authenticated() and u.is_superuser)
+
 
 def get_template(name):
     mylookup = TemplateLookup(directories=[TEMPLATE_DIR])
@@ -44,6 +50,7 @@ def render_template(name,request,**kwds):
     try:
         kwds.update(dict(
             user=request.user,
+            chapter=request.user.profile.chapter,
             messages=request.user.get_and_delete_messages(),
             MODE = tsa.settings.MODE,
             DEPLOYED = DEPLOYED
@@ -76,11 +83,13 @@ def generate_password():
 
 @login_required
 def index(request):
+    if not request.chapter:
+        return HttpResponseRedirect('/config/chapter_list')
     for user in User.objects.all():
         try:
             user.profile
         except UserProfile.DoesNotExist:
-            UserProfile(user=user, is_member=True, senior=False).save()
+            UserProfile(user=user, is_member=True, chapter=None).save()
     return render_template('index.mako',request, events=Event.objects.all())
 
 def quick_login(request):
@@ -117,151 +126,16 @@ def update_indi(request):
     return index(request)
 
 @login_required
-def join_team(request):
-    eid = request.REQUEST['event_id']
-    e = Event.objects.get(id=eid)
-    if request.method == 'POST':
-        t = Team(event=e)
-        t.captain = request.user
-        t.senior = request.user.profile.senior
-        t.save()
-        t.members.add(request.user)
-        message(request, 'New team created.')
-        log(request, 'team_create', '%s created a new <a href="/teams/%d">%s team</a>.' % (name(request.user), t.id, e.name))
-        return HttpResponseRedirect('/teams/%d' % t.id)
-    return render_template('join_team.mako',request, teams=Team.objects.filter(event=e).order_by('senior'), event=e)
-
-@login_required
-def view_team(request, tid):
-    return render_template('view_team.mako',request, team=Team.objects.get(id=tid))
-
-@login_required
-def update_team(request, tid):
-    action = request.REQUEST['action']
-    team = Team.objects.get(id=tid)
-    
-    redirect =  HttpResponseRedirect('/teams/%d/' % team.id)       
-    
-    if action == 'join':
-        if team.entry_locked:
-            return HttpResponse('Error: Team is locked; nobody may join')
-        team.members.add(request.user)
-        team.save()
-        message(request, 'You have joined this team.')
-        log(request, 'team_join', '%s joined a %s.' % (name(request.user), team.link()))
-        return redirect
-        
-    if action == 'remove_member' and int(request.REQUEST['user_id']) == request.user.id:
-        # The logged in user is leaving the team
-        team.members.remove(request.user)
-        message(request, 'You have left the team.')
-        log(request, 'team_leave', '%s left their %s.' % (name(request.user), team.link()))
-        if team.members.count() == 0:
-            event = team.event.name
-            team.delete()
-            message(request, 'The team has been deleted because you were the last member.')
-            log(request, 'team_delete', 'A %s team has been deleted.' % event)
-        elif request.user == team.captain:
-            team.captain = team.members.all()[0]
-            team.save()
-            message(request, '%s %s is the new team captain.' % (team.captain.first_name, team.captain.last_name))
-            log(request, 'team_promote', '%s has been promoted to captain of %s.' % (name(team.captain), team.link()), affected=team.captain)
-        return HttpResponseRedirect('/')
-        
-    if action == 'delete_post':
-        post = TeamPost.objects.get(id=int(request.REQUEST['id']))
-        if request.user == post.author or request.user == team.captain or request.user.is_superuser:
-            post.delete()
-            message(request, 'The post has been deleted.')
-            log(request, 'team_post_delete', '%s deleted a post in a %s.' % (name(request.user), team.link()))
-        else:
-            message(request, 'Error: you do not have permission to delete the post.')
-        return redirect
-            
-    if action == 'Post':
-        text = request.REQUEST['message']
-        post = TeamPost(team=team, author=request.user, text=text)
-        post.save()
-        for member in team.members.all():
-            if member.id == request.user.id:
-                continue
-            if member.profile.posts_email == 2:
-                t = get_template('email/posts_email.mako')
-                body = t.render(name=member.first_name, poster=request.user.first_name, team=team, text=text, login_url=login_url(member))
-                send_mail('%s Post' % team.event.name, body, 'State High TSA <scahs-tsa@pindi.us>', [member.email])
-        message(request, 'Message posted.')
-        log(request, 'team_post', '%s posted to their %s' % (name(request.user), team.link()))
-        return redirect
-
-    if request.user not in team.members.all() and not request.user.is_superuser:
-        message(request, 'Error: you are not in this team.')
-        return redirect
-    # All actions beyond this point require team membership
-        
-    if action == 'Add Member':
-        u = User.objects.get(id=int(request.REQUEST['user_id']))
-        if u.teams.filter(event=team.event).count() != 0:
-            message(request, 'Error: %s is already in a team for that event.' % u.first_name)
-            return redirect
-        team.members.add(u)
-        team.save()
-        message(request, '%s %s has been added to the team.' % (u.first_name, u.last_name))
-        log(request, 'team_join', '%s has been added to a %s.' % (name(u), team.link()), affected=u)
-        return redirect
-        
-    if request.user != team.captain and not request.user.is_superuser:
-        message(request, 'Error: you are not the team captain.')
-        return redirect
-    # All actions beyond this point require team captain
-    
-    if action == 'lock_team':
-        team.entry_locked = not team.entry_locked
-        team.save()
-        if team.entry_locked:
-            message(request, 'The team is now locked.')
-        else:
-            message(request, 'The team is now unlocked.')
-    if action == 'remove_member':
-        u = User.objects.get(id=int(request.REQUEST['user_id']))
-        team.members.remove(u)
-        team.save()
-        message(request, '%s %s has been removed from the team.' % (u.first_name, u.last_name))
-        log(request, 'team_remove', '%s has been removed from their %s.' % (name(u), team.link()), affected=u)
-    if action == 'promote_member':
-        u = User.objects.get(id=int(request.REQUEST['user_id']))
-        team.captain = u
-        team.save()
-        message(request, '%s %s has been promoted to team captain.' % (u.first_name, u.last_name))
-        log(request, 'team_promote', '%s has been promoted to captain of their %s.' % (name(u), team.link()), affected=u)
-    if action == 'delete_team':
-        event = team.event.name
-        team.delete()
-        message(request, 'The team has been deleted.')
-        log(request, 'team_delete', 'A %s team has been deleted.' % event)
-        return HttpResponseRedirect('/')
-
-    return redirect
-
-@login_required
 def event_list(request):
     if request.method == 'POST':
         i = 0
+        locked = request.chapter.locked_events
         for event in Event.objects.all():
-            if event.entry_locked and not 'lock_%d' % event.id in request.POST:
-                event.entry_locked = False
-                event.save()
+            if event in locked.all() and not 'lock_%d' % event.id in request.POST:
+                locked.remove(event)
                 i += 1
-            elif not event.entry_locked and 'lock_%d' % event.id in request.POST:
-                event.entry_locked = True
-                event.save()
-                i += 1
-            if event.entry_locked_senior and not 'senior_lock_%d' % event.id in request.POST:
-                event.entry_locked_senior = False
-                event.save()
-                i += 1
-            elif not event.entry_locked_senior and 'senior_lock_%d' % event.id in request.POST:
-                event.entry_locked_senior = True
-                event.save()
+            elif not event in locked.all() and 'lock_%d' % event.id in request.POST:
+                locked.add(event)
                 i += 1
         message(request, '%d events updated.' % i)
         if i > 0:
@@ -297,6 +171,7 @@ def member_list(request):
         members = e.entrants
     else:
         members = User.objects.all()
+    members = members.filter(profile__chapter=request.chapter, profile__is_member=True)
     return render_template('member_list.mako',request,
                            members=members,
                            selected_event = request.GET.get('event'),
@@ -309,6 +184,7 @@ def team_list(request):
         teams = Team.objects.filter(event__id=int(request.GET['event']))
     else:
         teams = Team.objects.all().order_by('event')
+    teams = teams.filter(chapter=request.chapter)
     return render_template('team_list.mako',request,
                            teams=teams,
                            selected_event = request.GET.get('event'),
@@ -380,6 +256,5 @@ def create_account(request):
         
     return HttpResponse('Your account has been created. Check your email for login details.')
     
-@login_required
-def system_log(request):
-    return render_template('system_log.mako', request, logs=SystemLog.objects.order_by('-date'))
+execfile(paths(APP_DIR, 'views_team.py'))
+execfile(paths(APP_DIR, 'views_admin.py'))

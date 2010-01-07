@@ -74,11 +74,21 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.load_template_source',
 )
 
+class ChapterMiddleware(object):
+    def process_request(self, request):
+        try:
+            if request.user.is_authenticated():
+                request.chapter = request.user.profile.chapter
+        except:
+            request.chapter = None
+
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
+    'tsa.settings.ChapterMiddleware',
 )
 
 ROOT_URLCONF = 'tsa.urls'

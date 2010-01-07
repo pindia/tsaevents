@@ -14,7 +14,7 @@ class EventAdmin(admin.ModelAdmin):
         }),
         ('Eligibility', {
             #'classes': ('collapse',),
-            'fields': ('is_team', 'team_size', 'max_region', 'max_state', 'max_nation','entry_locked')
+            'fields': ('is_team', 'team_size', 'max_region', 'max_state', 'max_nation')
         }),
         ('Entrants', {
             'description' : 'Only use for individual events!',
@@ -22,9 +22,8 @@ class EventAdmin(admin.ModelAdmin):
         }),
      )
      filter_horizontal = ('entrants',)
-     list_display = ('name','is_team','team_size','render_region','render_state','render_nation','entry_locked')
-     list_filter = ('is_team', 'entry_locked')
-     list_editable=('entry_locked',)
+     list_display = ('name','is_team','team_size','render_region','render_state','render_nation')
+     list_filter = ('is_team',)
      ordering=('id',)
      #actions=[lock_events]
 
@@ -37,9 +36,9 @@ class ProfileInline(admin.TabularInline):
      model = UserProfile
      
 class ProfileAdmin(admin.ModelAdmin):
-     list_display = ('name', 'is_member', 'senior', 'indi_id')
-     list_editable = ('is_member','senior','indi_id')
-     list_filter = ('is_member', 'senior')
+     list_display = ('name', 'is_member', 'chapter', 'indi_id')
+     list_editable = ('is_member','chapter','indi_id')
+     list_filter = ('is_member','chapter')
 
 admin.site._registry[User].inlines = (ProfileInline,)
 
@@ -47,3 +46,5 @@ admin.site._registry[User].inlines = (ProfileInline,)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(UserProfile, ProfileAdmin)
+admin.site.register(Chapter)
+admin.site.register(EventSet)

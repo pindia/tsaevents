@@ -9,17 +9,29 @@ admin.autodiscover()
 
 urlpatterns = patterns('tsa.events.views',
 
+    # Account/Event Management Views
     (r'^$', 'index'),
     (r'^quick_login$', 'quick_login'),
     (r'^update_indi$', 'update_indi'),
+    (r'^settings$', 'settings'),
+    
+    # List Views
     (r'^event_list$', 'event_list'),
     (r'^member_list$', 'member_list'),
     (r'^team_list$', 'team_list'),
+    
+    # Team Views
     (r'^join_team$', 'join_team'),
     (r'^teams/(\d+)/$', 'view_team'),
     (r'^teams/(\d+)/update/$', 'update_team'),
-    (r'^settings$', 'settings'),
+    
+    # Chapter Admin
     (r'^system_log$', 'system_log'),
+    
+    # System Admin
+    (r'^config/chapter_list$', 'chapter_list'),
+    (r'^config/eventsets/$', 'eventset_list'),
+    (r'^config/eventsets/(\d+)/$', 'edit_eventset')
 )
 
 urlpatterns += patterns('',

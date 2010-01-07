@@ -9,10 +9,23 @@ EMAIL_CHOICES = (
     (2,'Immediate')
 )
 
+class Chapter(models.Model):
+    name = models.CharField(max_length=100)
+    event_set = models.ForeignKey('EventSet')
+    locked_events = models.ManyToManyField('Event', blank=True)
+    register_open = models.BooleanField(default=True)
+    def get_events(self):
+        return self.event_set.events.all()
+    def __str__(self):
+        return self.name
+
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
     is_member = models.BooleanField()
-    senior = models.BooleanField()
+    is_admin = models.BooleanField()
+
+    chapter = models.ForeignKey(Chapter, related_name='members',null=True, blank=True)
     indi_id = models.CharField(max_length=100, blank=True)
     
     notify_email = models.IntegerField(choices=EMAIL_CHOICES, default=0)
@@ -23,7 +36,18 @@ class UserProfile(models.Model):
     name.short_description = 'Name'
 
 
+class EventSet(models.Model):
+    #name = models.CharField(max_length=100)
+    level = models.CharField(max_length=10, choices=(('MS','MS'),('HS','HS')))
+    state = models.CharField(max_length=50)
+    region = models.CharField(max_length=50)
+    def __str__(self):
+        return '%s %s %s' % (self.state, self.region, self.level)
+    
+
 class Event(models.Model):
+    event_set = models.ForeignKey(EventSet, related_name='events')
+    
     name = models.CharField(max_length=100)
     short_name = models.CharField(max_length=100)
 
@@ -36,9 +60,10 @@ class Event(models.Model):
     max_nation = models.IntegerField(help_text='Number of entrants or teams allowed at States. -x if it is an x per state event. Example: -3 means 3 per state.')
 
     entrants = models.ManyToManyField(User, related_name='events', help_text='Do NOT add entrants if this is a team event. Create teams for the event and add members to them instead!', blank=True)
-    entry_locked = models.BooleanField(default=False, help_text='Check to prevent signups for this event. Use when it is full and any conflicts between possible entrants are resolved.')
+
+    entry_locked = models.BooleanField(default=False)
     entry_locked_senior = models.BooleanField(default=False)
-    #entry_locked_senior = models.BooleanField(default=False)
+    
     def __str__(self):
         return self.name
 
@@ -63,13 +88,13 @@ class Event(models.Model):
     render_nation.short_description='Max nation'
     
     def is_locked(self, user):
-        return (user.profile.senior and self.entry_locked_senior) or (not user.profile.senior and self.entry_locked)
+        return self in user.profile.chapter.locked_events.all()
 
 
 class Team(models.Model):
     event = models.ForeignKey(Event, related_name='teams')
     team_id = models.CharField(max_length=100, null=True, blank=True)
-    senior = models.BooleanField()
+    chapter = models.ForeignKey(Chapter)
     info = models.TextField(null=True, blank=True)
     
     members = models.ManyToManyField(User, related_name='teams')
@@ -92,6 +117,7 @@ class TeamPost(models.Model):
     
 class SystemLog(models.Model):
     user = models.ForeignKey(User, related_name='log_actions')
+    chapter = models.ForeignKey(Chapter, null=True, blank=True, default=None)
     affected = models.ForeignKey(User, related_name='log_entries')
     type = models.CharField(max_length='20')
     text = models.CharField(max_length='100')

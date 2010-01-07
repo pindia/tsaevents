@@ -16,7 +16,7 @@ CURR_DIR = _CURR_DIR
 
 STATIC_DIR = paths( _CURR_DIR, 'static' )
 
-APP_DIR = paths( _CURR_DIR, 'tsa')
+APP_DIR = paths( _CURR_DIR, 'events')
 
 TEMPLATE_DIR = paths( _CURR_DIR, 'templates' )
 

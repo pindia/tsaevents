@@ -5,14 +5,12 @@
 
 <table class="tabular_list" align="center">
   <tr>
-    <th>L</th>
+    <th>S</th>
     % if user.is_superuser:
-      <th>9/10</th>
-      <th>11/12</th>
+      <th>Lck</th>
     % endif
     <th>Name</th>
-    <th>9/10</th>
-    <th>11/12</th>
+    <th>Num</th>
     <!--<th>Reg</th>
     <th>Sta</th>
     <th>Nat</th>-->
@@ -21,11 +19,9 @@
   % for event in events:
     <%
       if event.is_team:
-        n = [event.teams.filter(senior=False).count(),
-             event.teams.filter(senior=True).count()]
+        n = event.teams.filter(chapter=chapter).count()
       else:
-        n = [event.entrants.filter(profile__senior=False).count(),
-             event.entrants.filter(profile__senior=True).count()]
+        n = event.entrants.filter(profile__chapter=chapter).count()
              
       max = getattr(event, 'max_%s' % MODE)
       if MODE == 'region' and max == 0:
@@ -35,25 +31,19 @@
       if MODE == 'region' and rendered_max == '-':
         rendered_max = '(' + str(event.render_state()) + ')'
 
-      '''cellclass[0] = 'errorback' is event.max_state
-      if event.max_state >= 0 and n[0] > event.max_state:
-        cellclass = 'errorback'
-      else:
-        cellclass = '' '''
         
       rowclass = 'greenback'
       if MODE == 'region' and event.max_state == -1:
         rowclass = 'yellowback'
       if MODE == 'state' and event.max_nation < 0:
         rowclass = 'yellowback'
-      if (not user.profile.senior and event.entry_locked) or (user.profile.senior and event.entry_locked_senior):
+      if event.is_locked(user):
         rowclass = 'redback'
         
     %>
     <tr class='${rowclass}'>
-      <!--<td><a href="/event_list?action=lock_event&event_id=${event.id}">${'Yes' if event.entry_locked else 'No'}</a></td>-->
       <td>
-        % if max > 0 and (n[0] > max or n[1] > max):
+        % if max > 0 and n > max:
           <img src="/static/tsa/icons/exclamation.png">
         % elif event.is_locked(user):
           <img src="/static/tsa/icons/lock.png">
@@ -61,25 +51,15 @@
       </td>
       % if user.is_superuser:
       <td>
-          <input type="checkbox" name="lock_${event.id}" ${'checked="true"' if event.entry_locked else ''}>
-      </td>
-      <td>
-          <input type="checkbox" name="senior_lock_${event.id}" ${'checked="true"' if event.entry_locked_senior else ''}>
+          <input type="checkbox" name="lock_${event.id}" ${'checked="true"' if event.is_locked(user) else ''}>
       </td>
       % endif
       <td>${event.name}</td>
       <td>
-        % if not n[0]:
+        % if not n:
           -
         % else:
-          <a href="/${'team_list' if event.is_team else 'member_list'}?event=${event.id}">${n[0]}</a>
-        % endif
-      </td>
-      <td>
-        % if not n[1]:
-          -
-        % else:
-          <a href="/${'team_list' if event.is_team else 'member_list'}?event=${event.id}">${n[1]}</a>
+          <a href="/${'team_list' if event.is_team else 'member_list'}?event=${event.id}">${n}</a>
         % endif
       </td>
       <!--<td>${event.render_region()}</td>

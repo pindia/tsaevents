@@ -2,11 +2,8 @@
   <head>
     <link rel="stylesheet" href="/static/tsa/style.css">
     <title>${self.title()}</title>
-    <script type="text/javascript" src="/static/tsa/jquery.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
     ${self.scripts()}
-    % if msg:
-      <!-- <script language="javascript">alert("${msg}");</script> -->
-    % endif
     % if not DEPLOYED:
       <style>body {background-color: green;}</style>
     % endif
@@ -20,12 +17,26 @@
       <td valign="top" rowspan="3">
         <p class="name">Navigation</p>
         <ul class="text">
-          <li> <a href='/'>Your&nbsp;Events</a></li>
-          <li> <a href='/event_list'>Event&nbsp;List</a></li>
-          <li> <a href='/member_list'>Member&nbsp;List</a></li>
-          <li> <a href='/team_list'>Team&nbsp;List</a></li>
+          % if user.profile.chapter:
+            <li> <a href='/'>Your&nbsp;Events</a></li>
+            <li> <a href='/event_list'>Event&nbsp;List</a></li>
+            <li> <a href='/member_list'>Member&nbsp;List</a></li>
+            <li> <a href='/team_list'>Team&nbsp;List</a></li>
+          % endif
+          % if user.profile.chapter and user.profile.is_admin:
+          <li> Chapter&nbsp;Admin
+            <ul>
+              <li> <a href='/system_log'>System&nbsp;Log</a></li>
+            </ul>
+          </li>
+          % endif
           % if user.is_superuser:
-          <li> <a href='/system_log'>System&nbsp;Log</a></li>
+          <li> System&nbsp;Admin
+            <ul>
+              <li> <a href='/config/chapter_list'>Chapter&nbsp;List</a></li>
+              <li> <a href='/config/eventsets/'>Event&nbsp;Sets</a></li>
+            </ul>
+          </li>
           % endif
         </ul>
       </td>
@@ -37,12 +48,9 @@
           <i>[<a href="?ENABLE_ADMIN">E</a>]</i>
         % endif
         |
+        ${user.profile.chapter}
         % if not user.profile.is_member:
-          Nonmember
-        % elif user.profile.senior:
-          11/12 Chapter
-        % else:
-          9/10 Chapter
+          (N)
         % endif
         |
         Events: ${user.events.all().count()} Teams: ${user.teams.all().count()}

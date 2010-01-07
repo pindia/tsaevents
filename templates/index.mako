@@ -39,7 +39,7 @@ function confirmRemove(name, target)
     Add event:
     <select name="add_indi_event">
         <option value="-1">----------</option>
-      % for event in events.filter(is_team=False):
+      % for event in chapter.get_events().filter(is_team=False):
         <option ${"disabled='yes'" if event.is_locked(user) else ''} value="${event.id}">${event.name}</option>
       % endfor
     </select>
@@ -68,7 +68,7 @@ function confirmRemove(name, target)
     Create/Join Team:
     <select name="event_id">
         <option value="-1">----------</option>
-      % for event in events.filter(is_team=True):
+      % for event in chapter.get_events().filter(is_team=True):
         <option value="${event.id}">${event.name}</option>
       % endfor
     </select>

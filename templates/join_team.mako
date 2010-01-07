@@ -23,7 +23,7 @@
         % endif
       </td>
       <td>
-      % if team.senior != user.profile.senior:
+      % if team.chapter != user.profile.chapter:
         <i>Wrong chapter</i>
       % elif team.entry_locked:
         <i>Locked</i>
