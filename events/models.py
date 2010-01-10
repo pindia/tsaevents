@@ -9,6 +9,7 @@ EMAIL_CHOICES = (
     (2,'Immediate')
 )
 
+
 class Chapter(models.Model):
     name = models.CharField(max_length=100)
     event_set = models.ForeignKey('EventSet')
@@ -91,6 +92,11 @@ class Event(models.Model):
         return self in user.profile.chapter.locked_events.all()
 
 
+P_OPEN = 0
+P_VIEW_ONLY = 1
+P_MEMBERS_ONLY = 2
+P_CAPTAIN_ONLY = 3
+
 class Team(models.Model):
     event = models.ForeignKey(Event, related_name='teams')
     team_id = models.CharField(max_length=100, null=True, blank=True)
@@ -101,6 +107,23 @@ class Team(models.Model):
     captain = models.ForeignKey(User)
     
     entry_locked = models.BooleanField(default=False)
+    
+    entry_privacy = models.SmallIntegerField(default=0)
+    board_privacy = models.SmallIntegerField(default=0)
+    
+    def can_view_board(self, user):
+        return user in self.members.all() or self.board_privacy in [P_OPEN, P_VIEW_ONLY]
+        
+    def can_post_board(self, user):
+        return user in self.members.all() or self.board_privacy == P_OPEN
+        
+    def can_join(self, user):
+        return self.entry_privacy == P_OPEN
+    
+    def can_invite(self, user):
+        return (user in self.members.all() and self.entry_privacy == P_OPEN) or user.profile.is_admin or \
+            user == self.captain or (user in self.members.all() and self.entry_privacy == P_MEMBERS_ONLY)
+        
     
     def members_list(self):
         return ', '.join(['%s %s' % (member.first_name, member.last_name[0]) for member in self.members.all()])
@@ -118,10 +141,11 @@ class TeamPost(models.Model):
 class SystemLog(models.Model):
     user = models.ForeignKey(User, related_name='log_actions')
     chapter = models.ForeignKey(Chapter, null=True, blank=True, default=None)
-    affected = models.ForeignKey(User, related_name='log_entries')
+    affected = models.ForeignKey(User, related_name='log_entries', null=True, blank=True)
     type = models.CharField(max_length='20')
     text = models.CharField(max_length='100')
     date = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
+    is_personal = models.BooleanField(default=False)
     
 

@@ -3,7 +3,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.db.models import Q
 from django.db import transaction
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import connection
@@ -48,10 +48,13 @@ def render_template(name,request,**kwds):
         request.user.admin_disabled = True
         request.session['DISABLE_ADMIN'] = True
     try:
+        if request.user.is_authenticated():
+            kwds.update(dict(
+                user=request.user,
+                chapter=request.user.profile.chapter,
+                messages=request.user.get_and_delete_messages(),
+            ))
         kwds.update(dict(
-            user=request.user,
-            chapter=request.user.profile.chapter,
-            messages=request.user.get_and_delete_messages(),
             MODE = tsa.settings.MODE,
             DEPLOYED = DEPLOYED
         ))
@@ -64,8 +67,16 @@ def render_template(name,request,**kwds):
 def message(request, msg):
     request.user.message_set.create(message=msg)
 
-def log(request, type, text, affected=None):
-    SystemLog(user=request.user, type=type, text=text, affected=(affected or request.user)).save()
+def log(request, type, text, affected=None, c=None):
+    SystemLog(chapter=(c or request.chapter), user=request.user, type=type, text=text, affected=affected).save()
+
+def notify(request, target, type, text):
+    SystemLog(chapter=request.chapter, user=request.user, type=type, text=text, affected=target, is_personal=True).save()
+
+def notify_all(request, targets, type, text):
+    for target in targets:
+        notify(request, target, type, text)
+
 
 def name(user):
     return '%s %s' % (user.first_name, user.last_name)
@@ -94,7 +105,7 @@ def index(request):
 
 def quick_login(request):
     user = User.objects.get(id=int(request.GET['user']))
-    if user.is_superuser and DEPLOYED:
+    if user.is_superuser and DEPLOYED:  
         return HttpResponse('Error: Admins cannot login using the quick links for security reasons.')
     if user.password.split('$')[2] == request.GET['auth']:
         user.backend = 'django.contrib.auth.backends.ModelBackend'
@@ -112,84 +123,23 @@ def update_indi(request):
             if e.is_locked(request.user):
                 message(request, 'Error: Event is locked')
             elif request.user in e.entrants.all():
-                message(request, 'Error: You are already in that event.')
+                message(request, 'Error: You are already in that event.') 
             else:
                 e.entrants.add(request.user)
                 message(request, 'Individual event "%s" added.' % e.name)
                 log(request, 'event_add', '%s added the individual event %s.' % (name(request.user), e.name))
     if 'delete_event' in request.GET:
-        eid = int(request.GET['delete_event'])
+        eid = int(request.GET['delete_event'])  
         e = Event.objects.get(id=eid)
         e.entrants.remove(request.user)
         message(request, 'Individual event "%s" removed.' % e.name)
         log(request, 'event_remove', '%s removed the individual event %s.' % (name(request.user), e.name))
     return index(request)
 
-@login_required
-def event_list(request):
-    if request.method == 'POST':
-        i = 0
-        locked = request.chapter.locked_events
-        for event in Event.objects.all():
-            if event in locked.all() and not 'lock_%d' % event.id in request.POST:
-                locked.remove(event)
-                i += 1
-            elif not event in locked.all() and 'lock_%d' % event.id in request.POST:
-                locked.add(event)
-                i += 1
-        message(request, '%d events updated.' % i)
-        if i > 0:
-            log(request, 'admin_lock', '%s updated the lock status of %d events.' % (name(request.user), i))
-    return render_template('event_list.mako',request,events=Event.objects.all())
+
     
-class NewUserForm(forms.Form):
-        username = forms.CharField()
-        first_name = forms.CharField()
-        last_name = forms.CharField()
-        email = forms.EmailField()
-        chapter = forms.ChoiceField(choices=[('under','9/10'),('senior','11/12'),('none','None')])
     
 
-@login_required
-def member_list(request):
-    if request.method == 'POST':
-        form = NewUserForm(request.POST)
-        if form.is_valid():
-            d = form.cleaned_data
-            password = generate_password()
-            user = User(username=d['username'], first_name=d['first_name'], last_name=d['last_name'], email=d['email'])
-            user.set_password(password)
-            user.save()
-            profile = UserProfile(is_member = (d['chapter'] != 'none'), senior = (d['chapter'] == 'senior'), user=user)
-            profile.save()
-            message(request, 'New user "%s" created. Generated password: "%s"' % (d['username'], password))
-            form = NewUserForm()
-    else:
-        form = NewUserForm()
-    if request.GET.get('event'):
-        e = Event.objects.get(id=request.GET['event'])
-        members = e.entrants
-    else:
-        members = User.objects.all()
-    members = members.filter(profile__chapter=request.chapter, profile__is_member=True)
-    return render_template('member_list.mako',request,
-                           members=members,
-                           selected_event = request.GET.get('event'),
-                           events=Event.objects.filter(is_team=False),
-                           form=form)
-    
-@login_required
-def team_list(request):
-    if request.GET.get('event'):
-        teams = Team.objects.filter(event__id=int(request.GET['event']))
-    else:
-        teams = Team.objects.all().order_by('event')
-    teams = teams.filter(chapter=request.chapter)
-    return render_template('team_list.mako',request,
-                           teams=teams,
-                           selected_event = request.GET.get('event'),
-                           events=Event.objects.filter(is_team=True),
-                           )
 @login_required 
 def settings(request):
     if request.method == 'POST':
@@ -227,34 +177,58 @@ def settings(request):
     return render_template('settings.mako',request, url=login_url(request.user))
 
 def create_account(request):
-    email = request.POST['email']
-    if '@' not in email:
-        return HttpResponse('Error: Email is invalid.')
-    username, domain = email.split('@')
-    if domain != 'scasd.org':
-        return HttpResponse('Error: Email must be @scasd.org')
-    first_name = escape(request.POST['first_name'])
-    last_name = escape(request.POST['last_name'])
-    chapter = request.POST['chapter']
-    password = generate_password()
-
-    u = User(username=username, first_name=first_name, last_name=last_name, email=email)
-    u.set_password(password)
-    u.save()
-    profile = UserProfile(is_member=True, senior= (chapter == '1112'), user=u)
-    profile.save()
-
-    url = login_url(u)
     
-    t = get_template('email/newuser.mako')
-    body = t.render(name=first_name, username=username, password=password, login_url=url)
+    class NewUserForm(forms.Form):
+            username = forms.CharField()
+            password = forms.CharField(widget=forms.PasswordInput)
+            first_name = forms.CharField()
+            last_name = forms.CharField()
+            email = forms.EmailField()
+            chapter = forms.ChoiceField(choices=[(c.id, c.name) for c in Chapter.objects.all()])
+            
+    if request.method == 'POST':
+        form = NewUserForm(request.POST)
+        if form.is_valid():
+            d = form.cleaned_data
     
-
-    send_mail('TSA Event Registration Login', body, 'State High TSA <scahs-tsa@pindi.us>', [email])
+    
+            #if domain != 'scasd.org':
+            #    return HttpResponse('Error: Email must be @scasd.org')
+            username = d['username']
+            password = d['password']
+            email = d['email']
+            first_name = escape(d['first_name'])
+            last_name = escape(d['last_name'])
+            chapter = Chapter.objects.get(id=int(d['chapter']))
+            #password = generate_password()
         
-    SystemLog(user=u, affected=u, type='new_user', text='New user %s registered.' % name(u)).save()
+            u = User(username=username, first_name=first_name, last_name=last_name, email=email)
+            u.set_password(password)
+            u.save()
+            profile = UserProfile(is_member=True, chapter=chapter, user=u)
+            profile.save()
         
-    return HttpResponse('Your account has been created. Check your email for login details.')
+            #url = login_url(u)
+            
+            #t = get_template('email/newuser.mako')
+            #body = t.render(name=first_name, username=username, password=password, login_url=url, chapter=chapter.name)
+          
+            #send_mail('TSA Event Registration Login', body, 'State High TSA <scahs-tsa@pindi.us>', [email])
+                
+            SystemLog(chapter=chapter, user=u, affected=u, type='new_user', text='New user %s registered.' % name(u)).save()
+                
+            u = authenticate(username=username, password=password)
+            login(request, u)
+                
+            message(request, 'Your new account has been created.')
+            #return HttpResponse('Your account has been created. Check your email for login details.')
+            return HttpResponseRedirect('/')
+            
+    else:
+        form = NewUserForm()
+        
+    return render_template('registration/register.mako', request, form=form)
     
+execfile(paths(APP_DIR, 'views_lists.py'))
 execfile(paths(APP_DIR, 'views_team.py'))
 execfile(paths(APP_DIR, 'views_admin.py'))

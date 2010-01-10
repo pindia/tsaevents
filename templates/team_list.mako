@@ -30,11 +30,7 @@ Filter by Event:
             <td>${team.team_id or '-'}</td>
             <td>${team.members_list()}</td>
             <td>
-            % if team.entry_locked:
-                <i>Private</i>
-            % else:
                 <a href="/teams/${team.id}/">View</a>
-            % endif
             </td>
         </tr>
     % endfor

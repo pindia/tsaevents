@@ -15,18 +15,28 @@ def join_team(request):
 
 @login_required
 def view_team(request, tid):
-    return render_template('view_team.mako',request, team=Team.objects.get(id=tid))
+    try:
+        team = Team.objects.get(id=tid)
+    except Team.DoesNotExist:
+        message(request, 'Error: Team matching query does not exist.')
+        return render_template('index.mako', request)
+    return render_template('view_team.mako',request, team=team)
 
 @login_required
 def update_team(request, tid):
     action = request.REQUEST['action']
-    team = Team.objects.get(id=tid)
+    
+    try:
+        team = Team.objects.get(id=tid)
+    except DoesNotExist:
+        message(request, 'Error: Team matching query does not exist.')
+        return render_template('index.mako', request)
     
     redirect =  HttpResponseRedirect('/teams/%d/' % team.id)       
     
     if action == 'join':
-        if team.entry_locked:
-            return HttpResponse('Error: Team is locked; nobody may join')
+        if not team.can_join(request.user):
+            return HttpResponse('Error: Team is not accepting new members')
         team.members.add(request.user)
         team.save()
         message(request, 'You have joined this team.')
@@ -42,17 +52,17 @@ def update_team(request, tid):
             event = team.event.name
             team.delete()
             message(request, 'The team has been deleted because you were the last member.')
-            log(request, 'team_delete', 'A %s team has been deleted.' % event)
+            log(request, 'team_delete', 'A %s team has dissolved.' % event)
         elif request.user == team.captain:
             team.captain = team.members.all()[0]
             team.save()
             message(request, '%s %s is the new team captain.' % (team.captain.first_name, team.captain.last_name))
-            log(request, 'team_promote', '%s has been promoted to captain of %s.' % (name(team.captain), team.link()), affected=team.captain)
+            log(request, 'team_promote', '%s has been automatically promoted to captain of %s.' % (name(team.captain), team.link()), affected=team.captain)
         return HttpResponseRedirect('/')
         
     if action == 'delete_post':
         post = TeamPost.objects.get(id=int(request.REQUEST['id']))
-        if request.user == post.author or request.user == team.captain or request.user.is_superuser:
+        if request.user == post.author or request.user == team.captain or request.user.profile.is_admin:
             post.delete()
             message(request, 'The post has been deleted.')
             log(request, 'team_post_delete', '%s deleted a post in a %s.' % (name(request.user), team.link()))
@@ -61,6 +71,9 @@ def update_team(request, tid):
         return redirect
             
     if action == 'Post':
+        if not team.can_post_board(request.user):
+            message(request, 'Error: you do not have permission to post to this board.')
+            return redirect
         text = request.REQUEST['message']
         post = TeamPost(team=team, author=request.user, text=text)
         post.save()
@@ -75,7 +88,7 @@ def update_team(request, tid):
         log(request, 'team_post', '%s posted to their %s' % (name(request.user), team.link()))
         return redirect
 
-    if request.user not in team.members.all() and not request.user.is_superuser:
+    if request.user not in team.members.all() and not request.user.profile.is_admin:
         message(request, 'Error: you are not in this team.')
         return redirect
     # All actions beyond this point require team membership
@@ -88,38 +101,37 @@ def update_team(request, tid):
         team.members.add(u)
         team.save()
         message(request, '%s %s has been added to the team.' % (u.first_name, u.last_name))
-        log(request, 'team_join', '%s has been added to a %s.' % (name(u), team.link()), affected=u)
+        log(request, 'team_join', '%s added %s  to a %s.' % (name(request.user), name(u), team.link()), affected=u)
         return redirect
         
-    if request.user != team.captain and not request.user.is_superuser:
+    if request.user != team.captain and not request.user.profile.is_admin:
         message(request, 'Error: you are not the team captain.')
         return redirect
     # All actions beyond this point require team captain
     
-    if action == 'lock_team':
-        team.entry_locked = not team.entry_locked
+    if action == 'Update Settings':
+        team.entry_privacy = int(request.REQUEST['entry_privacy'])
+        team.board_privacy = int(request.REQUEST['board_privacy'])
         team.save()
-        if team.entry_locked:
-            message(request, 'The team is now locked.')
-        else:
-            message(request, 'The team is now unlocked.')
+        message(request, 'Team settings updated.')
+    
     if action == 'remove_member':
         u = User.objects.get(id=int(request.REQUEST['user_id']))
         team.members.remove(u)
         team.save()
         message(request, '%s %s has been removed from the team.' % (u.first_name, u.last_name))
-        log(request, 'team_remove', '%s has been removed from their %s.' % (name(u), team.link()), affected=u)
+        log(request, 'team_remove', '%s removed %s from their %s.' % (name(request.user), name(u), team.link()), affected=u)
     if action == 'promote_member':
         u = User.objects.get(id=int(request.REQUEST['user_id']))
         team.captain = u
         team.save()
         message(request, '%s %s has been promoted to team captain.' % (u.first_name, u.last_name))
-        log(request, 'team_promote', '%s has been promoted to captain of their %s.' % (name(u), team.link()), affected=u)
+        log(request, 'team_promote', '%s promoted %s  to captain of their %s.' % (name(request.user), name(u), team.link()), affected=u)
     if action == 'delete_team':
         event = team.event.name
         team.delete()
         message(request, 'The team has been deleted.')
-        log(request, 'team_delete', 'A %s team has been deleted.' % event)
+        log(request, 'team_delete', '%s deleted a %s team.' % (name(request.user), event))
         return HttpResponseRedirect('/')
 
     return redirect

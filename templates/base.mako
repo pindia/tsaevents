@@ -26,13 +26,14 @@
           % if user.profile.chapter and user.profile.is_admin:
           <li> Chapter&nbsp;Admin
             <ul>
-              <li> <a href='/system_log'>System&nbsp;Log</a></li>
+              <li> <a href='/event_log?type=chapter'>Chapter&nbsp;Log</a></li>
             </ul>
           </li>
           % endif
           % if user.is_superuser:
           <li> System&nbsp;Admin
             <ul>
+              <li> <a href='/event_log?type=system'>System&nbsp;Log</a></li>
               <li> <a href='/config/chapter_list'>Chapter&nbsp;List</a></li>
               <li> <a href='/config/eventsets/'>Event&nbsp;Sets</a></li>
             </ul>
@@ -42,7 +43,7 @@
       </td>
       <td align="left" height="20">
         Logged in as ${user.first_name} ${user.last_name} (${user.username})
-        % if user.is_superuser:
+        % if user.profile.is_admin:
           <b>[<a href="?DISABLE_ADMIN">A</a>]</b>
         % elif hasattr(user,'admin_disabled'):
           <i>[<a href="?ENABLE_ADMIN">E</a>]</i>

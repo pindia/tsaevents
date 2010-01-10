@@ -16,16 +16,12 @@
 	<tr>
       <td>${team.members_list()}</td>
       <td>
-        % if team.entry_locked:
-          <i>Private</i>
-        % else:
-          <a href="/teams/${team.id}/">View</a>
-        % endif
+        <a href="/teams/${team.id}/">View</a>
       </td>
       <td>
       % if team.chapter != user.profile.chapter:
         <i>Wrong chapter</i>
-      % elif team.entry_locked:
+      % elif not team.can_join(user):
         <i>Locked</i>
       % elif team.members.count() >= team.event.team_size:
         <i>Full</i>

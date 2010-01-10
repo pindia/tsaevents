@@ -1,46 +1,46 @@
- N , Event , Region , State , National,Short Name
-6,Agriculture and Biotechnology Design ,4,2,3/s,Ag & Biotech
-3,Animatronics , ,2,1,Animatronics
-6,Architectural Model ,4,Q ,1,Arch Model
-1,Career Comparisons , ,2,1,Career Comp
-6,Chapter Team , ,1,1,Chapter Team
-1,CAD Animation Architectural ,3,3,2/s,CAD Anim Arch
-1,CAD Animation Engineering ,3,3,2/s,CAD Anim Eng
-2,Construction Systems , ,2,1,Const Systems
-5,Cyberspace Pursuit ,3,1,1,Cyberspace Pur
-3,Debating Technological Issues,,1,2/s,Debating Tech
-1,Desktop Publishing ,3,Q ,1/s,Desktop Pub
-1,Dragster Design ,7,Q ,2,Dragster Design
-6,Electronic Game Design,4,2,3/s,Elect Game Design
-6,Electronic Research and Experimentation , ,2,1,Elect Res & Exp
-5,Engineering Design ,3,2,1,Eng Design
-1,Essays on Technology,,1,3/s,Essays on Tech
-1,Extemporaneous Presentation ,5,Q ,3/s,Extemp Pres
-2,Fashion Design,2,2,1,Fashion Design
-6,Film ,3,1,3/s,Film
-1,Future Technology Teacher,,2,3,Future Tech Teacher
-1,Flight Endurance ,5,2,2,Flight End
-1,Imaging Technology ,5,Q ,1,Imaging Tech
-6,Manufacturing Prototype ,5,2,1,Manufact Prototype
-6,Medical Technology ,5,1,3/s,Medical Tech
-6,Music Production,,2,3/s,Music Production
-6,On Demand Video,3,1,,On Demand Video
-1,Prepared Presentation ,5,Q ,3/s,Prepared Pres
-1,Promotional Graphics ,5,1,2,Promo Graphics
-2,Radio Controlled Transportation , ,2,1,RC Transport
-6,SciViz , ,2,3/s,SciViz
-2,Structural Engineering ,4,Q ,1,Struct Engineering
-3,System Control Technology ,2,1,1/s,System Control
-1,Technical Sketching and Application , ,2,2,Tech Sketching
-3,Technology Bowl ,3,2,1,Tech Bowl
-2,Technology Dare,3,Q,1,Tech Dare
-2,Technology Problem Solving ,4,Q ,1,Problem Solving
-1,Transportation Modeling ,5,2,1,Trans Modeling
-1,PA CAD 2D Architecture,3,1,,PA CAD 2D Arch
-1,PA CAD 3D Engineering,3,1,,PA CAD 3D Eng
-2,PA Computer Systems Troubleshooting , ,2, ,PA Comp Sys Troub
-1,PA Material Process ,5,2, ,PA Mat Process
-2,PA RC Vehicle , ,1, ,PA RC Vehicle
-1,PA Safety Illustration Computer Graphics ,5,1, ,PA Safety Illus
-1,PA Stencil Logo Design , ,2,,PA Stencil Logo
-1,Biomedical Research Essay,5,Q,,Biomed Essay
+Min N,Max N, Event , Region , State , National,Short Name
+2,6,Agriculture and Biotechnology Design ,4,2,3/s,Ag & Biotech
+3,3,Animatronics , ,2,1,Animatronics
+1,6,Architectural Model ,4,Q ,1,Arch Model
+1,1,Career Comparisons , ,2,1,Career Comp
+6,6,Chapter Team , ,1,1,Chapter Team
+1,1,CAD Animation Architectural ,3,3,2/s,CAD Anim Arch
+1,1,CAD Animation Engineering ,3,3,2/s,CAD Anim Eng
+2,2,Construction Systems , ,2,1,Const Systems
+3,5,Cyberspace Pursuit ,3,1,1,Cyberspace Pur
+2,2,Debating Technological Issues,,1,2/s,Debating Tech
+1,1,Desktop Publishing ,3,Q ,1/s,Desktop Pub
+1,1,Dragster Design ,7,Q ,2,Dragster Design
+2,6,Electronic Game Design,4,2,3/s,Elect Game Design
+2,6,Electronic Research and Experimentation , ,2,1,Elect Res & Exp
+3,5,Engineering Design ,3,2,1,Eng Design
+1,1,Essays on Technology,,1,3/s,Essays on Tech
+1,1,Extemporaneous Presentation ,5,Q ,3/s,Extemp Pres
+2,4,Fashion Design,2,2,1,Fashion Design
+1,6,Film ,3,1,3/s,Film
+1,1,Future Technology Teacher,,2,3,Future Tech Teacher
+1,1,Flight Endurance ,5,2,2,Flight End
+1,1,Imaging Technology ,5,Q ,1,Imaging Tech
+2,6,Manufacturing Prototype ,5,2,1,Manufact Prototype
+2,6,Medical Technology ,5,1,3/s,Medical Tech
+1,6,Music Production,,2,3/s,Music Production
+2,6,On Demand Video,3,1,,On Demand Video
+1,1,Prepared Presentation ,5,Q ,3/s,Prepared Pres
+1,1,Promotional Graphics ,5,1,2,Promo Graphics
+2,2,Radio Controlled Transportation , ,2,1,RC Transport
+1,6,SciViz , ,2,3/s,SciViz
+2,2,Structural Engineering ,4,Q ,1,Struct Engineering
+3,3,System Control Technology ,2,1,1/s,System Control
+1,1,Technical Sketching and Application , ,2,2,Tech Sketching
+3,3,Technology Bowl ,3,2,1,Tech Bowl
+2,2,Technology Dare,3,Q,1,Tech Dare
+2,2,Technology Problem Solving ,4,Q ,1,Problem Solving
+1,1,Transportation Modeling ,5,2,1,Trans Modeling
+1,1,PA CAD 2D Architecture,3,1,,PA CAD 2D Arch
+1,1,PA CAD 3D Engineering,3,1,,PA CAD 3D Eng
+2,2,PA Computer Systems Troubleshooting , ,2, ,PA Comp Sys Troub
+1,1,PA Material Process ,5,2, ,PA Mat Process
+2,2,PA RC Vehicle , ,1, ,PA RC Vehicle
+1,1,PA Safety Illustration Computer Graphics ,5,1, ,PA Safety Illus
+1,1,PA Stencil Logo Design , ,2,,PA Stencil Logo
+1,1,Biomedical Research Essay,5,Q,,Biomed Essay

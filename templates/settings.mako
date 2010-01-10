@@ -18,7 +18,7 @@
     System Administrator
     % elif not user.profile.is_member:
     Advisor
-    % elif user.profile.chapter_admin:
+    % elif user.profile.is_member:
     Administrator
     % else:
     Member
@@ -36,7 +36,7 @@
 
 <h3>Login Settings</h3>
 
-Login URL: <a href="http://events.tsa.pindi.us${url}">Login</a> <br>
+<!--Login URL: <a href="http://events.tsa.pindi.us${url}">Login</a> <br>-->
 
 <h4>Change Password</h4>
 Changing your password will invalidate all previously generated login links.

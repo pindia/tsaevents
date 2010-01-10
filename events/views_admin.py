@@ -1,6 +1,18 @@
-@chapter_admin_required
+#@chapter_admin_required
+@login_required
 def system_log(request):
-    return render_template('system_log.mako', request, logs=SystemLog.objects.order_by('-date'))
+    t = request.GET.get('type', 'chapter')
+    if request.user.is_superuser and t == 'system':
+        logs = SystemLog.objects.filter(chapter=None)
+    elif request.user.is_superuser and t == 'all':
+        logs = SystemLog.objects.all()
+    elif request.user.profile.is_admin and t == 'chapter':
+        logs = SystemLog.objects.filter(chapter=request.chapter)
+    elif t == 'actions':
+        logs = SystemLog.objects.filter(user=request.user)
+    else:
+        logs = SystemLog.objects.filter(affected=request.user)
+    return render_template('system_log.mako', request, logs=logs.order_by('-date'))
     
 @system_admin_required
 def chapter_list(request):

@@ -26,7 +26,7 @@ urlpatterns = patterns('tsa.events.views',
     (r'^teams/(\d+)/update/$', 'update_team'),
     
     # Chapter Admin
-    (r'^system_log$', 'system_log'),
+    (r'^event_log$', 'system_log'),
     
     # System Admin
     (r'^config/chapter_list$', 'chapter_list'),

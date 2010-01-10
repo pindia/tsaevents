@@ -59,7 +59,7 @@ function confirmDeletePost(target)
 </table>
 
 <h3>Members</h3>
-Maximum team size: ${team.event.team_size}
+Allowed team size: ${team.event.min_team_size} - ${team.event.team_size}
 <table class="tabular_list" align="center">
   <tr>
     <th>Name</th><th>Actions</th>
@@ -75,9 +75,11 @@ Maximum team size: ${team.event.team_size}
     <td>
       % if member == user:
         <a onclick="confirmLeave('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=remove_member&user_id=${member.id}')" href="javascript:void(0)">Leave</a>      
-      % elif team.captain == user:
+      % elif team.captain == user or user.profile.is_admin:
         <a onclick="confirmRemove('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=remove_member&user_id=${member.id}')" href="javascript:void(0)">Remove</a>
-        <a onclick="confirmPromote('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=promote_member&user_id=${member.id}')" href="javascript:void(0)">Promote</a>
+        % if team.captain != member:
+            <a onclick="confirmPromote('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=promote_member&user_id=${member.id}')" href="javascript:void(0)">Promote</a>
+        % endif
       % else:
         &nbsp;
       % endif
@@ -88,7 +90,9 @@ Maximum team size: ${team.event.team_size}
 
 <form action="/teams/${team.id}/update">
 
-% if user in team.members.all():
+% if team.members.count() >= team.event.team_size:
+    <p>Team is full.</p>
+% elif team.can_invite(user):
   <p>Add member:
     <select name="user_id">
       % for u in user.__class__.objects.filter(profile__chapter=team.chapter,profile__is_member=True):
@@ -97,26 +101,32 @@ Maximum team size: ${team.event.team_size}
     </select>
     <input type="submit" name="action" value="Add Member">
   </p>
+% elif user in team.members.all():
+    <p>You do not have permission to invite new members.</p>
 % elif not user.profile.is_member:
   <p>You cannot join teams.</p>
-% elif team.entry_locked:
+% elif not team.can_join(user):
   <p>This team is not accepting new members.</p>
 % else:
   <p><a href="/teams/${team.id}/update?action=join">Join this team</a></p>
 % endif
 
-% if not team.entry_locked or user in team.members.all():
+% if team.can_view_board(user):
 
 <h3>Message Board</h3>
 
 <table border=1 width="80%" cellpadding=5 align="center">
-  <tr>
-    <!--<td width="20%">Post:</td>-->
-    <td colspan=2>
-      <textarea name="message" rows=2 style="width: 90%"></textarea>
-      <input type="submit" name="action" value="Post">
-    </td>
-  </tr>
+    % if team.can_post_board(user):
+        <tr>
+          <!--<td width="20%">Post:</td>-->
+          <td colspan=2>
+            <textarea name="message" rows=2 style="width: 90%"></textarea>
+            <input type="submit" name="action" value="Post">
+          </td>
+        </tr>
+    % else:
+        You do not have permission to post to this board.
+    % endif
 % for msg in team.posts.order_by('-date'):
   <tr>
     <td width="20%">
@@ -157,12 +167,33 @@ Maximum team size: ${team.event.team_size}
 
 % if team.captain == user or user.is_superuser:
   <h3>Administration</h3>
-  % if team.entry_locked:
-    <p>Team is locked: Nobody may join. <a href="/teams/${team.id}/update/?action=lock_team">Unlock</a>
-  % else:
-    <p>Team is unlocked: Anybody may join. <a href="/teams/${team.id}/update/?action=lock_team">Lock</a>
-  % endif.
-  <br>
-  <input id="delete_button" onclick="confirmDelete(${team.id})" type="button" value="Delete Team">
+
+  <table align="center">
+  
+    <tr><td>
+    Entry Privacy:
+    </td></tr>
+    <tr><td>
+        <ul style="list-style-type:none;">
+          <li><input type="radio" name="entry_privacy" value="0" ${'checked' if team.entry_privacy == 0 else ''}>Anyone in the chapter may join the team</li>
+          <li><input type="radio" name="entry_privacy" value="2" ${'checked' if team.entry_privacy == 2 else ''}>Team members only may invite new members</li>
+          <li><input type="radio" name="entry_privacy" value="3" ${'checked' if team.entry_privacy == 3 else ''}>Team captain only may invite new members</li>
+        </ul>
+    </td></tr>
+    <tr><td>
+    Board Privacy:
+    </td></tr>
+    <tr><td>
+        <ul style="list-style-type:none;">
+          <li><input type="radio" name="board_privacy" value="0" ${'checked' if team.board_privacy == 0 else ''}>Anyone in the chapter may view and post to the team message board</li>
+          <li><input type="radio" name="board_privacy" value="1" ${'checked' if team.board_privacy == 1 else ''}>Anyone in the chapter may view but only team members may post to the board</li>
+          <li><input type="radio" name="board_privacy" value="2" ${'checked' if team.board_privacy == 2 else ''}>Only team members may view or post to the board</li>
+        </ul>
+    </td></tr>
+  </table>
+  
+    <input type="submit" name="action" value="Update Settings">
+ 
+  <p><input id="delete_button" onclick="confirmDelete(${team.id})" type="button" value="Delete Team"></p>
   </form>
 % endif

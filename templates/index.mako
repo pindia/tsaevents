@@ -12,7 +12,6 @@ function confirmRemove(name, target)
   var ok = confirm('Are you sure you want to remove "' + name +'" from your events?');
   if(ok)
     location.href=target;
-
 }
 
 </script>
