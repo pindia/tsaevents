@@ -39,7 +39,6 @@
 <!--Login URL: <a href="http://events.tsa.pindi.us${url}">Login</a> <br>-->
 
 <h4>Change Password</h4>
-Changing your password will invalidate all previously generated login links.
 <table align="center">
 <tr><td>Old:</td><td><input type="password" name="old_password"></td></tr>
 <tr><td>New:</td><td><input type="password" name="new_password"></td></tr>

@@ -165,7 +165,7 @@ Allowed team size: ${team.event.min_team_size} - ${team.event.team_size}
 % endif
 
 
-% if team.captain == user or user.is_superuser:
+% if team.captain == user or user.profile.is_admin:
   <h3>Administration</h3>
 
   <table align="center">

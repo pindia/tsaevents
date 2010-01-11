@@ -30,7 +30,7 @@ class UserProfile(models.Model):
     indi_id = models.CharField(max_length=100, blank=True)
     
     notify_email = models.IntegerField(choices=EMAIL_CHOICES, default=0)
-    posts_email = models.IntegerField(choices=EMAIL_CHOICES, default=0)
+    posts_email = models.IntegerField(choices=EMAIL_CHOICES, default=2)
     
     def name(self):
         return '%s %s' % (self.user.first_name, self.user.last_name[0])

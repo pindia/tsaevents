@@ -68,6 +68,9 @@ function confirmRemove(ename, uname, target)
             <td><input type="checkbox" name="edit_${member.id}"></td>
           % endif
           <td>${member.first_name} ${member.last_name}</td>
+          % if not member.profile.is_member:
+          <td colspan="5">Advisor</td>
+          % else:
           <td>
             % if member.profile.is_admin:
                 Admin
@@ -85,7 +88,7 @@ function confirmRemove(ename, uname, target)
                   ${event.short_name}
                   % if user.profile.is_admin:
                     <a href="javascript:void(0)" onclick="confirmRemove('${event.name}', '${member.first_name} ${member.last_name}', '/member_list?action=remove_event&uid=${member.id}&eid=${event.id}');">
-                        <img src="/static/tsa/icons/delete.png" title="[X]">
+                        <img src="/static/tsa/icons/delete.png" border="0">
                     </a>
                   % endif
                   |
@@ -96,6 +99,7 @@ function confirmRemove(ename, uname, target)
                   <a href="/teams/${team.id}">${team.event.short_name}</a>|
               % endfor
           </td>
+          % endif
       </tr>
   % endfor
   </table>

@@ -77,6 +77,7 @@ def member_list(request):
     else:
         members = User.objects.all()
     members = members.filter(profile__chapter=request.chapter, is_superuser=False)
+    members = members.order_by('-profile__is_member', '-profile__is_admin', 'last_name')
     return render_template('member_list.mako',request,
                            members=members,
                            selected_event = request.GET.get('event'),
