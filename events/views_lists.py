@@ -86,6 +86,21 @@ def member_list(request):
     
 @login_required
 def team_list(request):
+    if request.method == 'POST':
+        i = 0
+        for key, value in request.POST.items():
+            if not key.endswith('_id'):
+                continue
+            id, trash = key.split('_')
+            t = Team.objects.get(id=int(id))
+            if (t.team_id or value) and t.team_id != value:
+                t.team_id = value
+                t.save()
+                i += 1
+        if i != 0:
+            message(request, '%d team IDs updated.' % i)
+            log(request, 'edit_team_ids', '%s updated %d team IDs.' % (name(request.user), i))
+            
     if request.GET.get('event'):
         teams = Team.objects.filter(event__id=int(request.GET['event']))
     else:

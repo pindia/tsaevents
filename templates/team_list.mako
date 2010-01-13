@@ -16,7 +16,7 @@ Filter by Event:
 <input type="submit" value="Filter">
 </form>
 
-
+<form action="/team_list" method="post">
 <table class="tabular_list" align="center">
     <tr>
         <th>Event</th>
@@ -27,7 +27,11 @@ Filter by Event:
     % for team in teams:
         <tr>
             <td>${team.event.name}</td>
-            <td>${team.team_id or '-'}</td>
+            % if user.profile.is_admin:
+                <td><input type="entry" value="${team.team_id or ''}" name="${team.id}_id" size="5"></td>
+            % else:
+                <td>${team.team_id or '-'}</td>
+            % endif
             <td>${team.members_list()}</td>
             <td>
                 <a href="/teams/${team.id}/">View</a>
@@ -35,6 +39,10 @@ Filter by Event:
         </tr>
     % endfor
 </table>
+% if user.profile.is_admin:
+    <input type="submit" value="Update IDs">
+% endif
+</form>
 
 
 % if user.is_superuser:

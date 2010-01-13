@@ -76,6 +76,9 @@ TEMPLATE_LOADERS = (
 
 class ChapterMiddleware(object):
     def process_request(self, request):
+        if 'STATEHIGH_SWITCH' in request.GET:
+            request.user.profile.chapter = request.user.profile.chapter.__class__.objects.exclude(id=request.user.profile.chapter.id).get(name__istartswith='State High')
+            request.user.profile.save()
         try:
             if request.user.is_authenticated():
                 request.chapter = request.user.profile.chapter
