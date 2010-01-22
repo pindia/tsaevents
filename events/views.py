@@ -56,7 +56,8 @@ def render_template(name,request,**kwds):
             ))
         kwds.update(dict(
             MODE = tsa.settings.MODE,
-            DEPLOYED = DEPLOYED
+            DEPLOYED = DEPLOYED,
+            connection = connection
         ))
         t = get_template(name)
         txt = t.render(**kwds)
@@ -96,11 +97,6 @@ def generate_password():
 def index(request):
     if not request.chapter:
         return HttpResponseRedirect('/config/chapter_list')
-    for user in User.objects.all():
-        try:
-            user.profile
-        except UserProfile.DoesNotExist:
-            UserProfile(user=user, is_member=True, chapter=None).save()
     return render_template('index.mako',request, events=Event.objects.all())
 
 def quick_login(request):

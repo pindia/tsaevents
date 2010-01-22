@@ -1,4 +1,71 @@
-#@chapter_admin_required
+
+@chapter_admin_required
+def member_fields(request, category):
+    category = category or 'Main'
+    members = User.objects.filter(profile__chapter=request.chapter, is_superuser=False)
+    fields = request.chapter.get_fields()
+    categories = set(fields.values_list('category', flat=True))
+    fields = fields.filter(category=category)
+    if request.method == 'POST':
+        i = 0
+        for member in members:
+            for field in fields:
+                key = '%d_%d' % (member.id, field.id)
+                fv = member.profile.get_field(field)
+                if field.type == 0:
+                    if fv and key not in request.POST:
+                        member.profile.set_field(field, False)
+                        i += 1
+                    if not fv and key in request.POST:
+                        member.profile.set_field(field, True)
+                        i += 1
+                else:
+                    if fv != request.POST[key]:
+                        member.profile.set_field(field, request.POST[key])
+                        i += 1
+        message(request, '%d fields updated.' % i)
+                        
+                    
+    return render_template('chapadmin/member_fields.mako', request, members=members, fields=fields, categories=categories, category=category)
+
+
+@chapter_admin_required
+def edit_chapter(request):
+    c = request.chapter
+    if request.method == 'POST':
+        
+        for field in c.get_fields():
+            name = request.POST['%d_name' % field.id]
+            category = request.POST['%d_category' % field.id]
+            weight = int(request.POST['%d_weight' % field.id])
+            if name == 'DELETE':
+                field.delete()
+                continue
+            if field.name != name or field.category != category or field.weight != weight:
+                field.name = name
+                field.category = category
+                field.weight = weight
+                field.save()
+        
+        name = request.POST['name']
+        if name: # Create new field
+            is_boolean = request.POST['type'].lower() == 'boolean'
+            default = request.POST['default']
+            f = Field()
+            f.short_name = f.name = name
+            f.type = 0 if is_boolean else 1
+            f.chapter = c
+            f.default_value = default
+            f.save()
+            
+
+            
+        
+    return render_template('chapadmin/edit_chapter.mako', request, chapter=c)
+
+
+
+
 @login_required
 def system_log(request):
     t = request.GET.get('type', 'chapter')

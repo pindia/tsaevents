@@ -15,8 +15,41 @@ class Chapter(models.Model):
     event_set = models.ForeignKey('EventSet')
     locked_events = models.ManyToManyField('Event', blank=True)
     register_open = models.BooleanField(default=True)
+    
+    short_name = models.CharField(max_length=50, blank=True)
+    chapter_id = models.CharField(max_length=20, blank=True)
+    all_locked = models.BooleanField()
+    message = models.TextField(blank=True)
+    mode = models.IntegerField(choices=((0,'region'), (1,'state'), (2,'nation')), default=0)
+    
+    # Link to another chapter. The "child" chapter has a link to the parent and not vice versa
+    #link = models.ForeignKey('Chapter', db_column='extra_int1', null=True, blank=True) 
+    
+    extra_char1 = models.CharField(max_length=100, default='', blank=True)
+    extra_char2 = models.CharField(max_length=100, default='', blank=True)
+    extra_char3 = models.CharField(max_length=100, default='', blank=True)
+    extra_bool1 = models.BooleanField(default=False, blank=True)
+    extra_bool2 = models.BooleanField(default=False, blank=True)
+    extra_bool3 = models.BooleanField(default=False, blank=True)
+    extra_int1 = models.IntegerField(default=0)
+    extra_int2 = models.IntegerField(default=0)
+    extra_text1 = models.TextField(blank=True)
+    @property
+    def link(self):
+        if self.name == 'State High 9/10':
+            return Chapter.objects.get(name='State High 11/12')
+        else:
+            return None
     def get_events(self):
         return self.event_set.events.all()
+    def get_fields(self, category=None):
+        if self.link:
+            f = self.link.fields.all()
+        else:
+            f = self.fields.all()
+        if category:
+            f = f.filter(category=category)
+        return f.order_by('category','weight')
     def __str__(self):
         return self.name
 
@@ -35,7 +68,59 @@ class UserProfile(models.Model):
     def name(self):
         return '%s %s' % (self.user.first_name, self.user.last_name[0])
     name.short_description = 'Name'
+    
+    def get_field(self, field):
+        try:
+            fv = FieldValue.objects.get(user=self.user, field=field)
+        except FieldValue.DoesNotExist:
+            fv = FieldValue(user=self.user, field=field, raw_value=field.default_value)
+            fv.save()
+        return fv.get_value(field.type)
+        
+    def set_field(self, field, val):
+        fv = FieldValue.objects.get(user=self.user, field=field)
+        fv.set_value(field.type, val)
+        
 
+TYPE_CHOICES = zip(range(2),['Boolean', 'Text'])
+VIEW_CHOICES = zip(range(3),['Admin only', 'User or Admin', 'Everyone'])
+EDIT_CHOICES = zip(range(2),['Admin only', 'User or Admin'])
+
+class Field(models.Model):
+    name = models.CharField(max_length=50)
+    short_name = models.CharField(max_length=20)
+    chapter = models.ForeignKey(Chapter, related_name='fields')
+    type = models.IntegerField(default=0, choices=TYPE_CHOICES)
+    view_perm = models.IntegerField(default=0, choices=VIEW_CHOICES)
+    edit_perm = models.IntegerField(default=0, choices=EDIT_CHOICES)
+    default_value = models.CharField(max_length=50, default='')
+    category = models.CharField(max_length=20, default='Main')
+    weight = models.IntegerField(default=0)
+    size = models.IntegerField(default=12)
+    
+    def format_value(self, val):
+        if self.type == 0:
+            return 'True' if val == '1' or val == True else 'False'
+        elif not val:
+            return '-'
+        else:
+            return val
+    
+class FieldValue(models.Model):
+    field = models.ForeignKey(Field)
+    user = models.ForeignKey(User)
+    raw_value = models.CharField(max_length=50, default='')
+    def get_value(self, ftype):
+        if ftype == 0:
+            return self.raw_value == '1'
+        else:
+            return self.raw_value
+    def set_value(self, ftype, val):
+        if ftype == 0:
+            self.raw_value = '1' if val else '0'
+        else:
+            self.raw_value = val
+        self.save()
 
 class EventSet(models.Model):
     #name = models.CharField(max_length=100)
@@ -100,7 +185,7 @@ P_CAPTAIN_ONLY = 3
 class Team(models.Model):
     event = models.ForeignKey(Event, related_name='teams')
     team_id = models.CharField(max_length=100, null=True, blank=True)
-    chapter = models.ForeignKey(Chapter)
+    chapter = models.ForeignKey(Chapter, related_name='teams')
     info = models.TextField(null=True, blank=True)
     
     members = models.ManyToManyField(User, related_name='teams')

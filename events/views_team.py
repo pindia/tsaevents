@@ -11,7 +11,7 @@ def join_team(request):
         message(request, 'New team created.')
         log(request, 'team_create', '%s created a new <a href="/teams/%d">%s team</a>.' % (name(request.user), t.id, e.name))
         return HttpResponseRedirect('/teams/%d' % t.id)
-    return render_template('join_team.mako',request, teams=Team.objects.filter(event=e), event=e)
+    return render_template('join_team.mako',request, teams=Team.objects.filter(chapter=request.chapter, event=e), event=e)
 
 @login_required
 def view_team(request, tid):

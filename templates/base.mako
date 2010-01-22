@@ -27,6 +27,8 @@
           <li> Chapter&nbsp;Admin
             <ul>
               <li> <a href='/event_log?type=chapter'>Chapter&nbsp;Log</a></li>
+              <li> <a href='/edit_chapter?type=chapter'>Edit&nbsp;Chapter</a></li>
+              <li> <a href='/member_fields'>Member&nbsp;Fields</a></li>
             </ul>
           </li>
           % endif
@@ -74,7 +76,14 @@
       </td>
     </tr>
   <table>
-
+  % if not DEPLOYED:
+    <div align="center">${len(connection.queries)} SQL queries executed</div>
+    <!--<ol>
+    % for query in connection.queries:
+      <li>${query['sql']}</li>
+    % endfor
+    </ol>-->
+  % endif
   </body>
 
 </html>
