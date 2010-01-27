@@ -2,7 +2,7 @@
 @chapter_admin_required
 def member_fields(request, category):
     category = category or 'Main'
-    members = User.objects.filter(profile__chapter=request.chapter, is_superuser=False)
+    members = User.objects.filter(profile__chapter=request.chapter, is_superuser=False).order_by('last_name')
     fields = request.chapter.get_fields()
     categories = set(fields.values_list('category', flat=True))
     fields = fields.filter(category=category)
