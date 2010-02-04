@@ -23,7 +23,13 @@ def member_list(request):
             message(request, 'Error: you are not an administrator!')
             return HttpResponseRedirect('/member_list')
         action = request.POST['action']
-        for key in request.POST:
+        for key, val in request.POST.items():
+            if key.startswith('id_'):
+                trash, id = key.split('_')
+                u = User.objects.get(id=int(id))
+                if u.profile.indi_id != val:
+                    u.profile.indi_id = val
+                    u.profile.save()
             if key.startswith('edit_'):
                 trash, id = key.split('_')
                 u = User.objects.get(id=int(id))

@@ -81,10 +81,19 @@ class UserProfile(models.Model):
         fv = FieldValue.objects.get(user=self.user, field=field)
         fv.set_value(field.type, val)
         
+    def get_id(self):
+        id = self.indi_id
+        if not id:
+            return ''
+        if '-' in id:
+            return id.split('-')[-1]
+        else:
+            return id
+        
 
 TYPE_CHOICES = zip(range(2),['Boolean', 'Text'])
 VIEW_CHOICES = zip(range(3),['Admin only', 'User or Admin', 'Everyone'])
-EDIT_CHOICES = zip(range(2),['Admin only', 'User or Admin'])
+EDIT_CHOICES = zip(range(2),['Admin only', 'User or Admin', 'Admin (logged)', 'Editing locked'])
 
 class Field(models.Model):
     name = models.CharField(max_length=50)
@@ -100,7 +109,7 @@ class Field(models.Model):
     
     def format_value(self, val):
         if self.type == 0:
-            return 'True' if val == '1' or val == True else 'False'
+            return 'Yes' if val == '1' or val == True else 'No'
         elif not val:
             return '-'
         else:
@@ -216,6 +225,15 @@ class Team(models.Model):
     
     def link(self):
         return '<a href="/teams/%d">%s team</a>' % (self.id, self.event.name)
+        
+    def get_id(self):
+        val = self.team_id
+        if not val:
+            return ''
+        if '-' in val:
+            return val.split('-')[-1]
+        else:
+            return val
     
 class TeamPost(models.Model):
     team = models.ForeignKey(Team, related_name='posts')

@@ -2,7 +2,7 @@
 @chapter_admin_required
 def member_fields(request, category):
     category = category or 'Main'
-    members = User.objects.filter(profile__chapter=request.chapter, is_superuser=False).order_by('last_name')
+    members = User.objects.filter(profile__chapter=request.chapter, is_superuser=False, profile__is_member=True).order_by('last_name')
     fields = request.chapter.get_fields()
     categories = set(fields.values_list('category', flat=True))
     fields = fields.filter(category=category)
@@ -36,15 +36,21 @@ def edit_chapter(request):
         
         for field in c.get_fields():
             name = request.POST['%d_name' % field.id]
+            short_name = request.POST['%d_short_name' % field.id]
             category = request.POST['%d_category' % field.id]
             weight = int(request.POST['%d_weight' % field.id])
+            view_perm = int(request.POST['%d_view_perm' % field.id])
+            edit_perm = int(request.POST['%d_edit_perm' % field.id])
             if name == 'DELETE':
                 field.delete()
                 continue
-            if field.name != name or field.category != category or field.weight != weight:
+            if field.name != name or field.category != category or field.weight != weight or field.short_name != short_name or field.view_perm != view_perm or field.edit_perm != edit_perm:
                 field.name = name
+                field.short_name = short_name
                 field.category = category
                 field.weight = weight
+                field.edit_perm = edit_perm
+                field.view_perm = view_perm
                 field.save()
         
         name = request.POST['name']

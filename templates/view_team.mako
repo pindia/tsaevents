@@ -54,12 +54,18 @@ function confirmDeletePost(target)
 
 
 <table align="center">
-  <tr><td class="right">Team ID:</td><td>${team.team_id or 'Unknown'}</td></tr>
+  <tr><td class="right">Team ID:</td><td>
+  % if team.team_id:
+    ${chapter.chapter_id}-${team.get_id()}
+  % else:
+    Unknown
+  % endif
+  </td></tr>
   <tr><td class="right">Team Chapter:</td><td>${team.chapter.name}</td></tr>
 </table>
 
 <h3>Members</h3>
-Allowed team size: ${team.event.min_team_size} - ${team.event.team_size}
+Maximum team size: ${team.event.team_size}
 <table class="tabular_list" align="center">
   <tr>
     <th>Name</th><th>Actions</th>
@@ -140,7 +146,7 @@ Allowed team size: ${team.event.min_team_size} - ${team.event.team_size}
     % elif msg.author in team.members.all():
       Team Member
     % else:
-      Former Member
+      Nonmember
     % endif
     </span><br>
       

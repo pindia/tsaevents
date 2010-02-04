@@ -55,8 +55,7 @@ function confirmRemove(ename, uname, target)
         <th>&nbsp;</th>
       % endif
       <th>Name</th>
-      <th>Type</th>
-      <!--<th>TSA ID</th>-->
+      <th>TSA ID</th>
       <th># E</th>
       <th># T</th>
       <th>Individual</th>
@@ -67,20 +66,24 @@ function confirmRemove(ename, uname, target)
           % if user.profile.is_admin:
             <td><input type="checkbox" name="edit_${member.id}"></td>
           % endif
-          <td>${member.first_name} ${member.last_name}</td>
+          <td>
+          % if member.profile.is_admin:
+            <i>${member.first_name} ${member.last_name}</i>
+          % else:
+            ${member.first_name} ${member.last_name}
+          % endif  
+            
+        </td>
           % if not member.profile.is_member:
           <td colspan="5">Advisor</td>
           % else:
-          <td>
-            % if member.profile.is_admin:
-                Admin
-            % elif member.profile.is_member:
-                Member
+          <td style="white-space: nowrap;">
+            % if user.profile.is_admin:
+                ${chapter.chapter_id}-<input type="entry" name="id_${member.id}" value="${member.profile.get_id()}" size="1">
             % else:
-                Advisor
+                ${'%s-%s' % (chapter.chapter_id, member.profile.get_id()) if member.profile.indi_id else '-'}
             % endif
           </td>
-          <!--<td>${member.profile.indi_id or '-'}</td>-->
           <td>${member.events.count()}</td>
           <td>${member.teams.count()}</td>
           <td>|
@@ -105,6 +108,9 @@ function confirmRemove(ename, uname, target)
   </table>
 
 % if user.profile.is_admin:
+    <p>
+        <input type="submit" value="Update IDs">
+    </p>
     <p>
         Add event to selected users:
         <!--<select name="uid">

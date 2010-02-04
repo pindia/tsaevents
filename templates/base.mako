@@ -55,7 +55,7 @@
         % if not user.profile.is_member:
           (N)
         % endif
-        % if user.profile.chapter.name.startswith('State High') and user.is_superuser:
+        % if user.profile.chapter and user.profile.chapter.name.startswith('State High') and user.is_superuser:
           [<a href="?STATEHIGH_SWITCH">Switch</a>]
         % endif
         |

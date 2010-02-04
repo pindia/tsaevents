@@ -17,7 +17,9 @@ function confirmRemove(name, target)
 </script>
 
 <p>
-Welcome to the event registration system! The system has undergone a major update, forcing me to migrate the data to a new format. If you notice any of your data missing or encounter problems using the system, please let me know as soon as possible. 
+% if user.profile.indi_id:
+  Your individual ID is: ${chapter.chapter_id}-${user.profile.get_id()}
+% endif
 </p>
 
 

@@ -27,6 +27,27 @@
 <tr><td>Chapter:</td><td>${chapter}</td></tr>
 </table>
 
+% if user.profile.is_member and fields.count() != 0:
+
+<h3>Fields</h3>
+
+<table align="center">
+% for field in fields:
+    <tr>
+        <td>${field.name}:</td>
+        <td>
+        % if field.type == 0:
+            ${'Yes' if user.profile.get_field(field) else 'No'}
+        % else:
+            ${user.profile.get_field(field)}
+        % endif
+        </td>
+    </tr>
+% endfor
+</table>
+
+% endif
+
 <h3>Email Settings</h3>
 
 <p>

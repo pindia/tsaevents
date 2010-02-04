@@ -28,9 +28,9 @@ Filter by Event:
         <tr>
             <td>${team.event.name}</td>
             % if user.profile.is_admin:
-                <td><input type="entry" value="${team.team_id or ''}" name="${team.id}_id" size="5"></td>
+                <td>${chapter.chapter_id}-<input type="entry" value="${team.get_id()}" name="${team.id}_id" size="1"></td>
             % else:
-                <td>${team.team_id or '-'}</td>
+                <td>${'%s-%s' % (chapter.chapter_id, team.get_id()) if team.team_id else '-'}</td>
             % endif
             <td>${team.members_list()}</td>
             <td>

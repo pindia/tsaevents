@@ -138,6 +138,7 @@ def update_indi(request):
 
 @login_required 
 def settings(request):
+    fields = Field.objects.filter(chapter=request.chapter, view_perm=1)
     if request.method == 'POST':
         if request.POST['action'] == 'Regenerate Password':
             password = generate_password()
@@ -170,7 +171,7 @@ def settings(request):
                 log(request, 'password_change', '%s changed their password.' % (name(request.user)))
             u.save()
             message(request, 'Your settings have been updated.')
-    return render_template('settings.mako',request, url=login_url(request.user))
+    return render_template('settings.mako',request, url=login_url(request.user), fields=fields)
 
 def create_account(request):
     

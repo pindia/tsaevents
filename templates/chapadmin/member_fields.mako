@@ -29,7 +29,7 @@ from tsa.events.views import login_url
     <tr>
       <th>Name</th>
       % for field in fields:
-        <th>${field.name}</th>
+        <th>${field.short_name}</th>
       % endfor
 
     </tr>
