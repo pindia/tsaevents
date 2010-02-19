@@ -1,4 +1,27 @@
 
+#footer {
+	background-color:#CECECE;
+	border-bottom:1px solid #666666;
+	font-size:smaller;
+	margin-top:10px;
+	padding:1px;
+	text-align:center;
+}
+
+#header {
+	background-color:#CECECE;
+	border-top:1px solid #666666;
+	font-size:smaller;
+	margin-top:10px;
+	padding:5px;
+	text-align:center;
+}
+
+.datatable {
+	background-color:#EEEEEE;
+	border:1px solid #999999;
+}
+
 ul{
 	margin-left: 0px;
 	padding-left: 20px;
