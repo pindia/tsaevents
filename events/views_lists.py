@@ -17,7 +17,9 @@ def event_list(request):
     return render_template('event_list.mako',request,events=request.chapter.get_events())
 
 @login_required
-def member_list(request):
+def member_list(request, eid=None):
+    if 'event' in request.REQUEST:
+        return HttpResponseRedirect('/member_list/%s/' % request.REQUEST['event'])
     if request.method == 'POST':
         if not request.user.profile.is_admin:
             message(request, 'Error: you are not an administrator!')
@@ -77,8 +79,8 @@ def member_list(request):
             u.events.remove(e)
             message(request, '%s has been removed from %s\'s events.' % (e.name, name(u)))
             log(request, 'event_remove', '%s removed %s from %s\'s events.' % (name(request.user), e.name, name(u)), affected=u)           
-    if request.GET.get('event'):
-        e = Event.objects.get(id=request.GET['event'])
+    if eid is not None:
+        e = Event.objects.get(id=eid)
         members = e.entrants
     else:
         members = User.objects.all()
@@ -86,12 +88,14 @@ def member_list(request):
     members = members.order_by('-profile__is_member', '-profile__is_admin', 'last_name')
     return render_template('member_list.mako',request,
                            members=members,
-                           selected_event = request.GET.get('event'),
+                           selected_event = eid,
                            events=request.chapter.get_events().filter(is_team=False),
                            )
     
 @login_required
-def team_list(request):
+def team_list(request, eid=None):
+    if 'event' in request.REQUEST:
+        return HttpResponseRedirect('/team_list/%s/' % request.REQUEST['event'])
     if request.method == 'POST':
         i = 0
         for key, value in request.POST.items():
@@ -107,13 +111,13 @@ def team_list(request):
             message(request, '%d team IDs updated.' % i)
             log(request, 'edit_team_ids', '%s updated %d team IDs.' % (name(request.user), i))
             
-    if request.GET.get('event'):
-        teams = Team.objects.filter(event__id=int(request.GET['event']))
+    if eid is not None:
+        teams = Team.objects.filter(event__id=eid)
     else:
         teams = Team.objects.all().order_by('event')
     teams = teams.filter(chapter=request.chapter)
     return render_template('team_list.mako',request,
                            teams=teams,
-                           selected_event = request.GET.get('event'),
+                           selected_event = eid,
                            events=request.chapter.get_events().filter(is_team=True),
                            )

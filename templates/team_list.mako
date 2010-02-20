@@ -38,13 +38,11 @@ Filter by Event:
             </td>
         </tr>
     % endfor
+    % if not teams:
+        <tr><td colspan="99">No teams matching filters found. <a href="/team_list/">View all</a></td></tr>
+    % endif
 </table>
-% if user.profile.is_admin:
+% if user.profile.is_admin and teams:
     <input type="submit" value="Update IDs">
 % endif
 </form>
-
-
-% if user.is_superuser:
-<a href="/admin/events/team">Edit Teams</a>
-% endif

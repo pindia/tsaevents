@@ -60,10 +60,10 @@
 <!--Login URL: <a href="http://events.tsa.pindi.us${url}">Login</a> <br>-->
 
 <h4>Change Password</h4>
-<table align="center">
-<tr><td>Old:</td><td><input type="password" name="old_password"></td></tr>
-<tr><td>New:</td><td><input type="password" name="new_password"></td></tr>
-<tr><td>Confirm:</td><td><input type="password" name="confirm_password"></td></tr>
+<table align="center" class="datatable">
+    <tr><td>Old:</td><td><input type="password" name="old_password"></td></tr>
+    <tr><td>New:</td><td><input type="password" name="new_password"></td></tr>
+    <tr><td>Confirm:</td><td><input type="password" name="confirm_password"></td></tr>
 </table>
 <input type="submit" name="action" value="Save">
 <!--

@@ -59,7 +59,7 @@
         % if not n:
           -
         % else:
-          <a href="/${'team_list' if event.is_team else 'member_list'}?event=${event.id}">${n}</a>
+          <a href="/${'team_list' if event.is_team else 'member_list'}/${event.id}/">${n}</a>
         % endif
       </td>
       <!--<td>${event.render_region()}</td>
@@ -87,10 +87,5 @@
   
   <h2>Team Events</h2>
   ${render_table(events.filter(is_team=True))}
-  
-  % if user.is_superuser:
-    <input type="submit" value="Save">
-      <p><a href="/admin/events/event">Edit Events</a></p>
-  % endif
   
 </form>

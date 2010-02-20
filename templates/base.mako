@@ -1,7 +1,6 @@
 <%inherit file="layout.mako" />
 
-<%def name="scripts()"></%def>
-<%def name="actions()"></%def>
+
 <%def name="header()">
   <div id="infobar" class="span-24 last">
     Logged in as ${user.first_name} ${user.last_name} (${user.username})
@@ -32,8 +31,8 @@
     % if user.profile.chapter:
       <li> <a href='/'>Your&nbsp;Events</a></li>
       <li> <a href='/event_list'>Event&nbsp;List</a></li>
-      <li> <a href='/member_list'>Member&nbsp;List</a></li>
-      <li> <a href='/team_list'>Team&nbsp;List</a></li>
+      <li> <a href='/member_list/'>Member&nbsp;List</a></li>
+      <li> <a href='/team_list/'>Team&nbsp;List</a></li>
     % endif
     % if user.profile.chapter and user.profile.is_admin:
     <li> Chapter&nbsp;Admin
@@ -57,6 +56,7 @@
 </div>
 
 <div id="body" class="span-20 last" align="center">
+  <h3>TSA Events - ${self.title()}</h3>
   % if messages:
     % for message in messages:
       <div align="center" class="${'error' if message.startswith('Error:') else 'info'}">${message}</div>
@@ -66,6 +66,7 @@
 </div>
 
 <%def name="footer()">
+${parent.footer()}
 % if not DEPLOYED:
   <div align="center">${len(connection.queries)} SQL queries executed</div>
   <!--<ol>
@@ -75,3 +76,4 @@
   </ol>-->
 % endif
 </%def>
+

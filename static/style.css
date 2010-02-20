@@ -17,6 +17,15 @@
 	text-align:center;
 }
 
+#team-board > table {
+	border: 1px solid gray;
+	border-spacing: 2px;
+}
+#team-board > table td{
+	border: 1px solid gray;	
+}
+
+
 
 .datatable {
 	background-color:#EEEEEE;

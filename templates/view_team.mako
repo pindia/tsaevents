@@ -1,7 +1,5 @@
 <%inherit file='base.mako' />
 
-
-<%def name='title()'>Team</%def>
 <%
 import datetime
 def frmt_datetime(dtime):
@@ -49,7 +47,9 @@ function confirmDeletePost(target)
 </script>
 
 
-<h2>${team.event.name} Team</h2>
+<%def name='title()'>${team.event.name} Team</%def>
+
+<!--<h2>${team.event.name} Team</h2>-->
 
 
 
@@ -64,113 +64,118 @@ function confirmDeletePost(target)
   <tr><td class="right">Team Chapter:</td><td>${team.chapter.name}</td></tr>
 </table>
 
-<h3>Members</h3>
-Maximum team size: ${team.event.team_size}
-<table class="tabular_list" align="center">
-  <tr>
-    <th>Name</th><th>Actions</th>
-  </tr>
-  % for member in team.members.all():
-  <tr>
-    <td>
-    % if member == team.captain:
-      <b>[C]</b>
-    % endif
-      ${member.first_name} ${member.last_name}
-    </td>
-    <td>
-      % if member == user:
-        <a onclick="confirmLeave('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=remove_member&user_id=${member.id}')" href="javascript:void(0)">Leave</a>      
-      % elif team.captain == user or user.profile.is_admin:
-        <a onclick="confirmRemove('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=remove_member&user_id=${member.id}')" href="javascript:void(0)">Remove</a>
-        % if team.captain != member:
-            <a onclick="confirmPromote('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=promote_member&user_id=${member.id}')" href="javascript:void(0)">Promote</a>
+<div id="team-members">
+    <h3>Members</h3>
+    Maximum team size: ${team.event.team_size}
+    <table class="tabular_list" align="center">
+      <tr>
+        <th>Name</th><th>Actions</th>
+      </tr>
+      % for member in team.members.all():
+      <tr>
+        <td>
+        % if member == team.captain:
+          <b>[C]</b>
         % endif
-      % else:
-        &nbsp;
-      % endif
-    </td>
-  </tr>
-  % endfor
-</table>
-
-<form action="/teams/${team.id}/update">
-
-% if team.members.count() >= team.event.team_size:
-    <p>Team is full.</p>
-% elif team.can_invite(user):
-  <p>Add member:
-    <select name="user_id">
-      % for u in user.__class__.objects.filter(profile__chapter=team.chapter,profile__is_member=True):
-        <option value="${u.id}">${u.first_name} ${u.last_name}</option>
+          ${member.first_name} ${member.last_name}
+        </td>
+        <td>
+          % if member == user:
+            <a onclick="confirmLeave('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=remove_member&user_id=${member.id}')" href="javascript:void(0)">Leave</a>      
+          % elif team.captain == user or user.profile.is_admin:
+            <a onclick="confirmRemove('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=remove_member&user_id=${member.id}')" href="javascript:void(0)">Remove</a>
+            % if team.captain != member:
+                <a onclick="confirmPromote('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=promote_member&user_id=${member.id}')" href="javascript:void(0)">Promote</a>
+            % endif
+          % else:
+            &nbsp;
+          % endif
+        </td>
+      </tr>
       % endfor
-    </select>
-    <input type="submit" name="action" value="Add Member">
-  </p>
-% elif user in team.members.all():
-    <p>You do not have permission to invite new members.</p>
-% elif not user.profile.is_member:
-  <p>You cannot join teams.</p>
-% elif not team.can_join(user):
-  <p>This team is not accepting new members.</p>
-% else:
-  <p><a href="/teams/${team.id}/update?action=join">Join this team</a></p>
-% endif
-
-% if team.can_view_board(user):
-
-<h3>Message Board</h3>
-
-<table border=1 width="80%" cellpadding=5 align="center">
-    % if team.can_post_board(user):
-        <tr>
-          <td colspan=2>
-            <textarea name="message" rows="2" style="width: 90%; height:auto;"></textarea>
-            <input type="submit" name="action" value="Post">
-          </td>
-        </tr>
-    % else:
-        You do not have permission to post to this board.
-    % endif
-% for msg in team.posts.order_by('-date'):
-  <tr>
-    <td width="20%">
-    <span class="name">${msg.author.first_name} ${msg.author.last_name}</span><br>
+    </table>
     
-    <span style="font-size:0.7em; font-style:italic;">
-    % if msg.author.is_superuser:
-      Site Admin
-    % elif team.captain == msg.author:
-      Team Captain
-    % elif msg.author in team.members.all():
-      Team Member
+    <form action="/teams/${team.id}/update">
+    
+    % if team.members.count() >= team.event.team_size:
+        <p>Team is full.</p>
+    % elif team.can_invite(user):
+      <p>Add member:
+        <select name="user_id">
+          % for u in user.__class__.objects.filter(profile__chapter=team.chapter,profile__is_member=True):
+            <option value="${u.id}">${u.first_name} ${u.last_name}</option>
+          % endfor
+        </select>
+        <input type="submit" name="action" value="Add Member">
+      </p>
+    % elif user in team.members.all():
+        <p>You do not have permission to invite new members.</p>
+    % elif not user.profile.is_member:
+      <p>You cannot join teams.</p>
+    % elif not team.can_join(user):
+      <p>This team is not accepting new members.</p>
     % else:
-      Nonmember
+      <p><a href="/teams/${team.id}/update?action=join">Join this team</a></p>
     % endif
-    </span><br>
-      
-    ${frmt_datetime(msg.date)}<br>
-    % if msg.author == user or user == team.captain or user.is_superuser:
-    <span style="font-size:0.75em;">
-      <a href="javascript:confirmDeletePost('/teams/${team.id}/update?action=delete_post&id=${msg.id}');">Delete</a>
-    </span>
+</div>
+
+<div id="team-board">
+    % if team.can_view_board(user):
+    
+    <h3>Message Board</h3>
+    
+    <table border=1 width="80%" cellpadding=5 align="center" id="team-board-table" class="datatable">
+        % if team.can_post_board(user):
+            <tr>
+              <td colspan="2">
+                <textarea name="message" rows="2" style="width: 90%; height:auto; margin:0;"></textarea>
+                <input type="submit" name="action" value="Post">
+              </td>
+            </tr>
+        % else:
+            You do not have permission to post to this board.
+        % endif
+    % for msg in team.posts.order_by('-date'):
+      <tr>
+        <td width="20%">
+        <span class="name">${msg.author.first_name} ${msg.author.last_name}</span><br>
+        
+        <span style="font-size:0.7em; font-style:italic;">
+        % if msg.author.is_superuser:
+          Site Admin
+        % elif team.captain == msg.author:
+          Team Captain
+        % elif msg.author in team.members.all():
+          Team Member
+        % else:
+          Nonmember
+        % endif
+        </span><br>
+          
+        ${frmt_datetime(msg.date)}<br>
+        % if msg.author == user or user == team.captain or user.is_superuser:
+        <span style="font-size:0.75em;">
+          <a href="javascript:confirmDeletePost('/teams/${team.id}/update?action=delete_post&id=${msg.id}');">Delete</a>
+        </span>
+        % endif
+        </td>
+        <td style="text-align: left;">${msg.text | h}</td>
+      </tr>
+    % endfor
+    % if not team.posts.count():
+      <tr><td colspan=2><div align="center">No posts.</div></td></tr>
     % endif
-    </td>
-    <td style="text-align: left;">${msg.text | h}</td>
-  </tr>
-% endfor
-% if not team.posts.count():
-  <tr><td colspan=2><div align="center">No posts.</div></td></tr>
-% endif
-</table>
-
-% else:
-    You do not have permission to view this team's message board.
-
-% endif
+    </table>
+    
+    % else:
+        You do not have permission to view this team's message board.
+    
+    % endif
+</div>
 
 
 % if team.captain == user or user.profile.is_admin:
+<div id="team-admin">
   <h3>Administration</h3>
 
   <table align="center">
@@ -201,4 +206,5 @@ Maximum team size: ${team.event.team_size}
  
   <p><input id="delete_button" onclick="confirmDelete(${team.id})" type="button" value="Delete Team"></p>
   </form>
+</div>
 % endif

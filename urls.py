@@ -17,8 +17,10 @@ urlpatterns = patterns('tsa.events.views',
     
     # List Views
     (r'^event_list$', 'event_list'),
-    (r'^member_list$', 'member_list'),
-    (r'^team_list$', 'team_list'),
+    (r'^member_list/$', 'member_list'),
+    (r'^member_list/(\d+)/$', 'member_list'),
+    (r'^team_list/$', 'team_list'),
+    (r'^team_list/(\d+)/$', 'team_list'),
     
     # Team Views
     (r'^join_team$', 'join_team'),
