@@ -124,9 +124,8 @@ Maximum team size: ${team.event.team_size}
 <table border=1 width="80%" cellpadding=5 align="center">
     % if team.can_post_board(user):
         <tr>
-          <!--<td width="20%">Post:</td>-->
           <td colspan=2>
-            <textarea name="message" rows=2 style="width: 90%"></textarea>
+            <textarea name="message" rows="2" style="width: 90%; height:auto;"></textarea>
             <input type="submit" name="action" value="Post">
           </td>
         </tr>

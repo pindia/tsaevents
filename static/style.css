@@ -11,11 +11,12 @@
 #header {
 	background-color:#CECECE;
 	border-top:1px solid #666666;
-	font-size:smaller;
+	font-size:small;
 	margin-top:10px;
 	padding:5px;
 	text-align:center;
 }
+
 
 .datatable {
 	background-color:#EEEEEE;
@@ -42,9 +43,6 @@ table.aligner td:first-child{
 }
 
 
-.layout td {
-	background-color: #FFFFFF;
-}
 .blueback td {
 	background-color:#E8E8FF;
 }
@@ -55,7 +53,7 @@ table.aligner td:first-child{
 	background-color:#FFDDDD;
 }
 .yellowback td{
-background-color: #FFFFD2;
+	background-color: #FFFFD2;
 }
 td.errorback, .errorback td{
 	background-color:#FF9999;
@@ -67,8 +65,8 @@ td.errorback, .errorback td{
 
 
 body {
-background-color: #CCCCFF;
-font-family: Georgia, "Times New Roman", Times, serif;
+/*font-family: Georgia, "Times New Roman", Times, serif;*/
+font-size: 10pt;
 }
 
 .green {

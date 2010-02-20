@@ -83,7 +83,7 @@ def update_team(request, tid):
             if member.profile.posts_email == 2:
                 t = get_template('email/posts_email.mako')
                 body = t.render(name=member.first_name, poster=request.user.first_name, team=team, text=text, login_url=login_url(member))
-                send_mail('%s Post' % team.event.name, body, 'State High TSA <scahs-tsa@pindi.us>', [member.email])
+                send_mail('%s Post' % team.event.name, body, 'State High TSA <scahs-tsa@pindi.us>', [member.email], fail_silently = not DEPLOYED)
         message(request, 'Message posted.')
         log(request, 'team_post', '%s posted to their %s' % (name(request.user), team.link()))
         return redirect
