@@ -3,9 +3,10 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.db.models import Q
 from django.db import transaction
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.forms import AuthenticationForm
 from django.db import connection
 from django import forms
 from django.core.mail import send_mail
@@ -98,6 +99,29 @@ def index(request):
     if not request.chapter:
         return HttpResponseRedirect('/config/chapter_list')
     return render_template('index.mako',request, events=Event.objects.all())
+
+def login_view(request):
+    class LoginForm(forms.Form):
+            username = forms.CharField()
+            password = forms.CharField(widget=forms.PasswordInput)
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            d = form.cleaned_data
+            user = authenticate(username=d['username'], password=d['password'])
+            if user is not None and user.is_active:
+                login(request, user)
+                return HttpResponseRedirect('/')
+        # Reinitialize the form to be empty; don't want to retransmit password in HTML source
+        return render_template('registration/login.mako', request, form=LoginForm(), error=True) 
+    else:
+        form = LoginForm()
+        return render_template('registration/login.mako', request, form=form)
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect('/accounts/login')
+
 
 def quick_login(request):
     user = User.objects.get(id=int(request.GET['user']))

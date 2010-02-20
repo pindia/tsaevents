@@ -37,8 +37,9 @@ urlpatterns = patterns('tsa.events.views',
 )
 
 urlpatterns += patterns('',
-    (r'^accounts/login/$',  login),
-    (r'^accounts/logout/$', logout, {'template_name':'registration/login.html'}),
+    #(r'^accounts/login/$',  login),
+    (r'^accounts/login/$', 'tsa.events.views.login_view'),
+    (r'^accounts/logout/$', 'tsa.events.views.logout_view'),
     (r'^accounts/create/$', 'tsa.events.views.create_account'),
 )
 
