@@ -1,13 +1,13 @@
 <%def name="footer()">Copyright &copy; <a href="http://www.pindi.us">Pindi Albert</a></%def>
 <%def name="header()">Welcome to TSAEvents.com</%def>
-<%def name="title()">TSA Events</%def>
+<%def name="title()"></%def>
 <%def name="bigtitle()"></%def>
 <%def name="scripts()"></%def>
 
 
 <html>
 <head>
-    <title>${next.title()}</title>
+    <title>TSA Events - ${self.title()}</title>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
     ${self.scripts()}
     <link rel="stylesheet" href="/static/tsa/blueprint/screen.css" type="text/css" media="screen, projection">
@@ -24,11 +24,6 @@
         ${self.header()}    
     </div>
 
-    <div class="span-24 last" align="center">
-      <h2>${self.bigtitle()}</h2>
-    </div>
-
-   
     ${next.body()}
 
     <div class="span-24 last" id="footer">

@@ -25,38 +25,40 @@
   </div>
 </%def>
 
-<div id="navigation" class="span-4">
-  <p class="name">Navigation</p>
-  <ul class="text">
-    % if user.profile.chapter:
-      <li> <a href='/'>Your&nbsp;Events</a></li>
-      <li> <a href='/event_list'>Event&nbsp;List</a></li>
-      <li> <a href='/member_list/'>Member&nbsp;List</a></li>
-      <li> <a href='/team_list/'>Team&nbsp;List</a></li>
-    % endif
-    % if user.profile.chapter and user.profile.is_admin:
-    <li> Chapter&nbsp;Admin
-      <ul>
-        <li> <a href='/event_log?type=chapter'>Chapter&nbsp;Log</a></li>
-        <li> <a href='/edit_chapter?type=chapter'>Edit&nbsp;Chapter</a></li>
-        <li> <a href='/member_fields'>Member&nbsp;Fields</a></li>
-      </ul>
-    </li>
-    % endif
-    % if user.is_superuser:
-    <li> System&nbsp;Admin
-      <ul>
-        <li> <a href='/event_log?type=system'>System&nbsp;Log</a></li>
-        <li> <a href='/config/chapter_list'>Chapter&nbsp;List</a></li>
-        <li> <a href='/config/eventsets/'>Event&nbsp;Sets</a></li>
-      </ul>
-    </li>
-    % endif
-  </ul>
+<div id="navigation-container" class="span-4">
+  <div id="navigation" class="datatable">
+    <h2>Navigation</h2>
+    <ul class="text">
+      % if user.profile.chapter:
+        <li> <a href='/'>Your&nbsp;Events</a></li>
+        <li> <a href='/event_list'>Event&nbsp;List</a></li>
+        <li> <a href='/member_list/'>Member&nbsp;List</a></li>
+        <li> <a href='/team_list/'>Team&nbsp;List</a></li>
+      % endif
+      % if user.profile.chapter and user.profile.is_admin:
+      <li> Chapter&nbsp;Admin
+        <ul>
+          <li> <a href='/event_log?type=chapter'>Chapter&nbsp;Log</a></li>
+          <li> <a href='/edit_chapter?type=chapter'>Edit&nbsp;Chapter</a></li>
+          <li> <a href='/member_fields'>Member&nbsp;Fields</a></li>
+        </ul>
+      </li>
+      % endif
+      % if user.is_superuser:
+      <li> System&nbsp;Admin
+        <ul>
+          <li> <a href='/event_log?type=system'>System&nbsp;Log</a></li>
+          <li> <a href='/config/chapter_list'>Chapter&nbsp;List</a></li>
+          <li> <a href='/config/eventsets/'>Event&nbsp;Sets</a></li>
+        </ul>
+      </li>
+      % endif
+    </ul>
+  </div>
 </div>
 
 <div id="body" class="span-20 last" align="center">
-  <h3>TSA Events - ${self.title()}</h3>
+  <h1>TSA Events - ${self.title()}</h1>
   % if messages:
     % for message in messages:
       <div align="center" class="${'error' if message.startswith('Error:') else 'info'}">${message}</div>

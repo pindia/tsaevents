@@ -9,6 +9,9 @@ admin.autodiscover()
 
 urlpatterns = patterns('tsa.events.views',
 
+    (r'^help/$', 'help_viewer'),
+    (r'^help/(\w+)$', 'help_viewer'),
+
     # Account/Event Management Views
     (r'^$', 'index'),
     (r'^quick_login$', 'quick_login'),

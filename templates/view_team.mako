@@ -49,9 +49,6 @@ function confirmDeletePost(target)
 
 <%def name='title()'>${team.event.name} Team</%def>
 
-<!--<h2>${team.event.name} Team</h2>-->
-
-
 
 <table align="center">
   <tr><td class="right">Team ID:</td><td>
@@ -65,7 +62,7 @@ function confirmDeletePost(target)
 </table>
 
 <div id="team-members">
-    <h3>Members</h3>
+    <h2>Members</h2>
     Maximum team size: ${team.event.team_size}
     <table class="tabular_list" align="center">
       <tr>
@@ -122,9 +119,9 @@ function confirmDeletePost(target)
 <div id="team-board">
     % if team.can_view_board(user):
     
-    <h3>Message Board</h3>
+    <h2>Message Board</h2>
     
-    <table border=1 width="80%" cellpadding=5 align="center" id="team-board-table" class="datatable">
+    <table border=1 width="100%" cellpadding=5 align="center" id="team-board-table" class="datatable">
         % if team.can_post_board(user):
             <tr>
               <td colspan="2">
@@ -176,7 +173,7 @@ function confirmDeletePost(target)
 
 % if team.captain == user or user.profile.is_admin:
 <div id="team-admin">
-  <h3>Administration</h3>
+  <h2>Administration</h2>
 
   <table align="center">
   

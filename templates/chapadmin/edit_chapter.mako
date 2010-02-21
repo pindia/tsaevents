@@ -1,6 +1,6 @@
 <%inherit file='../base.mako' />
 
-<%def name='title()'>Home</%def>
+<%def name='title()'>Edit Chapter</%def>
 <%
 def sel(cond):
     return 'selected="yes"' if cond else ''

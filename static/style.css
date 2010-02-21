@@ -1,56 +1,74 @@
+/* +------------------------+
+   | Element wide styles    |
+   +------------------------+ */
 
-#footer {
-	background-color:#CECECE;
-	border-bottom:1px solid #666666;
-	font-size:smaller;
-	margin-top:10px;
-	padding:1px;
-	text-align:center;
+h1 {
+	font-size: x-large;
+	margin-bottom: 0.5em;
+	margin-top: 0.25em;
+}
+h2 {
+	font-size: large;
+	margin-bottom: 0.5em;
 }
 
-#header {
-	background-color:#CECECE;
-	border-top:1px solid #666666;
-	font-size:small;
-	margin-top:10px;
-	padding:5px;
-	text-align:center;
-}
-
-#team-board > table {
-	border: 1px solid gray;
-	border-spacing: 2px;
-}
-#team-board > table td{
-	border: 1px solid gray;	
-}
-
-
-
-.datatable {
-	background-color:#EEEEEE;
-	border:1px solid #999999;
-}
 
 ul{
 	margin-left: 0px;
 	padding-left: 20px;
 }
 
-a:visited{
-	color:blue;
+body {
+/*font-family: Georgia, "Times New Roman", Times, serif;*/
+font-size: 10pt;
 }
 
-table.aligner td{
+img {
+	border:none;
+}
 
+/* +------------------------+
+   |Custom classes          |
+   +------------------------+ */
+
+tr.odd td{
+	background-color: #E0E0E0;
+}
+tr.even td{
+	background-color: #F0F0F0;
+}
+
+
+.datatable, .layouttable {
+	background-color:#EEEEEE;
+	border:1px solid #999999;
+}
+
+.datatable th{
+	background-color:#D0D0D0;
+	font-weight:bold;
+}
+
+input[type="checkbox"], input[type="radio"], input.checkbox, input.radio {
+	position: static;
+}
+
+
+table.aligner td{
 	text-align: left;
+	padding: 2px;
 }
 
 table.aligner td:first-child{
-
 	text-align: right;
 }
 
+.green {
+	color:#008800;
+}
+.red {
+	color:#CC0000;
+}
 
 .blueback td {
 	background-color:#E8E8FF;
@@ -72,18 +90,79 @@ td.errorback, .errorback td{
 	font-weight: bold;
 }
 
-
-body {
-/*font-family: Georgia, "Times New Roman", Times, serif;*/
-font-size: 10pt;
+/* Error message style */
+.error{
+	margin: 10px;
+	padding: 0px;
+	text-align: center;
+	/*background: #FFCE7B;*/
+	background: #FFCCCC;
+	border: 1px solid red;
 }
 
-.green {
-	color:#008800;
+/* Error message style */
+.info {
+	margin: 10px;
+	padding: 0px;
+	text-align: center;
+	background: #E0FEE1;
+	border: 1px solid #CCCCCC;
 }
-.red {
-	color:#CC0000;
+
+/* +------------------------+
+   |Specific element styles |
+   +------------------------+ */
+
+#footer {
+	background-color:#CECECE;
+	border-bottom:1px solid #666666;
+	font-size:smaller;
+	margin-top:10px;
+	padding:1px;
+	text-align:center;
 }
+
+#header {
+	background-color:#CECECE;
+	border-top:1px solid #666666;
+	font-size:small;
+	margin-top:10px;
+	padding:5px;
+	text-align:center;
+}
+
+#navigation{
+	margin-top: 10px;
+	padding:5px;
+}
+
+#team-board > table {
+	border: 1px solid gray;
+	border-spacing: 2px;
+}
+#team-board > table td{
+	border: 1px solid gray;	
+}
+
+
+
+
+
+
+
+a:visited{
+	color:blue;
+}
+
+
+
+
+
+
+
+
+
+
 
 .bold {
 	font-weight: bold;
@@ -93,36 +172,15 @@ td.right{
 text-align: right;
 }
 
-.center > td{
+.center  td{
 text-align: center;
 }
 
-.header {
-font-family: Georgia, "Times New Roman", Times, serif;
-font-size: x-large;
-font-weight: bold;
-color: #993300;
+
+table.tabular_list {
+	padding: 10px;
 }
-.name {
-font-family: Georgia, "Times New Roman", Times, serif;
-font-size: large;
-}
-.bigname {
-font-family: Georgia, "Times New Roman", Times, serif;
-font-size: x-large;
-}
-.dbheader {
-font-family: Georgia, "Times New Roman", Times, serif;
-font-size: x-large;
-font-weight: bold;
-color: #0000FF;
-}
-.text {  
-font-family: Georgia, "Times New Roman", Times, serif;
-}
-img {
-	border:none;
-}
+
 .tabular_list th {
 	border:1px solid;
 	border-color:#ddd #999 #888 #ddd;
@@ -130,9 +188,6 @@ img {
 	font-weight:bold;
 	text-align:center;
 	color:#003;
-	padding:2px;
-	padding-bottom:0px;
-	font-size:.9em;
 }
 
 
@@ -141,26 +196,9 @@ img {
 	border:1px solid;
 	text-align:center;
 	border-color:#fff #bbb #bbb #fff;
-	padding:1px;
-	font-size:.9em;
 }
 
-/* Error message style */
-.error{
-	margin: 20px;
-	text-align: center;
-	/*background: #FFCE7B;*/
-	background: #FFCCCC;
-	border: 1px solid red;
-}
 
-/* Error message style */
-.info {
-	margin: 20px;
-	text-align: center;
-	background: #E0FEE1;
-	border: 1px solid #CCCCCC;
-}
 
 
 

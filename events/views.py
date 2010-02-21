@@ -25,6 +25,7 @@ from itertools import *
 from models import *
 from tsa.config import *
 import tsa.settings
+from rest import reSTify
 
 # Define decorators
 
@@ -58,7 +59,8 @@ def render_template(name,request,**kwds):
         kwds.update(dict(
             MODE = tsa.settings.MODE,
             DEPLOYED = DEPLOYED,
-            connection = connection
+            connection = connection,
+            cycle = cycle(['odd','even'])
         ))
         t = get_template(name)
         txt = t.render(**kwds)
@@ -99,6 +101,15 @@ def index(request):
     if not request.chapter:
         return HttpResponseRedirect('/config/chapter_list')
     return render_template('index.mako',request, events=Event.objects.all())
+
+
+def help_viewer(request, page='index'):
+    try:
+        f = open(paths(DOCS_DIR, '%s.rst' % page))
+    except IOError:
+        return render_template('helpviewer.mako', request, body='Error: page "%s" not found' % page)
+    html = reSTify(f.read())
+    return render_template('helpviewer.mako',request,body=html)
 
 def login_view(request):
     class LoginForm(forms.Form):

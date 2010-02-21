@@ -16,7 +16,7 @@
     % endfor
 </table>
 
-<h4>New Event Set</h4>
+<h2>New Event Set</h2>
 <form method="POST">
 Copy from:
 <select name="copy_id">

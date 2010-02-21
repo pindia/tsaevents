@@ -54,7 +54,7 @@ ICONS = {
         <th>Text</th>
     </tr>
     % for log in logs:
-    <tr>
+    <tr class="${cycle.next()}">
         <td>
         % if log.type in ICONS:
             <img src="/static/tsa/icons/${ICONS[log.type]}">

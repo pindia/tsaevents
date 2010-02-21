@@ -29,7 +29,21 @@
     </script>
 </%def>
 
-<br>
+
+
+<%def name="render_indi_event(event, member)" buffered="True">
+    ${event.short_name.replace(' ','&nbsp;')}
+    % if user.profile.is_admin:
+      <a href="javascript:void(0)" onclick="confirmRemove('${event.name}', '${member.first_name} ${member.last_name}', '?action=remove_event&uid=${member.id}&eid=${event.id}');"><img src="/static/tsa/icons/delete.png" border="0"></a>
+    % endif
+</%def>
+
+<%def name="render_team_event(team)" buffered="True">
+    <a href="/teams/${team.id}">${team.event.short_name.replace(' ','&nbsp;')}</a>
+</%def>
+
+
+
 
 % if user.profile.is_admin:
     <form action="/member_list" method="get">
@@ -46,20 +60,20 @@
 
 <form action="" method="post">
 
-<table class="tabular_list" align="center">
+<table class="datatable" align="center">
     <tr>
       % if user.profile.is_admin:
         <th>&nbsp;</th>
       % endif
-      <th>Name</th>
+      <th width="120">Name</th>
       <th>TSA ID</th>
-      <th># E</th>
-      <th># T</th>
+      <th>#E</th>
+      <th>#T</th>
       <th>Individual</th>
       <th>Team</th>
     </tr>
   % for member in members:
-      <tr>
+      <tr class="${cycle.next()}">
           % if user.profile.is_admin:
             <td><input type="checkbox" name="edit_${member.id}"></td>
           % endif
@@ -83,19 +97,11 @@
           </td>
           <td>${member.events.count()}</td>
           <td>${member.teams.count()}</td>
-          <td>|
-              % for event in member.events.all():
-                  ${event.short_name}
-                  % if user.profile.is_admin:
-                    <a href="javascript:void(0)" onclick="confirmRemove('${event.name}', '${member.first_name} ${member.last_name}', '?action=remove_event&uid=${member.id}&eid=${event.id}');"><img src="/static/tsa/icons/delete.png" border="0"></a>
-                  % endif
-                  |
-              % endfor
+          <td>
+                ${'&bull'.join([render_indi_event(event, member) for event in member.events.all()]) or '&nbsp;'}
           </td>
-          <td>|
-              % for team in member.teams.all():
-                  <a href="/teams/${team.id}">${team.event.short_name}</a>|
-              % endfor
+          <td>
+                ${'&bull'.join([render_team_event(team) for team in member.teams.all()]) or '&nbsp;'}
           </td>
           % endif
       </tr>

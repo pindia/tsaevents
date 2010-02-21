@@ -31,8 +31,7 @@ function confirmRemove(name, target)
       <th>&nbsp;</th><th>Event</th><th>Del</th>
     </tr>
     % for event in user.events.all():
-    <tr>
-      <!--<td><input type="checkbox" name="remove_${event.id}"></td>-->
+    <tr class="${cycle.next()}">
       <td><img src="/static/tsa/icons/user.png" title="Individual"></td>
       <td>${event.name}</td>
       <td><a onclick="confirmRemove('${event.name}','/update_indi?delete_event=${event.id}')" href="javascript:void(0)"><img src="/static/tsa/icons/delete.png" title="Remove Event"></a></td>
@@ -60,7 +59,7 @@ function confirmRemove(name, target)
       <th>View</th>
     </tr>
     % for team in user.teams.all():
-    <tr>
+    <tr class="${cycle.next()}">
       <td><img src="/static/tsa/icons/group.png" title="Team"></td>
       <td>${team.event.name}</td>
       <td>${team.members_list()}</td>

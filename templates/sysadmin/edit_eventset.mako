@@ -1,6 +1,6 @@
 <%inherit file='../base.mako' />
 
-<%def name='title()'>Edit Event Set</%def>
+<%def name='title()'>Editing ${es}</%def>
 <%def name='scripts()'>
 <script language="javascript">
 
@@ -11,8 +11,6 @@ $(document).ready(function() {
 </script>
 </%def>
 
-
-<h3>Editing ${es}</h3>
 
 <p>Note: Editing a national qualification number will update all event sets in the level. Editing a state qualification number will update all event sets in the state.<br>
 Click a column heading to enable editing.</p>

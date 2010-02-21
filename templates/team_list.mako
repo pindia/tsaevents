@@ -2,9 +2,6 @@
 
 <%def name="title()">Team List</%def>
 
-
-<br>
-
 <form action="/team_list" method="get">
 Filter by Event:
 <select name="event">
@@ -17,7 +14,7 @@ Filter by Event:
 </form>
 
 <form action="/team_list" method="post">
-<table class="tabular_list" align="center">
+<table class="datatable">
     <tr>
         <th>Event</th>
         <th>TSA ID</th>
@@ -25,7 +22,7 @@ Filter by Event:
         <th>View</th>
     </tr>
     % for team in teams:
-        <tr>
+        <tr class="${cycle.next()}">
             <td>${team.event.name}</td>
             % if user.profile.is_admin:
                 <td>${chapter.chapter_id}-<input type="entry" value="${team.get_id()}" name="${team.id}_id" size="1"></td>

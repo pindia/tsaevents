@@ -1,17 +1,21 @@
 <%inherit file="../layout.mako" />
 
-<%def name="title()">TSA Events - Login</%def>
+<%def name="title()">Login</%def>
+<%def name="bigtitle()">${self.title()}</%def>
+
 
 
 <div class="span-24 last" align="center">
+  <h1>TSA Events - Login</h1>
   <p>Log in below with your username and password, or simply use the link in your email.</p>
 </div>
 
 <div class="span-24 last" align="center">
   
+  
   <form action='/accounts/login/' method='post'>
   
-  <table class="datatable">
+  <table class="layouttable">
 
     
 

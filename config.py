@@ -18,6 +18,8 @@ STATIC_DIR = paths( _CURR_DIR, 'static' )
 
 APP_DIR = paths( _CURR_DIR, 'events')
 
+DOCS_DIR = paths( _CURR_DIR, 'docs')
+
 TEMPLATE_DIR = paths( _CURR_DIR, 'templates' )
 
 DATABASE_FILE = paths( _CURR_DIR, 'db-tsa.db' )
