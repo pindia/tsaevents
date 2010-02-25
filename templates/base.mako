@@ -20,7 +20,10 @@
     |
     Events: ${user.events.all().count()} Teams: ${user.teams.all().count()}
     |
+    <a href="/help">Help</a>
+    &bull;
     <a href="/settings">Settings</a>
+    &bull;
     <a href="/accounts/logout">Logout</a>
   </div>
 </%def>

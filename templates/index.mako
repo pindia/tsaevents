@@ -80,5 +80,5 @@ function confirmRemove(name, target)
 </form>
 
 % else:
-You cannot sign up for events.
+You cannot sign up for events because you are a chapter advisor. 
 % endif

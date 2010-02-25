@@ -1,9 +1,6 @@
 <%inherit file='base.mako' />
 
-<%def name='title()'>Home </%def> <% %>
-
-
-<h2>${event.name} Teams</h2>
+<%def name='title()'>${event.name} Teams</%def> <% %>
 
 % if user.teams.filter(event=event).count() != 0:
   <i>You are already in a team for this event.</i>

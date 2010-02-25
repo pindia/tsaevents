@@ -27,9 +27,23 @@ img {
 	border:none;
 }
 
+
 /* +------------------------+
    |Custom classes          |
    +------------------------+ */
+
+#help-viewer{
+	margin-top: 10px;
+}
+
+#help-viewer img{
+	border: thin outset gray;
+}
+
+h1.title{
+	margin-top: 10px;
+	text-align: center;
+}
 
 tr.odd td{
 	background-color: #E0E0E0;
