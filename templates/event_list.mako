@@ -6,7 +6,7 @@
 <table class="tabular_list">
   <tr>
     <th>S</th>
-    % if user.is_superuser:
+    % if user.profile.is_admin:
       <th>Lck</th>
     % endif
     <th>Name</th>
@@ -51,7 +51,7 @@
           &nbsp;
         % endif
       </td>
-      % if user.is_superuser:
+      % if user.profile.is_admin:
       <td>
           <input type="checkbox" name="lock_${event.id}" ${'checked="true"' if event.is_locked(user) else ''}>
       </td>
