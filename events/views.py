@@ -160,7 +160,7 @@ def update_indi(request):
                 message(request, 'Individual event "%s" added.' % e.name)
                 log(request, 'event_add', '%s added the individual event %s.' % (name(request.user), e.name))
     if 'delete_event' in request.GET:
-        eid = int(request.GET['delete_event'])  
+        eid = int(request.GET['delete_event'])
         e = Event.objects.get(id=eid)
         e.entrants.remove(request.user)
         message(request, 'Individual event "%s" removed.' % e.name)
@@ -175,37 +175,26 @@ def update_indi(request):
 def settings(request):
     fields = Field.objects.filter(chapter=request.chapter, view_perm=1)
     if request.method == 'POST':
-        if request.POST['action'] == 'Regenerate Password':
-            password = generate_password()
-            u = request.user
-            u.set_password(password)
-            u.save()
-            url = login_url(u)
-            body = get_template('email/reset_password.mako').render(name=u.first_name, username=u.username, password=password, login_url=url)
-            send_mail('TSA Event Registration Login', body, 'State High TSA <scahs-tsa@pindi.us>', [u.email])
-            message(request, 'Your password has been reset. Check your email for your new information.')
+        p = request.user.profile
+        if 'posts_email' in request.POST:
+            p.posts_email = 2
         else:
-            p = request.user.profile
-            print request.POST
-            if 'posts_email' in request.POST:
-                p.posts_email = 2
-            else:
-                p.posts_email = 0
-            p.save()
-            u = request.user
-            u.first_name = escape(request.POST['first_name'])
-            u.last_name = escape(request.POST['last_name'])
-            u.email = request.POST['email']
-            if request.POST['new_password'] and not u.check_password(request.POST['old_password']):
-                message(request, 'Error: Old password is not correct.')
-            elif request.POST['new_password'] != request.POST['confirm_password']:
-                message(request, 'Error: Password do not match.')
-            elif request.POST['new_password']:
-                u.set_password(request.POST['new_password'])
-                message(request, 'Your password has been changed.')
-                log(request, 'password_change', '%s changed their password.' % (name(request.user)))
-            u.save()
-            message(request, 'Your settings have been updated.')
+            p.posts_email = 0
+        p.save()
+        u = request.user
+        u.first_name = escape(request.POST['first_name'])
+        u.last_name = escape(request.POST['last_name'])
+        u.email = request.POST['email']
+        if request.POST['new_password'] and not u.check_password(request.POST['old_password']):
+            message(request, 'Error: Old password is not correct.')
+        elif request.POST['new_password'] != request.POST['confirm_password']:
+            message(request, 'Error: Password do not match.')
+        elif request.POST['new_password']:
+            u.set_password(request.POST['new_password'])
+            message(request, 'Your password has been changed.')
+            log(request, 'password_change', '%s changed their password.' % (name(request.user)))
+        u.save()
+        message(request, 'Your settings have been updated.')
     return render_template('settings.mako',request, url=login_url(request.user), fields=fields)
 
 def create_account(request):

@@ -15,6 +15,8 @@
             return confirm('Normal members are able to sign up for events, but have no administrative powers. Are you sure you want to change the selected users to normal members?');
         if(a=='advisor')
             return confirm('Warning: advisor accounts have FULL CONTROL over the entire chapter just like administrators, but cannot sign up for events. Are you sure you want to change the selected users to advisors?');
+        if(a=='none')
+            return true;
         return false;
     }
     
@@ -50,7 +52,7 @@
     Filter by Event:
     <select name="event">
         <option value="">-----All-----</option>
-        % for event in events:
+        % for event in events.filter(is_team=False):
             <option value="${event.id}" ${'selected="yes"' if str(event.id) == selected_event else ''}>${event.name}</option>
         % endfor
     </select>
@@ -58,7 +60,7 @@
     </form>
 % endif
 
-<form action="" method="post">
+<form action="?" method="post">
 
 <table class="datatable" align="center">
     <tr>
@@ -111,28 +113,33 @@
   % endif
   </table>
 
+
+
 % if user.profile.is_admin and members:
 
     <table class="aligner">
 
     <tr>
-        <td colspan="3" style="text-align: center;"><input type="submit" value="Update IDs"></td>
-    </tr>
-    
-    <tr>
-        <td>Add event to selected users:</td>
+        <td>Add event/Create team:</td>
         <td>
             <select name="eid">
-                % for e in events:
-                    <option value="${e.id}">${e.name}</option>
-                % endfor
+                <option value="-1"> --- Select event ---</option>
+                <optgroup label="Add events to all selected:">
+                    % for e in events.filter(is_team=False):
+                        <option value="${e.id}">${e.name}</option>
+                    % endfor
+                </optgroup>
+                <optgroup label="Create team of those selected:">
+                    % for e in events.filter(is_team=True):
+                        <option value="${e.id}">${e.name}</option>
+                    % endfor
+                </optgroup>
             </select>
         </td>
-        <td><input type="submit" name="action_button" value="Add Event"></td>
     </tr>
     
     <tr>
-        <td align="right">Administer Users:</td>
+        <td>Administer Users:</td>
         <td>
             <select name="action" id="action_select">
                 <option value="none"> --- Select action --- </option>
@@ -142,8 +149,9 @@
                 <option value="advisor">Change selected users to advisors</option>
             </select>
         </td>
-        <td><input type="submit" value="Update Users" onclick="return confirmSubmit(); "></td>
     </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;"><input type="submit" value="Update Users" onclick="return confirmSubmit(); "></td></td>
     
     </table>
 % endif

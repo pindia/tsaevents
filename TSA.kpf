@@ -11,4 +11,7 @@ run.bat</command>
   <string id="import_type">useFolders</string>
   <string id="mappedPaths"></string>
 </preference-set>
+<preference-set idref="86204a0e-eb3b-4ebf-86d9-0973dd9f11d5/docs/member_guide.rst">
+  <string id="spellcheckLangID">en-US</string>
+</preference-set>
 </project>

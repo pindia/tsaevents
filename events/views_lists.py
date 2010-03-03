@@ -25,14 +25,24 @@ def member_list(request, eid=None):
             message(request, 'Error: you are not an administrator!')
             return HttpResponseRedirect('/member_list')
         action = request.POST['action']
+        if request.POST.get('eid','') != "-1":
+            e = Event.objects.get(id=int(request.POST['eid']))
+            if e.is_team:
+                t = Team(event=e, chapter=request.chapter)
+                new_members = []
+                message(request, 'A new %s team was created.' % e.name)
+        else:
+            e = None
         for key, val in request.POST.items():
             if key.startswith('id_'):
+                # For each id field, check to see if the id has changed, and save if it has
                 trash, id = key.split('_')
                 u = User.objects.get(id=int(id))
                 if u.profile.indi_id != val:
                     u.profile.indi_id = val
                     u.profile.save()
             if key.startswith('edit_'):
+                # For user checkboxes, perform the action selected on the selected users
                 trash, id = key.split('_')
                 u = User.objects.get(id=int(id))
                 if action == 'promote':
@@ -63,14 +73,24 @@ def member_list(request, eid=None):
                     message(request, '%s deleted.' % name(u))
                     log(request, 'user_delete', "%s deleted %s's account." % (name(request.user), name(u)))
                     u.delete()
-                elif request.POST.get('action_button','') == 'Add Event':
+                elif request.POST.get('eid','') != "-1":
                     #u = User.objects.get(id=int(request.GET['uid']))
-                    e = Event.objects.get(id=int(request.POST['eid']))
-                    u.events.add(e)
-                    message(request, '%s has been added to %s\'s events.' % (e.name, name(u)))
-                    log(request, 'event_add', '%s added %s to %s\'s events.' % (name(request.user), e.name, name(u)), affected=u) 
+                    #e = Event.objects.get(id=int(request.POST['eid']))
+                    if e.is_team:
+                        new_members.append(u)
+                        message(request, '%s was added to the new team.' % name(u))
+                    else:
+                        u.events.add(e)
+                        message(request, '%s has been added to %s\'s events.' % (e.name, name(u)))
+                        log(request, 'event_add', '%s added %s to %s\'s events.' % (name(request.user), e.name, name(u)), affected=u) 
                 else:
                     pass
+        if e and e.is_team == True:
+            t.captain = new_members[0]
+            message(request, '%s was selected to be the team captain.' % name(t.captain))
+            t.save()
+            for member in new_members:
+                t.members.add(member)
     if request.GET.get('action') and request.user.profile.is_admin:
         action = request.GET.get('action')
         if action == 'remove_event':
@@ -89,7 +109,7 @@ def member_list(request, eid=None):
     return render_template('member_list.mako',request,
                            members=members,
                            selected_event = eid,
-                           events=request.chapter.get_events().filter(is_team=False),
+                           events=request.chapter.get_events(),
                            )
     
 @login_required

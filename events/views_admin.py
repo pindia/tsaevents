@@ -57,8 +57,19 @@ def edit_chapter(request):
         if name: # Create new field
             is_boolean = request.POST['type'].lower() == 'boolean'
             default = request.POST['default']
+            if is_boolean:
+                if default.lower() in ['1','true','yes']:
+                    default = '1'
+                elif default.lower() in ['0','false','no']:
+                    default = '0'
+                else:
+                    message(request, "Error: unrecognized default value, please enter 'yes' or 'no'.")
+                    return render_template('chapadmin/edit_chapter.mako', request, chapter=c)
+            else:
+                default = request.POST['default']
             f = Field()
-            f.short_name = f.name = name
+            f.short_name = request.POST['short_name']
+            f.name = name
             f.type = 0 if is_boolean else 1
             f.chapter = c
             f.default_value = default

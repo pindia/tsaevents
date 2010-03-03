@@ -122,16 +122,16 @@ function confirmDeletePost(target)
     <h2>Message Board</h2>
     
     <table border=1 width="100%" cellpadding=5 align="center" id="team-board-table" class="datatable">
-        % if team.can_post_board(user):
-            <tr>
-              <td colspan="2">
-                <textarea name="message" rows="2" style="width: 90%; height:auto; margin:0;"></textarea>
-                <input type="submit" name="action" value="Post">
-              </td>
-            </tr>
-        % else:
-            You do not have permission to post to this board.
-        % endif
+        <tr>
+            <td colspan="2">
+                % if team.can_post_board(user):
+                    <textarea name="message" rows="2" style="width: 90%; height:auto; margin:0;"></textarea>
+                    <input type="submit" name="action" value="Post">
+                % else:
+                    You do not have permission to post to this board.
+                % endif
+            </td>
+        </tr>
     % for msg in team.posts.order_by('-date'):
       <tr>
         <td width="20%">
@@ -166,7 +166,6 @@ function confirmDeletePost(target)
     
     % else:
         You do not have permission to view this team's message board.
-    
     % endif
 </div>
 

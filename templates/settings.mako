@@ -4,7 +4,7 @@
 
 <form action="/settings" method="POST">
 
-<h3>Account Information</h3>
+<h2>Account Information</h2>
 
 <table align="center">
 <tr><td>Username:</td><td>${user.username}</td></tr>
@@ -29,9 +29,9 @@
 
 % if user.profile.is_member and fields.count() != 0:
 
-<h3>Fields</h3>
+<h2>Fields</h2>
 
-<table align="center">
+<table class="aligner">
 % for field in fields:
     <tr>
         <td>${field.name}:</td>
@@ -48,19 +48,19 @@
 
 % endif
 
-<h3>Email Settings</h3>
+<h2>Email Settings</h2>
 
 <p>
     <input type="checkbox" name="posts_email" ${'checked="yes"' if user.profile.posts_email == 2 else ''}>Send email for team posts
 </p>
 <!--<input type="submit" name="action" value="Save">-->
 
-<h3>Login Settings</h3>
+<h2>Login Settings</h2>
 
 <!--Login URL: <a href="http://events.tsa.pindi.us${url}">Login</a> <br>-->
 
-<h4>Change Password</h4>
-<table align="center" class="datatable">
+<h3>Change Password</h3>
+<table align="center" class="layouttable">
     <tr><td>Old:</td><td><input type="password" name="old_password"></td></tr>
     <tr><td>New:</td><td><input type="password" name="new_password"></td></tr>
     <tr><td>Confirm:</td><td><input type="password" name="confirm_password"></td></tr>

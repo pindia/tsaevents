@@ -7,7 +7,7 @@
 
 <div class="span-24 last" align="center">
   <h1>TSA Events - Login</h1>
-  <p>Log in below with your username and password, or simply use the link in your email.</p>
+  <p>Log in below with your username and password.</p>
 </div>
 
 <div class="span-24 last" align="center">

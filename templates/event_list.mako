@@ -77,15 +77,20 @@
 
 <form action="/event_list" method="post">
 
+<!--
+
 <div align="left">
-  <p>This page is currently set to display information for the "${MODE}" level.</p>
+  
   <ul>
   <li>Red events are not offered at this level or have filled up and can no longer be entered.
   <li>Yellow events still have space for entry, and must be entered if you want to qualify for the next level in that event.
   <li>Green events still have space for entry, and are not required to be entered to qualify for the next level.
   </ul>
   <p>The 'Max' column shows the maximum number of people able to compete. A number in parentheses indicates that the event is only offered at the next level.</p>
-</div>
+</div> -->
+
+<p>This page is currently set to display information for the ${MODE.title()} level. See the <a href="/help/member_guide#event-list">member guide</a> for details about this page.</p>
+
 
   <h2>Individual Events</h2>
   ${render_table(events.filter(is_team=False))}

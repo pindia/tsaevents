@@ -8,6 +8,7 @@ Individual events
 
 .. image:: /static/tsa/docs/yourevents.png
     :align: right
+    :target: /static/tsa/docs/raw/yourevents.png
 
 The first section of the page deals with individual events. The events you are currently signed up for are shown in a table. You can remove any of them by clicking the delete icon on the right side of the row.
 
@@ -43,7 +44,7 @@ Below the table is the interface to add new members. If you are not a member of 
 Message board
 ---------------
 
-Next is the team message board. Team members can use the board to communicate amongst themselves. Whenever a message is posted, all team members will be sent an email unless they have opted out through their settings. Depending on the team privacy settings, nonmemebers may be able to view or even post to the board. Any message may be deleted by its author or by the team captain.
+Next is the team message board. Team members can use the board to communicate amongst themselves. Whenever a message is posted, all team members will be sent an email unless they have opted out through their settings. Depending on the team privacy settings, nonmembers may be able to view or even post to the board. Any message may be deleted by its author or by the team captain.
 
 Administration
 ---------------
@@ -61,7 +62,29 @@ The last part of the page (not shown in the picture) allows the team captain to 
 
 The team captain may also delete the team using the appropriate button at the bottom of the page.
 
-Events List
+Event List
 ============
 
-Rest of page coming soon
+.. image:: /static/tsa/docs/event_list.png
+    :align: right
+    :target: /static/tsa/docs/raw/event_list.png
+
+The event list page is the most important informational page for you as a chapter member. It details the number of people or teams currently signed up for each event along with the maximum number that your chapter will be able to send.
+
+An example of this screen is shown to the right. Keep in mind that the example was generated at the State level.
+
+The screen is divided into tables for individual and team events. The "Num" column reports the current number of individuals or teams registered for the event. Clicking on this number will show a list of who is registered for the event. The "Max" column reports the maximum number of entrants at the current level. 
+
+* Red events have been locked by a chapter advisor, and cannot be entered. This may be because it has filled up, or is qualification-only. Check with your advisor if you are confused as to why an event is locked. In the example, the events are locked because they are qualification-only, so no new people can sign up for States if they did not qualify in Regionals.
+* Yellow events are unlocked and can be entered. However, you *must* enter these events at the current level if you want to enter in the next level. For instance, in the picture, Essays on Technology is yellow because only the top three teams from each state will be allowed to compete at Nationals.
+* Green events are unlocked and can be entered. Unlike yellow events, these events do not need to be entered at the current level to go to the next. For example, in Career Comparisons, one team per chapter may enter Nationals regardless of whether they attended States.
+
+Some events have icons next to them:
+
+* Lock icons indicate locked events in addition to the red color
+* Exclaimation marks indicate events for which more people are signed up than the maximum. Note that you can still sign up as long as the event is not locked. This allows the chapter advisor to see everyone interested in the event, so that the conflict can be resolved fairly instead of first-come-first-serve. Also, sometimes more people qualify than the strict maximum and they can all go (see the `PA Qualification Rules <pa_qualification>`_). In these cases, the mark can be ignored.
+
+Other Lists
+==============
+
+The member list and team list provide detailed information about the other members of the chapter and their events. Details about using these screens are in the `advisor guide <advisor_guide>`_. 

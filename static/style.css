@@ -3,12 +3,16 @@
    +------------------------+ */
 
 h1 {
-	font-size: x-large;
+	font-size: 2.0em;
 	margin-bottom: 0.5em;
 	margin-top: 0.25em;
 }
 h2 {
-	font-size: large;
+	font-size: 1.5em;
+	margin-bottom: 0.5em;
+}
+h3 {
+	font-size: 1.25em;
 	margin-bottom: 0.5em;
 }
 
@@ -31,6 +35,10 @@ img {
 /* +------------------------+
    |Custom classes          |
    +------------------------+ */
+
+.center {
+	text-align: center !important;
+}
 
 #help-viewer{
 	margin-top: 10px;
@@ -122,6 +130,8 @@ td.errorback, .errorback td{
 	background: #E0FEE1;
 	border: 1px solid #CCCCCC;
 }
+
+
 
 /* +------------------------+
    |Specific element styles |

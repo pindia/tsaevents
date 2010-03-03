@@ -14,7 +14,7 @@ def sel(cond):
     % if chapter.link:
         <tr><td><i>Master:</i></td><td><i>${chapter.link.name}</i></td>
     % endif
-    <tr><td>Members:</td><td>${chapter.members.count()}</td></tr>
+    <tr><td>Members:</td><td>${chapter.members.filter(is_member=True).count()}</td></tr>
     <tr><td>Teams:</td><td>${chapter.teams.count()}</td></tr>
 </table>
 
@@ -59,15 +59,20 @@ def sel(cond):
     </tr>
     % endfor
 </table>
-<h4>New Field</h4>
 % if chapter.link:
     Switch to master chapter to edit field
 % else:
-
-        Name: <input type="entry" name="name"><br>
-        Type: <input type="entry" name="type"><br>
-        Default: <input type="entry" name="default"><br>
-        <input type="submit" value="Submit">
+<h3>New Field</h3>
+    <table class="layouttable aligner">
+        <tr><td>Name:</td><td><input type="entry" name="name"></td></tr>
+        <tr><td>Short Name:</td><td><input type="entry" name="short_name"></td></tr>
+        <tr><td>Type:</td><td>
+        <select name="type">
+            <option value="text">Text</option>
+            <option value="boolean">Boolean (Yes/No)</option>
+        </select></td></tr>
+        <tr><td>Default:</td><td><input type="entry" name="default"></td>
+    </table>
 % endif
-
+        <input type="submit" value="Submit">
     </form>

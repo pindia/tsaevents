@@ -1,1 +1,1 @@
-Page coming soon
+This page is still being written. Thank you for your patience.
