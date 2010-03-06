@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
 from django.db import connection
 from django import forms
-from django.core.mail import send_mail
+from django.core.mail import send_mail, mail_admins
 from django.utils.html import escape
 
 # Mako imports
@@ -20,6 +20,7 @@ from mako.lookup import TemplateLookup
 # Standard library imports
 import time, datetime, os, timeit, string, random
 from itertools import *
+from smtplib import SMTPException
 
 # Project-specific imports
 from models import *
@@ -88,6 +89,12 @@ def name(user):
 def login_url(user):
     return '/quick_login?user=%s&auth=%s' % (user.id, user.password.split('$')[2])
     
+def get_token(user):
+    return user.password.split('$')[2]
+    
+def verify_token(user, token):
+    return user.password.split('$')[2] == token
+    
 def generate_password():
     c, v = 'bcdfghjklmnpqrstvwxz', 'aeiou'
     r = random.choice
@@ -95,6 +102,12 @@ def generate_password():
     
 
 
+def custom404(request):
+    print request.user
+    return render_template('errors/404.mako', request, parent='../base.mako' if request.user else '../layout.mako')
+
+def custom500(request):
+    return render_template('errors/500.mako', request, parent='../base.mako' if request.user else '../layout.mako')
 
 @login_required
 def index(request):
@@ -110,6 +123,10 @@ def help_viewer(request, page='index'):
         return render_template('helpviewer.mako', request, body='Error: page "%s" not found' % page)
     html = reSTify(f.read())
     return render_template('helpviewer.mako',request,body=html)
+    
+@login_required    
+def contact(request):
+    return render_template('contact.mako', request)
 
 def login_view(request):
     class LoginForm(forms.Form):
@@ -122,12 +139,21 @@ def login_view(request):
             user = authenticate(username=d['username'], password=d['password'])
             if user is not None and user.is_active:
                 login(request, user)
-                return HttpResponseRedirect('/')
+                return HttpResponseRedirect(request.POST['next'])
         # Reinitialize the form to be empty; don't want to retransmit password in HTML source
-        return render_template('registration/login.mako', request, form=LoginForm(), error=True) 
+        return render_template('registration/login.mako', request, form=LoginForm(), next=request.POST['next'], error_msg="Sorry, that's not a valid username or password.") 
     else:
         form = LoginForm()
-        return render_template('registration/login.mako', request, form=form)
+        if 'next' in request.GET and request.user.is_authenticated():
+            error_msg = 'You must be logged in as an administrator to view that page.'
+        elif 'next' in request.GET:
+            error_msg = 'You must be logged in to view that page.'
+        else:
+            error_msg = ''
+        return render_template(
+            'registration/login.mako', request, form=form,
+            next=request.GET.get('next', '/'), error_msg=error_msg)
+
 
 def logout_view(request):
     logout(request)
@@ -197,11 +223,54 @@ def settings(request):
         message(request, 'Your settings have been updated.')
     return render_template('settings.mako',request, url=login_url(request.user), fields=fields)
 
+def reset_password(request):
+    if request.method == 'POST':
+        if 'username' in request.POST:
+            try:
+                user = User.objects.get(Q(username=request.POST['username']) | Q(email=request.POST['username']))
+            except User.DoesNotExist:
+                return render_template('registration/request_reset.mako', request, error_msg='Unknown username or email address')
+            t = get_template('email/reset_password.mako')
+            body = t.render(name=user.first_name, chapter=user.profile.chapter.name, uid=user.id, token=get_token(user))
+            try:
+                send_mail('TSAEvents Password Reset', body, '%s TSA <system@tsaevents.com>' % user.profile.chapter.name, [user.email], fail_silently=False)
+            except SMTPException:
+                return render_template('registration/request_reset.mako', request, error_msg='Unable to send email. Contact server administrator.')
+            return render_template('registration/request_reset.mako', request, success_msg='Further instructions have been sent to your email address.')
+        if 'password' in request.POST:
+            uid = int(request.POST['user'])
+            auth = request.POST.get('auth','')
+            user = User.objects.get(id=uid)
+            if not verify_token(user, auth):
+                return render_template('registration/request_reset.mako', request, error_msg='Invalid authentication token. Try re-sending the email.')
+            password = request.POST['password']
+            confirm_password = request.POST['password']
+            if password != confirm_password:
+                return render_template('registration/perform_reset.mako', reques, user=uid, auth=auth , error_msg='Error: passwords do not match.')
+            user.set_password(password)
+            user = authenticate(username=user.username, password=password)
+            login(request, user)
+            message(request, 'New password set. You have been automatically logged in.')
+            return HttpResponseRedirect('/')
+    elif 'user' in request.GET:
+        uid = int(request.GET['user'])
+        auth = request.GET.get('auth','')
+        user = User.objects.get(id=uid)
+        if verify_token(user, auth):
+            return render_template('registration/perform_reset.mako', request, user=uid, auth=auth )
+        else:
+            return render_template('registration/request_reset.mako', request, error_msg='Invalid authentication token. Try re-sending the email.')
+    
+    return render_template('registration/request_reset.mako', request)
+
+
+
 def create_account(request):
     
     class NewUserForm(forms.Form):
             username = forms.CharField()
             password = forms.CharField(widget=forms.PasswordInput)
+            confirm_password = forms.CharField(widget=forms.PasswordInput)
             first_name = forms.CharField()
             last_name = forms.CharField()
             email = forms.EmailField()

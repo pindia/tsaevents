@@ -12,12 +12,15 @@ MODE_ABBR =dict(
 
 
 
-DEBUG = True
+DEBUG = not config.DEPLOYED
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
+    ('Pindi Albert', 'pindi.albert@gmail.com'),
     # ('Your Name', 'your_email@domain.com'),
 )
+
+SERVER_EMAIL = 'system@tsaevents.com'
 
 MANAGERS = ADMINS
 
@@ -77,8 +80,9 @@ TEMPLATE_LOADERS = (
 class ChapterMiddleware(object):
     def process_request(self, request):
         if 'STATEHIGH_SWITCH' in request.GET:
-            request.user.profile.chapter = request.user.profile.chapter.__class__.objects.exclude(id=request.user.profile.chapter.id).get(name__istartswith='State High')
-            request.user.profile.save()
+            if request.user.profile.chapter.name.startswith('State High') and request.user.profile.is_admin and not request.user.profile.is_member:
+                request.user.profile.chapter = request.user.profile.chapter.__class__.objects.exclude(id=request.user.profile.chapter.id).get(name__istartswith='State High')
+                request.user.profile.save()
         try:
             if request.user.is_authenticated():
                 request.chapter = request.user.profile.chapter

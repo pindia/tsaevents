@@ -73,6 +73,6 @@ def sel(cond):
         </select></td></tr>
         <tr><td>Default:</td><td><input type="entry" name="default"></td>
     </table>
+    <input type="submit" value="Submit">
 % endif
-        <input type="submit" value="Submit">
     </form>

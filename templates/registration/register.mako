@@ -9,7 +9,7 @@
 
     <form action="/accounts/create/" method='post'>
         
-        <table class="layouttable">     
+        <table class="layouttable aligner">     
             ${form.as_table()}
           <tr ><td colspan="2"><div align="center"><input type="submit" value="Create" /></div></td></tr>
         </table>

@@ -1,17 +1,13 @@
 Hello ${name},
 
-Your login information for the State High TSA event registration system has been reset.
+A request to reset your password in the ${chapter} TSA system has been received.
 
-You can login to the system at http://events.tsa.pindi.us with the new information below:
+Use the link below to complete the password reset:
 
-Username: ${username}
-Password: ${password}
+http://www.tsaevents.com/accounts/reset/?user=${uid}&auth=${token}
 
-Instead of memorizing the information above, you may login at any time using the new link below. Your old link is no longer valid.
-Keep this email so you have access to this link. You may bookmark it, but be aware that anyone can login as you using it.
+If you did not initiate this request, you may safely ignore this email.
 
-http://events.tsa.pindi.us${login_url}
+This is an automated email; do not reply. 
 
-This is an automated email; do not reply. If you have any questions, email Pindi at pindi.albert@gmail.com.
-
--State High TSA
+-${chapter} TSA

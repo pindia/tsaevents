@@ -4,22 +4,24 @@
 <%def name="header()">
   <div id="infobar" class="span-24 last">
     Logged in as ${user.first_name} ${user.last_name} (${user.username})
-    % if user.profile.is_admin:
+    % if user.is_superuser:
+      <b>[SA]</b>
+    % elif user.profile.is_admin:
       <b>[A]</b>
     % elif hasattr(user,'admin_disabled'):
       <i>[<a href="?ENABLE_ADMIN">E</a>]</i>
     % endif
-    |
+    &bull;
     ${user.profile.chapter}
     % if not user.profile.is_member:
       (N)
     % endif
-    % if user.profile.chapter and user.profile.chapter.name.startswith('State High') and user.is_superuser:
+    % if user.profile.chapter and user.profile.chapter.name.startswith('State High') and user.profile.is_admin and not user.profile.is_member:
       [<a href="?STATEHIGH_SWITCH">Switch</a>]
     % endif
-    |
+    &bull;
     Events: ${user.events.all().count()} Teams: ${user.teams.all().count()}
-    |
+    &bull;
     <a href="/help">Help</a>
     &bull;
     <a href="/settings">Settings</a>
@@ -71,7 +73,7 @@
 </div>
 
 <%def name="footer()">
-${parent.footer()}
+${parent.footer()} &bull; <a href="/contact/">Contact admin</a>
 % if not DEPLOYED:
   <div align="center">${len(connection.queries)} SQL queries executed</div>
   <!--<ol>

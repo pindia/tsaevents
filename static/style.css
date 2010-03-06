@@ -10,10 +10,12 @@ h1 {
 h2 {
 	font-size: 1.5em;
 	margin-bottom: 0.5em;
+	margin-top: 0.25em;
 }
 h3 {
 	font-size: 1.25em;
 	margin-bottom: 0.5em;
+	margin-top: 0.25em;
 }
 
 
@@ -81,7 +83,7 @@ table.aligner td{
 	padding: 2px;
 }
 
-table.aligner td:first-child{
+table.aligner td:first-child, table.aligner th:first-child{
 	text-align: right;
 }
 

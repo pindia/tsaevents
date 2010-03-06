@@ -22,10 +22,12 @@ class Chapter(models.Model):
     message = models.TextField(blank=True)
     mode = models.IntegerField(choices=((0,'region'), (1,'state'), (2,'nation')), default=0)
     
+    key = models.CharField(max_length=100, default='', blank=True, db_column='extra_char1')
+    
     # Link to another chapter. The "child" chapter has a link to the parent and not vice versa
     #link = models.ForeignKey('Chapter', db_column='extra_int1', null=True, blank=True) 
     
-    extra_char1 = models.CharField(max_length=100, default='', blank=True)
+    #extra_char1 = models.CharField(max_length=100, default='', blank=True)
     extra_char2 = models.CharField(max_length=100, default='', blank=True)
     extra_char3 = models.CharField(max_length=100, default='', blank=True)
     extra_bool1 = models.BooleanField(default=False, blank=True)
@@ -40,6 +42,8 @@ class Chapter(models.Model):
             return Chapter.objects.get(name='State High 11/12')
         else:
             return None
+        
+        
     def get_events(self):
         return self.event_set.events.all()
     def get_fields(self, category=None):

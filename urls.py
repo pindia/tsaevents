@@ -7,10 +7,15 @@ import config
 from django.contrib import admin
 admin.autodiscover()
 
+handler404 = 'tsa.events.views.custom404'
+handler500 = 'tsa.events.views.custom500'
+
 urlpatterns = patterns('tsa.events.views',
 
     (r'^help/$', 'help_viewer'),
     (r'^help/(\w+)$', 'help_viewer'),
+    
+    (r'^contact/$', 'contact'),
 
     # Account/Event Management Views
     (r'^$', 'index'),
@@ -46,6 +51,7 @@ urlpatterns += patterns('',
     (r'^accounts/login/$', 'tsa.events.views.login_view'),
     (r'^accounts/logout/$', 'tsa.events.views.logout_view'),
     (r'^accounts/create/$', 'tsa.events.views.create_account'),
+    (r'^accounts/reset/$', 'tsa.events.views.reset_password'),
 )
 
 urlpatterns += patterns('',

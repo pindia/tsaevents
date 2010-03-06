@@ -9,5 +9,4 @@ Some other miscellaneous topics covered:
 
 * `PA Qualification Rules <pa_qualification>`_ - Details some of the complexities of Pennsylvania's state qualification system
 
-
-Note: the help system is still quite incomplete. Please be patient as it is being written.
+If your questions are not answered in the help pages or you need something in your chapter's system changed, contact one of your chapter advisors. Their email addresses are listed on the `contact page </contact/>`_ (you must be logged in).
