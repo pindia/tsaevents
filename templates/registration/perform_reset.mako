@@ -9,7 +9,7 @@
 
     <form action="" method='post'>
 
-        <input type="hidden" name="user" value="${user}">
+        <input type="hidden" name="user" value="${uid}">
         <input type="hidden" name="auth" value="${auth}">
 
         % if error_msg:

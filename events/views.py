@@ -257,7 +257,7 @@ def reset_password(request):
         auth = request.GET.get('auth','')
         user = User.objects.get(id=uid)
         if verify_token(user, auth):
-            return render_template('registration/perform_reset.mako', request, user=uid, auth=auth )
+            return render_template('registration/perform_reset.mako', request, uid=uid, auth=auth )
         else:
             return render_template('registration/request_reset.mako', request, error_msg='Invalid authentication token. Try re-sending the email.')
     
