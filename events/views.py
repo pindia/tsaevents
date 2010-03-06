@@ -104,10 +104,10 @@ def generate_password():
 
 def custom404(request):
     print request.user
-    return render_template('errors/404.mako', request, parent='../base.mako' if request.user else '../layout.mako')
+    return render_template('errors/404.mako', request, parent='../base.mako' if request.user.is_authenticated() else '../layout.mako')
 
 def custom500(request):
-    return render_template('errors/500.mako', request, parent='../base.mako' if request.user else '../layout.mako')
+    return render_template('errors/500.mako', request, parent='../base.mako' if request.user.is_authenticated() else '../layout.mako')
 
 @login_required
 def index(request):
