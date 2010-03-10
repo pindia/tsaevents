@@ -146,7 +146,7 @@ def login_view(request):
         form = LoginForm()
         if 'next' in request.GET and request.user.is_authenticated():
             error_msg = 'You must be logged in as an administrator to view that page.'
-        elif 'next' in request.GET:
+        elif 'next' in request.GET and request.GET['next'] != '/':
             error_msg = 'You must be logged in to view that page.'
         else:
             error_msg = ''

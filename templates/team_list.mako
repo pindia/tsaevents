@@ -13,7 +13,7 @@ Filter by Event:
 <input type="submit" value="Filter">
 </form>
 
-<form action="/team_list" method="post">
+<form action="" method="post">
 <table class="datatable">
     <tr>
         <th>Event</th>
