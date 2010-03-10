@@ -47,7 +47,6 @@
 
 
 
-% if user.profile.is_admin:
     <form action="/member_list" method="get">
     Filter by Event:
     <select name="event">
@@ -58,7 +57,6 @@
     </select>
     <input type="submit" value="Filter">
     </form>
-% endif
 
 <form action="?" method="post">
 

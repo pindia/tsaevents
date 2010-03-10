@@ -37,7 +37,10 @@ def member_list(request, eid=None):
             if key.startswith('id_'):
                 # For each id field, check to see if the id has changed, and save if it has
                 trash, id = key.split('_')
-                u = User.objects.get(id=int(id))
+                try:
+                    u = User.objects.get(id=int(id))
+                except User.DoesNotExist:
+                    continue
                 if u.profile.indi_id != val:
                     u.profile.indi_id = val
                     u.profile.save()
