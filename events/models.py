@@ -36,10 +36,17 @@ class Chapter(models.Model):
     extra_int1 = models.IntegerField(default=0)
     extra_int2 = models.IntegerField(default=0)
     extra_text1 = models.TextField(blank=True)
+    
     @property
     def link(self):
         if self.name == 'State High 9/10':
             return Chapter.objects.get(name='State High 11/12')
+        else:
+            return None
+    @property
+    def reverselink(self):
+        if self.name == 'State High 11/12':
+            return Chapter.objects.get(name='State High 9/10')
         else:
             return None
         
