@@ -244,10 +244,11 @@ def reset_password(request):
             if not verify_token(user, auth):
                 return render_template('registration/request_reset.mako', request, error_msg='Invalid authentication token. Try re-sending the email.')
             password = request.POST['password']
-            confirm_password = request.POST['password']
+            confirm_password = request.POST['confirm_password']
             if password != confirm_password:
-                return render_template('registration/perform_reset.mako', reques, user=uid, auth=auth , error_msg='Error: passwords do not match.')
+                return render_template('registration/perform_reset.mako', request, user=uid, auth=auth , error_msg='Error: passwords do not match.')
             user.set_password(password)
+            user.save()
             user = authenticate(username=user.username, password=password)
             login(request, user)
             message(request, 'New password set. You have been automatically logged in.')
