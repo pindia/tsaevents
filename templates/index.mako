@@ -3,6 +3,11 @@
 <%def name='title()'>Home</%def> <%%>
 
 
+% if chapter.message:
+<p>${chapter.message | h}</p>
+% endif
+
+
 % if user.profile.is_member:
 
 <script language="javascript">

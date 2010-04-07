@@ -19,8 +19,11 @@ class Chapter(models.Model):
     short_name = models.CharField(max_length=50, blank=True)
     chapter_id = models.CharField(max_length=20, blank=True)
     all_locked = models.BooleanField()
+    
     message = models.TextField(blank=True)
-    mode = models.IntegerField(choices=((0,'region'), (1,'state'), (2,'nation')), default=0)
+    info = models.TextField(blank=True, db_column='extra_text1')
+    
+    #mode = models.IntegerField(choices=((0,'region'), (1,'state'), (2,'nation')), default=0)
     
     key = models.CharField(max_length=100, default='', blank=True, db_column='extra_char1')
     
@@ -33,9 +36,9 @@ class Chapter(models.Model):
     extra_bool1 = models.BooleanField(default=False, blank=True)
     extra_bool2 = models.BooleanField(default=False, blank=True)
     extra_bool3 = models.BooleanField(default=False, blank=True)
-    extra_int1 = models.IntegerField(default=0)
-    extra_int2 = models.IntegerField(default=0)
-    extra_text1 = models.TextField(blank=True)
+    #extra_int1 = models.IntegerField(default=0)
+    #extra_int2 = models.IntegerField(default=0)
+    #extra_text1 = models.TextField(blank=True)
     
     @property
     def link(self):

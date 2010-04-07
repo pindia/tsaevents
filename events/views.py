@@ -141,7 +141,7 @@ def login_view(request):
                 login(request, user)
                 return HttpResponseRedirect(request.POST['next'])
         # Reinitialize the form to be empty; don't want to retransmit password in HTML source
-        return render_template('registration/login.mako', request, form=LoginForm(), next=request.POST['next'], error_msg="Sorry, that's not a valid username or password.") 
+        return render_template('registration/login.mako', request, form=LoginForm(), chapters=Chapter.objects.all(), next=request.POST['next'], error_msg="Sorry, that's not a valid username or password.") 
     else:
         form = LoginForm()
         if 'next' in request.GET and request.user.is_authenticated():
@@ -152,7 +152,7 @@ def login_view(request):
             error_msg = ''
         return render_template(
             'registration/login.mako', request, form=form,
-            next=request.GET.get('next', '/'), error_msg=error_msg)
+            next=request.GET.get('next', '/'), chapters=Chapter.objects.all(), error_msg=error_msg)
 
 
 def logout_view(request):
@@ -268,29 +268,49 @@ def reset_password(request):
 
 def create_account(request):
     
+    if 'chapter' not in request.REQUEST:
+        return HttpResponseRedirect('/accounts/login')
+    chapter = Chapter.objects.get(id=int(request.REQUEST['chapter']))
+
     class NewUserForm(forms.Form):
+            if chapter.key:
+                key = forms.CharField()
             username = forms.CharField()
             password = forms.CharField(widget=forms.PasswordInput)
             confirm_password = forms.CharField(widget=forms.PasswordInput)
             first_name = forms.CharField()
             last_name = forms.CharField()
             email = forms.EmailField()
-            chapter = forms.ChoiceField(choices=[(c.id, c.name) for c in Chapter.objects.all()])
+    
+    
+    
             
     if request.method == 'POST':
         form = NewUserForm(request.POST)
+        
+        def show_error(msg):
+            return render_template('registration/register.mako', request, form=form, chapter=chapter, error_msg=msg)
+            
         if form.is_valid():
             d = form.cleaned_data
     
     
             #if domain != 'scasd.org':
             #    return HttpResponse('Error: Email must be @scasd.org')
+            if 'key' in d:
+                key = d['key']
+                if key != chapter.key:
+                    return show_error('Invalid key. Contact your chapter advisor for assistance.')
             username = d['username']
+            if User.objects.filter(username=username).count() != 0:
+                return show_error('Username is already in use.')
             password = d['password']
+            confirm_password = d['confirm_password']
+            if password != confirm_password:
+                return show_error('Passwords do not match.')
             email = d['email']
             first_name = escape(d['first_name'])
             last_name = escape(d['last_name'])
-            chapter = Chapter.objects.get(id=int(d['chapter']))
             #password = generate_password()
         
             u = User(username=username, first_name=first_name, last_name=last_name, email=email)
@@ -299,12 +319,6 @@ def create_account(request):
             profile = UserProfile(is_member=True, chapter=chapter, user=u)
             profile.save()
         
-            #url = login_url(u)
-            
-            #t = get_template('email/newuser.mako')
-            #body = t.render(name=first_name, username=username, password=password, login_url=url, chapter=chapter.name)
-          
-            #send_mail('TSA Event Registration Login', body, 'State High TSA <scahs-tsa@pindi.us>', [email])
                 
             SystemLog(chapter=chapter, user=u, affected=u, type='new_user', text='New user %s registered.' % name(u)).save()
                 
@@ -312,13 +326,14 @@ def create_account(request):
             login(request, u)
                 
             message(request, 'Your new account has been created.')
-            #return HttpResponse('Your account has been created. Check your email for login details.')
             return HttpResponseRedirect('/')
             
     else:
         form = NewUserForm()
+    
+    
         
-    return render_template('registration/register.mako', request, form=form)
+    return render_template('registration/register.mako', request, form=form, chapter=chapter)
     
 execfile(paths(APP_DIR, 'views_lists.py'))
 execfile(paths(APP_DIR, 'views_team.py'))

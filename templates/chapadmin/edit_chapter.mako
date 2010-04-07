@@ -9,16 +9,60 @@ def sel(cond):
 
 <h2>Chapter Information</h2>
 
-<table align="center">
-    <tr><td>Name:</td><td>${chapter.name}</td></tr>
+<table class="aligner">
+    <tr><th>Name:</th><td>${chapter.name}</td></tr>
     % if chapter.link:
         <tr><td><i>Master:</i></td><td><i>${chapter.link.name}</i></td>
     % endif
-    <tr><td>Members:</td><td>${chapter.members.filter(is_member=True).count()}</td></tr>
-    <tr><td>Teams:</td><td>${chapter.teams.count()}</td></tr>
+    <tr><th>Members:</th><td>${chapter.members.filter(is_member=True).count()}</td></tr>
+    <tr><th>Teams:</th><td>${chapter.teams.count()}</td></tr>
 </table>
 
 <form method="post" action="/edit_chapter">
+
+<h2>Chapter Settings</h2>
+
+<table class="layouttable aligner">
+    <tr>
+        <th>Chapter ID:</th>
+        <td>
+            <input type="entry" name="chapter_id" value=${chapter.chapter_id}><br>
+            <span style="font-size:smaller;">Prefix for all IDs; like <b>2045</b>-xxxx</span>
+        </td>
+    </tr>
+    <tr>
+        <th>Allow new users:</th>
+        <td><input type="checkbox" name="register_open" ${'checked="yes"' if chapter.register_open else ''}></td>
+    </tr>
+    <tr>
+        <th>Key:</th>
+        <td>
+            <input type="entry" name="key" value=${chapter.key}><br>
+            <span style="font-size:smaller;">Optional; new users must enter this key to register</span>
+        </td>
+    </tr>
+    <tr>
+        <th>Info:</th>
+        <td>
+            <textarea name="info" style="width:300px; height:100px;">${chapter.info}</textarea><br>
+            <span style="font-size:smaller;">Displayed to new users on registration screen</span>
+        </td>
+    </tr>
+    <tr>
+        <th>Message:</th>
+        <td>
+            <textarea name="message" style="width:300px; height:100px;">${chapter.message}</textarea><br>
+            <span style="font-size:smaller;">Displayed to chapter members on the front page</span>
+        </td>
+    </tr>
+
+</table>
+
+
+
+% if chapter.link:
+    Switch to master chapter to view and edit fields.
+% else:
 
 <h2>Fields</h2>
 <table align="center" class="tabular_list">
@@ -59,9 +103,7 @@ def sel(cond):
     </tr>
     % endfor
 </table>
-% if chapter.link:
-    Switch to master chapter to edit field
-% else:
+
 <h3>New Field</h3>
     <table class="layouttable aligner">
         <tr><td>Name:</td><td><input type="entry" name="name"></td></tr>
@@ -73,6 +115,9 @@ def sel(cond):
         </select></td></tr>
         <tr><td>Default:</td><td><input type="entry" name="default"></td>
     </table>
-    <input type="submit" value="Submit">
 % endif
-    </form>
+
+
+<input type="submit" value="Submit">
+
+</form>

@@ -33,47 +33,54 @@ def member_fields(request, category):
 def edit_chapter(request):
     c = request.chapter
     if request.method == 'POST':
-        
-        for field in c.get_fields():
-            name = request.POST['%d_name' % field.id]
-            short_name = request.POST['%d_short_name' % field.id]
-            category = request.POST['%d_category' % field.id]
-            weight = int(request.POST['%d_weight' % field.id])
-            view_perm = int(request.POST['%d_view_perm' % field.id])
-            edit_perm = int(request.POST['%d_edit_perm' % field.id])
-            if name == 'DELETE':
-                field.delete()
-                continue
-            if field.name != name or field.category != category or field.weight != weight or field.short_name != short_name or field.view_perm != view_perm or field.edit_perm != edit_perm:
-                field.name = name
-                field.short_name = short_name
-                field.category = category
-                field.weight = weight
-                field.edit_perm = edit_perm
-                field.view_perm = view_perm
-                field.save()
-        
-        name = request.POST['name']
-        if name: # Create new field
-            is_boolean = request.POST['type'].lower() == 'boolean'
-            default = request.POST['default']
-            if is_boolean:
-                if default.lower() in ['1','true','yes']:
-                    default = '1'
-                elif default.lower() in ['0','false','no']:
-                    default = '0'
-                else:
-                    message(request, "Error: unrecognized default value, please enter 'yes' or 'no'.")
-                    return render_template('chapadmin/edit_chapter.mako', request, chapter=c)
-            else:
+        c.register_open = 'register_open' in request.POST
+        c.message = request.POST['message']
+        c.info = request.POST['info']
+        c.key = request.POST['key']
+        c.chapter_id=request.POST['chapter_id']
+        c.save()
+        message(request, 'Chapter settings updated.')
+        if not c.link: # Only edit fields if no master chapter
+            for field in c.get_fields():
+                name = request.POST['%d_name' % field.id]
+                short_name = request.POST['%d_short_name' % field.id]
+                category = request.POST['%d_category' % field.id]
+                weight = int(request.POST['%d_weight' % field.id])
+                view_perm = int(request.POST['%d_view_perm' % field.id])
+                edit_perm = int(request.POST['%d_edit_perm' % field.id])
+                if name == 'DELETE':
+                    field.delete()
+                    continue
+                if field.name != name or field.category != category or field.weight != weight or field.short_name != short_name or field.view_perm != view_perm or field.edit_perm != edit_perm:
+                    field.name = name
+                    field.short_name = short_name
+                    field.category = category
+                    field.weight = weight
+                    field.edit_perm = edit_perm
+                    field.view_perm = view_perm
+                    field.save()
+            
+            name = request.POST['name']
+            if name: # Create new field
+                is_boolean = request.POST['type'].lower() == 'boolean'
                 default = request.POST['default']
-            f = Field()
-            f.short_name = request.POST['short_name']
-            f.name = name
-            f.type = 0 if is_boolean else 1
-            f.chapter = c
-            f.default_value = default
-            f.save()
+                if is_boolean:
+                    if default.lower() in ['1','true','yes']:
+                        default = '1'
+                    elif default.lower() in ['0','false','no']:
+                        default = '0'
+                    else:
+                        message(request, "Error: unrecognized default value, please enter 'yes' or 'no'.")
+                        return render_template('chapadmin/edit_chapter.mako', request, chapter=c)
+                else:
+                    default = request.POST['default']
+                f = Field()
+                f.short_name = request.POST['short_name']
+                f.name = name
+                f.type = 0 if is_boolean else 1
+                f.chapter = c
+                f.default_value = default
+                f.save()
             
 
             
