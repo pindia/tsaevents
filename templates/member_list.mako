@@ -10,11 +10,11 @@
         if(a=='delete')
             return confirm('Warning: deleting users will IRREVERSIBLY DESTROY all data relating to them, including entries, teams, and team posts. Are you sure you want to delete the selected users?');
         if(a=='promote')
-            return confirm('Warning: administrators have FULL CONTROL over the entire chapter, including the ability to delete users, teams, and event entries. Are you sure you want to promote the selected users to administrators?');
+            return confirm('Warning: officers have FULL CONTROL over the entire chapter, including the ability to delete users, teams, and event entries. Are you sure you want to promote the selected users to administrators?');
         if(a=='demote')
             return confirm('Normal members are able to sign up for events, but have no administrative powers. Are you sure you want to change the selected users to normal members?');
         if(a=='advisor')
-            return confirm('Warning: advisor accounts have FULL CONTROL over the entire chapter just like administrators, but cannot sign up for events. Are you sure you want to change the selected users to advisors?');
+            return confirm('Warning: advisor accounts have FULL CONTROL over the entire chapter like officers, but cannot sign up for events. Are you sure you want to change the selected users to advisors?');
         if(a=='none')
             return true;
         return false;
@@ -44,6 +44,9 @@
     <a href="/teams/${team.id}">${team.event.short_name.replace(' ','&nbsp;')}</a>
 </%def>
 
+% if user.profile.is_admin:
+<p>See the <a href="/help/advisor_guide#user-management">advisor guide</a> for details about using this page.</p>
+% endif
 
 
 
@@ -142,7 +145,7 @@
             <select name="action" id="action_select">
                 <option value="none"> --- Select action --- </option>
                 <option value="delete">Delete selected users</option>
-                <option value="promote">Change selected users to adminstrators</option>
+                <option value="promote">Change selected users to officers</option>
                 <option value="demote">Change selected users to normal members</option>
                 <option value="advisor">Change selected users to advisors</option>
             </select>

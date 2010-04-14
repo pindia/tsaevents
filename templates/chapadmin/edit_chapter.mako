@@ -22,6 +22,8 @@ def sel(cond):
 
 <h2>Chapter Settings</h2>
 
+<p>See the <a href="/help/advisor_guide#chapter-settings">advisor guide</a> for details about chapter settings.</p>
+
 <table class="layouttable aligner">
     <tr>
         <th>Chapter ID:</th>
@@ -65,6 +67,10 @@ def sel(cond):
 % else:
 
 <h2>Fields</h2>
+
+<p>See the <a href="/help/advisor_guide#fields">advisor guide</a> for details about fields.</p>
+
+
 <table align="center" class="tabular_list">
     <tr>
         <th>Name</th>

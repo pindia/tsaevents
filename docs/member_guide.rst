@@ -1,4 +1,5 @@
-
+Member Guide
+~~~~~~~~~~~~~
 
 The system makes it easy to enter all of your events. You sign up for events on the 'Your Events' page, which is the default page you get after you log in. You can get back to it at any time with the link on the navigation bar to the left.
 
@@ -82,7 +83,7 @@ The screen is divided into tables for individual and team events. The "Num" colu
 Some events have icons next to them:
 
 * Lock icons indicate locked events in addition to the red color
-* Exclaimation marks indicate events for which more people are signed up than the maximum. Note that you can still sign up as long as the event is not locked. This allows the chapter advisor to see everyone interested in the event, so that the conflict can be resolved fairly instead of first-come-first-serve. Also, sometimes more people qualify than the strict maximum and they can all go (see the `PA Qualification Rules <pa_qualification>`_). In these cases, the mark can be ignored.
+* Exclamation marks indicate events for which more people are signed up than the maximum. Note that you can still sign up as long as the event is not locked. This allows the chapter advisor to see everyone interested in the event, so that the conflict can be resolved fairly instead of first-come-first-serve. Also, sometimes more people qualify than the strict maximum and they can all go (see the `PA Qualification Rules <pa_qualification>`_). In these cases, the mark can be ignored.
 
 Other Lists
 ==============

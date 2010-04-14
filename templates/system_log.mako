@@ -18,6 +18,7 @@ ICONS = {
 'team_leave':'script_delete.png',
 'team_promote':'group_gear.png',
 'team_delete':'group_delete.png',
+'edit_team_ids':'group_edit.png',
 'team_post':'comment_add.png',
 'team_post_delete':'comment_delete.png',
 'admin_lock':'lock_edit.png',

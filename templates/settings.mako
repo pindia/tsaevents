@@ -18,8 +18,8 @@
     System Administrator
     % elif not user.profile.is_member:
     Advisor
-    % elif user.profile.is_member:
-    Administrator
+    % elif user.profile.is_admin:
+    Officer
     % else:
     Member
     % endif

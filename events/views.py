@@ -268,7 +268,7 @@ def reset_password(request):
 
 def create_account(request):
     
-    if 'chapter' not in request.REQUEST:
+    if 'chapter' not in request.REQUEST or request.REQUEST['chapter'] == '-1':
         return HttpResponseRedirect('/accounts/login')
     chapter = Chapter.objects.get(id=int(request.REQUEST['chapter']))
 
