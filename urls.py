@@ -51,6 +51,7 @@ urlpatterns += patterns('',
     (r'^accounts/login/$', 'tsa.events.views.login_view'),
     (r'^accounts/logout/$', 'tsa.events.views.logout_view'),
     (r'^accounts/create/$', 'tsa.events.views.create_account'),
+    (r'^accounts/request_chapter/$', 'tsa.events.views.request_chapter'),
     (r'^accounts/reset/$', 'tsa.events.views.reset_password'),
 )
 

@@ -49,7 +49,7 @@
   
   <h3>Create new chapter</h3>
   
-  <p>Interested in using this system for your own chapter? The system is currently in open beta and available free to any chapter in Pennsylvania. Email <a href="mailto:admin@tsaevents.com">admin@tsaevents.com</a> for more information.
+  <p>Interested in using this system for your own chapter? The system is currently in open beta and available free to any chapter in Pennsylvania. Fill out the <a href="/accounts/request_chapter">new chapter form</a> to request the creation of a new chapter. Email <a href="mailto:admin@tsaevents.com">admin@tsaevents.com</a> with any questions.
 
 </div>
 

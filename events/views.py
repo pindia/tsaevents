@@ -264,6 +264,37 @@ def reset_password(request):
     
     return render_template('registration/request_reset.mako', request)
 
+def request_chapter(request):
+    class RequestForm(forms.Form):
+            chapter_name = forms.CharField()
+            region = forms.CharField()
+            level = forms.ChoiceField(choices=(('HS','High School'),('MS','Middle School')) )
+            admin_username = forms.CharField()
+            admin_first_name = forms.CharField()
+            admin_last_name = forms.CharField()
+            admin_email = forms.EmailField()    
+            admin_password = forms.CharField(widget=forms.PasswordInput)
+            confirm_password = forms.CharField(widget=forms.PasswordInput)
+            comments = forms.CharField(widget=forms.Textarea, required=False) 
+            
+    if request.method == 'POST':
+        form = RequestForm(request.POST)
+        if form.is_valid():
+            d = form.cleaned_data
+            if d['admin_password'] != d['confirm_password']:
+                return render_template('registration/request_chapter.mako', request, form=form, error_msg = 'Passwords do not match.')
+            t = get_template('email/request_chapter.mako')
+            body = t.render(**d)
+            send_mail('TSAEvents Chapter Request', body, 'TSAEvents <system@tsaevents.com>', ['pindi.albert@gmail.com'], fail_silently=False)
+            return HttpResponse('Your request has been processed and is awaiting approval. You will be emailed when your new chapter is created.')
+            
+    else:
+        form = RequestForm()
+        
+    return render_template('registration/request_chapter.mako', request, form=form)
+    
+    
+
 
 
 def create_account(request):
