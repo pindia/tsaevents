@@ -16,20 +16,43 @@ Filter by Event:
 <form action="" method="post">
 <table class="datatable">
     <tr>
+        <!--<th>&nbsp;</th>-->
         <th>Event</th>
-        <th>TSA ID</th>
+        % if MODE != 'nation':
+            <th>TSA ID</th>
+        % endif
         <th>Members</th>
         <th>View</th>
     </tr>
     % for team in teams:
+        <%
+        n = team.members.count()
+        min = team.event.min_team_size
+        max = team.event.team_size
+        %>
         <tr class="${cycle.next()}">
+            <!--<td>
+                &nbsp;
+                % if n < min or n > max:
+                    <img src="/static/tsa/icons/exclamation.png">
+                % endif
+            </td>-->
             <td>${team.event.name}</td>
-            % if user.profile.is_admin:
-                <td>${chapter.chapter_id}-<input type="entry" value="${team.get_id()}" name="${team.id}_id" size="1"></td>
-            % else:
-                <td>${'%s-%s' % (chapter.chapter_id, team.get_id()) if team.team_id else '-'}</td>
+            % if MODE != 'nation':
+                % if user.profile.is_admin:
+                    <td>${chapter.chapter_id}-<input type="entry" value="${team.get_id()}" name="${team.id}_id" size="1"></td>
+                % else:
+                    <td>${'%s-%s' % (chapter.chapter_id, team.get_id()) if team.team_id else '-'}</td>
+                % endif
             % endif
-            <td>${team.members_list()}</td>
+            <td>
+                ${team.members_list()}
+                % if n < min:
+                    <b>(Requires ${min})</b>
+                % elif n > max:
+                    <b>(Maximum ${max})</b>
+                % endif
+            </td>
             <td>
                 <a href="/teams/${team.id}/">View</a>
             </td>

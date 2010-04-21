@@ -94,6 +94,8 @@ def update_team(request, tid):
     # All actions beyond this point require team membership
         
     if action == 'Add Member':
+        if request.REQUEST['user_id'] == "-1":
+            return redirect
         u = User.objects.get(id=int(request.REQUEST['user_id']))
         if u.teams.filter(event=team.event).count() != 0:
             message(request, 'Error: %s is already in a team for that event.' % u.first_name)

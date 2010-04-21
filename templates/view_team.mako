@@ -50,7 +50,7 @@ function confirmDeletePost(target)
 <%def name='title()'>${team.event.name} Team</%def>
 
 
-<table align="center">
+<!--<table align="center">
   <tr><td class="right">Team ID:</td><td>
   % if team.team_id:
     ${chapter.chapter_id}-${team.get_id()}
@@ -59,11 +59,25 @@ function confirmDeletePost(target)
   % endif
   </td></tr>
   <tr><td class="right">Team Chapter:</td><td>${team.chapter.name}</td></tr>
-</table>
+</table> -->
+
+% if MODE != 'nation':
+  Team ID:
+  % if team.team_id:
+    ${chapter.chapter_id}-${team.get_id()}
+  % else:
+    Unknown
+  % endif
+% endif
 
 <div id="team-members">
     <h2>Members</h2>
-    Maximum team size: ${team.event.team_size}
+        Team size: ${team.event.min_team_size} - ${team.event.team_size}
+        % if team.members.count() < team.event.min_team_size:
+            <br><span class="error">Event requires at least ${team.event.min_team_size} members. </span>
+        % elif team.members.count() > team.event.team_size:
+            <br><span class="error">Team exceeds maximum of ${team.event.team_size} members. </span>
+        % endif
     <table class="tabular_list" align="center">
       <tr>
         <th>Name</th><th>Actions</th>
@@ -99,6 +113,7 @@ function confirmDeletePost(target)
     % elif team.can_invite(user):
       <p>Add member:
         <select name="user_id">
+            <option value="-1" selected="true"> ----- Select member -----</option>
           % for u in user.__class__.objects.filter(profile__chapter=team.chapter,profile__is_member=True):
             <option value="${u.id}">${u.first_name} ${u.last_name}</option>
           % endfor

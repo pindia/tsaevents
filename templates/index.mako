@@ -22,7 +22,7 @@ function confirmRemove(name, target)
 </script>
 
 <p>
-% if user.profile.indi_id:
+% if user.profile.indi_id and MODE != 'nation':
   Your individual ID is: ${chapter.chapter_id}-${user.profile.get_id()}
 % endif
 </p>

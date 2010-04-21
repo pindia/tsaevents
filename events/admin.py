@@ -22,8 +22,9 @@ class EventAdmin(admin.ModelAdmin):
         }),
      )
      filter_horizontal = ('entrants',)
-     list_display = ('name','is_team','team_size','render_region','render_state','render_nation')
-     list_filter = ('is_team',)
+     list_display = ('name','short_name','is_team','min_team_size','team_size','render_region','render_state','render_nation')
+     list_editable = ('short_name','min_team_size','team_size')
+     list_filter = ('is_team','event_set')
      ordering=('id',)
      #actions=[lock_events]
 

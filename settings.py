@@ -1,7 +1,7 @@
 import config
 # Django settings for tsa project.
 
-MODE = 'state'
+MODE = 'nation'
 
 MODE_ABBR =dict(
     region='Reg',

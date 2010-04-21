@@ -69,9 +69,10 @@
         <th>&nbsp;</th>
       % endif
       <th width="120">Name</th>
-      <th>TSA ID</th>
+      % if MODE != 'nation':
+        <th>TSA ID</th>
+      % endif
       <th>#E</th>
-      <th>#T</th>
       <th>Individual</th>
       <th>Team</th>
     </tr>
@@ -91,21 +92,22 @@
           % if not member.profile.is_member:
           <td colspan="5">Advisor</td>
           % else:
-          <td style="white-space: nowrap;">
-            % if user.profile.is_admin:
-                ${chapter.chapter_id}-<input type="entry" name="id_${member.id}" value="${member.profile.get_id()}" size="1">
-            % else:
-                ${'%s-%s' % (chapter.chapter_id, member.profile.get_id()) if member.profile.indi_id else '-'}
+            % if MODE != 'nation':
+              <td style="white-space: nowrap;">
+                % if user.profile.is_admin:
+                    ${chapter.chapter_id}-<input type="entry" name="id_${member.id}" value="${member.profile.get_id()}" size="1">
+                % else:
+                    ${'%s-%s' % (chapter.chapter_id, member.profile.get_id()) if member.profile.indi_id else '-'}
+                % endif
+              </td>
             % endif
-          </td>
-          <td>${member.events.count()}</td>
-          <td>${member.teams.count()}</td>
-          <td>
-                ${'&bull'.join([render_indi_event(event, member) for event in member.events.all()]) or '&nbsp;'}
-          </td>
-          <td>
-                ${'&bull'.join([render_team_event(team) for team in member.teams.all()]) or '&nbsp;'}
-          </td>
+            <td>${member.events.count() + member.teams.count()}</td>
+            <td>
+                  ${'&bull'.join([render_indi_event(event, member) for event in member.events.all()]) or '&nbsp;'}
+            </td>
+            <td>
+                  ${'&bull'.join([render_team_event(team) for team in member.teams.all()]) or '&nbsp;'}
+            </td>
           % endif
       </tr>
   % endfor

@@ -15,9 +15,24 @@
     <th>Sta</th>
     <th>Nat</th>-->
     <th>Max</th>
+    % if user.is_superuser:
+      <th>Rules</th>
+    % endif
   </tr>
+  
+  <%
+    import os
+    import tsa.config
+    rules = os.listdir(tsa.config.paths(tsa.config.STATIC_DIR, 'HSrules'))
+    
+  %>
+  
   % for event in events:
     <%
+      if MODE == 'nation' and event.max_nation == 0:
+        continue
+    
+    
       if event.is_team:
         n = event.teams.filter(chapter=chapter).count()
       else:
@@ -68,6 +83,15 @@
       <td>${event.render_state()}</td>
       <td>${event.render_nation()}</td>-->
       <td>${rendered_max}</td>
+      % if user.is_superuser:
+        <td>
+          % if event.name.strip() + '.pdf' in rules:
+            <a href="/static/tsa/HSrules/${event.name.strip()}.pdf">Rules</a>
+          % else:
+            -
+          % endif
+        </td>
+      % endif
     </tr>
   % endfor
 </table> 
