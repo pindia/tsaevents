@@ -49,3 +49,5 @@ admin.site.register(Team, TeamAdmin)
 admin.site.register(UserProfile, ProfileAdmin)
 admin.site.register(Chapter)
 admin.site.register(EventSet)
+
+admin.site.register(ChapterFile)

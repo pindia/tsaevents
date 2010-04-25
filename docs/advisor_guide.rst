@@ -12,7 +12,6 @@ Basic chapter settings can be changed on the **Edit Chapter** page. The followin
 * Allow new users - Uncheck this box to lock chapter registration. Any new user who tries to sign up into your chapter will receive an error message, so you must add new users manually.
 * Key - You may enter a key that all new users must enter in order to sign up into your chapter. This is optional; leave the field blank and users will not be prompted for a key. A key is recommended as a basic security precaution to prevent anyone in the world from creating an account in your chapter. You will need to somehow inform your chapter's members of the key outside of this site.
 * Chapter info - This text will be displayed to all users signing up for an account on the registration screen. Note that this will be visible to anyone in the world that selects your chapter from the main screen. You can use this text for anything you want. For instance, you could provide a hint for the key that only someone from your school would likely understand.
-* Chapter message - This text will be displayed to all logged in chapter members on the main chapter page. You can use this text to advise members of what is going on in the chapter.
 
 User management
 ===================

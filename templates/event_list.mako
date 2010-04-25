@@ -15,7 +15,7 @@
     <th>Sta</th>
     <th>Nat</th>-->
     <th>Max</th>
-    % if user.is_superuser:
+    % if 'State' in chapter.name:
       <th>Rules</th>
     % endif
   </tr>
@@ -24,6 +24,7 @@
     import os
     import tsa.config
     rules = os.listdir(tsa.config.paths(tsa.config.STATIC_DIR, 'HSrules'))
+
     
   %>
   
@@ -83,7 +84,7 @@
       <td>${event.render_state()}</td>
       <td>${event.render_nation()}</td>-->
       <td>${rendered_max}</td>
-      % if user.is_superuser:
+      % if 'State' in chapter.name:
         <td>
           % if event.name.strip() + '.pdf' in rules:
             <a href="/static/tsa/HSrules/${event.name.strip()}.pdf">Rules</a>

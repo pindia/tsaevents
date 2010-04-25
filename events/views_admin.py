@@ -30,11 +30,70 @@ def member_fields(request, category):
 
 
 @chapter_admin_required
+def chapter_info(request):
+    c = (request.chapter.link or request.chapter)
+    if request.method == 'POST':
+        if request.POST.get('new_announce'):
+            a = Announcement(chapter=c, author=request.user, text=request.POST['new_announce'])
+            a.save()
+            message(request, 'New announcement created.')
+            log(request, 'announce_create', '%s posted a new announcement.' % name(request.user))
+            
+        if request.FILES.get('new_file'):
+            uf = request.FILES['new_file']
+            if uf.size > 25 * 2 ** 20:
+                message(request, 'Error: Files cannot be larger than 25 MB')
+                return render_template('index.mako', request)
+            if c.files.count() >= 10:
+                message(request, 'Error: There cannot be more than 10 files per chapter. Delete some old files and try again.')
+                return render_template('index.mako', request)
+            f = ChapterFile(chapter=c, author=request.user, name=uf.name, size=uf.size, file=uf)
+            f.save()
+            message(request, 'New file uploaded.')
+            log(request, 'file_create', '%s uploaded the file "%s".' % (name(request.user), f.name))
+            
+        for key, value in request.POST.items():
+            if key.startswith('editannounce_'):
+                junk, aid = key.split('_')
+                if 'deleteannounce_%s' % aid in request.POST:
+                    continue
+                a = Announcement.objects.get(id=int(aid))
+                if a.text != value:
+                    a.text = value
+                    a.save()
+                    message(request, 'Announcement updated.')
+            if key.startswith('deleteannounce_'):
+                junk, aid = key.split('_')
+                a = Announcement.objects.get(id=(int(aid)))
+                log(request, 'announce_delete', '%s deleted an announcement.' % name(request.user))
+                message(request, 'Announcement deleted.')
+                a.delete()
+                
+            if key.startswith('editfile_'):
+                junk, fid = key.split('_')
+                if 'deletefile_%s' % fid in request.POST:
+                    continue
+                f = ChapterFile.objects.get(id=int(fid))
+                if f.name != value:
+                    f.name = value
+                    f.save()
+                    message(request, 'File updated.')
+            if key.startswith('deletefile_'):
+                junk, fid = key.split('_')
+                f = ChapterFile.objects.get(id=(int(fid)))
+                message(request, 'File deleted.')
+                log(request, 'file_delete', '%s deleted the file "%s".' % (name(request.user), f.name))
+                f.delete()
+                
+    #return render_template('chapadmin/chapter_info.mako', request)
+    return render_template('index.mako', request)
+
+
+@chapter_admin_required
 def edit_chapter(request):
     c = request.chapter
     if request.method == 'POST':
         c.register_open = 'register_open' in request.POST
-        c.message = request.POST['message']
         c.info = request.POST['info']
         c.key = request.POST['key']
         c.chapter_id=request.POST['chapter_id']

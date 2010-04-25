@@ -67,6 +67,43 @@ class Chapter(models.Model):
     def __str__(self):
         return self.name
 
+class Announcement(models.Model):
+    chapter = models.ForeignKey(Chapter, related_name='announcements')
+    author = models.ForeignKey(User)
+    create_date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now=True)
+    title = models.CharField(max_length=100, default='')
+    text = models.TextField()
+    active = models.BooleanField(default=True)
+    
+    extra_char1 = models.CharField(max_length=100, default='')
+    extra_int1 = models.IntegerField(default=0)
+    extra_bool1 = models.BooleanField(default=False)
+    
+    def render_text(self):
+        t = self.text
+        t = t.replace('<','&lt;')
+        t = t.replace('>','&gt;')
+        t = t.replace('"','&quot;')
+        t = t.replace('\n', '<br>')
+        return t
+    
+def get_upload_path(instance, filename):
+    return '%d/%s' % (instance.chapter.id, filename)
+    
+class ChapterFile(models.Model):
+    chapter = models.ForeignKey(Chapter, related_name='files')
+    author = models.ForeignKey(User)
+    create_date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=100)
+    
+    file = models.FileField(upload_to=get_upload_path)
+    size = models.IntegerField()
+    active = models.BooleanField(default=True)
+
+
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
@@ -233,8 +270,8 @@ class Team(models.Model):
             user == self.captain or (user in self.members.all() and self.entry_privacy == P_MEMBERS_ONLY)
         
     
-    def members_list(self):
-        return ', '.join(['%s %s' % (member.first_name, member.last_name[0]) for member in self.members.all()])
+    def members_list(self, sep=', '):
+        return sep.join(['%s %s' % (member.first_name, member.last_name[0]) for member in self.members.all()])
     members_list.short_description='Members'
     
     def link(self):

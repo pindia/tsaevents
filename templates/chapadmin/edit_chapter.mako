@@ -50,13 +50,6 @@ def sel(cond):
             <span style="font-size:smaller;">Displayed to new users on registration screen</span>
         </td>
     </tr>
-    <tr>
-        <th>Message:</th>
-        <td>
-            <textarea name="message" style="width:300px; height:100px;">${chapter.message}</textarea><br>
-            <span style="font-size:smaller;">Displayed to chapter members on the front page</span>
-        </td>
-    </tr>
 
 </table>
 
