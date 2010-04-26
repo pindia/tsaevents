@@ -52,6 +52,21 @@ def chapter_info(request):
             message(request, 'New file uploaded.')
             log(request, 'file_create', '%s uploaded the file "%s".' % (name(request.user), f.name))
             
+        if request.POST.get('create_event'):
+            try:
+                d = datetime.date(month=int(request.POST['editeventmonth_create']),
+                                  day=int(request.POST['editeventday_create']),
+                                  year=int(request.POST['editeventyear_create']))
+            except ValueError: # Date was not valid
+                message(request, 'Error: Date is not valid')
+                return render_template('index.mako', request)
+            if d < datetime.date.today():
+                message(request, 'Error: Date is before today')
+                return render_template('index.mako', request)
+            e = CalendarEvent(chapter=c, author=request.user, name=request.POST['editeventname_create'], date=d)
+            e.save()
+            message(request, 'New event created.')
+            
         for key, value in request.POST.items():
             if key.startswith('editannounce_'):
                 junk, aid = key.split('_')
@@ -84,6 +99,26 @@ def chapter_info(request):
                 message(request, 'File deleted.')
                 log(request, 'file_delete', '%s deleted the file "%s".' % (name(request.user), f.name))
                 f.delete()
+                
+        for event in c.calendar_events.all():
+            if 'editeventname_%d' % event.id not in request.POST:
+                continue
+            if 'deleteevent_%d' % event.id in request.POST:
+                event.delete()
+                message(request, 'Event deleted.')
+                continue
+            n = request.POST['editeventname_%d' % event.id]
+            m = int(request.POST['editeventmonth_%d' % event.id])
+            d = int(request.POST['editeventday_%d' % event.id])
+            y = int(request.POST['editeventyear_%d' % event.id])
+            if n != event.name or m != event.date.month or d != event.date.day or y != event.date.year:
+                event.name = n
+                event.date = datetime.date(month=m, day=d, year=y)
+                if(event.date < datetime.date.today()):
+                    message(request, 'Error: Date is before today')
+                    return render_template('index.mako', request)
+                event.save()
+                message(request, 'Event updated.')
                 
     #return render_template('chapadmin/chapter_info.mako', request)
     return render_template('index.mako', request)

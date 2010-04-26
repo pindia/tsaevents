@@ -102,7 +102,15 @@ class ChapterFile(models.Model):
     size = models.IntegerField()
     active = models.BooleanField(default=True)
 
-
+class CalendarEvent(models.Model):
+    chapter = models.ForeignKey(Chapter, related_name='calendar_events')
+    author = models.ForeignKey(User)
+    create_date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=100)
+    text = models.TextField()
+    date = models.DateField()
+    active = models.BooleanField(default=True)
 
 
 class UserProfile(models.Model):

@@ -23,7 +23,7 @@ function confirm_delete_file(fname)
 
 <form action='/chapter_info' method='POST' enctype='multipart/form-data'>
   
-  <h2>Chapter Files</h2>
+  <h2>Files</h2>
   
   <table class="datatable" style="width:100%">
       % if (chapter.link or chapter).files.count() == 0:

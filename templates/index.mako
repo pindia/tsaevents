@@ -27,5 +27,6 @@
 
   <%include file="components/announcements.mako" />
   <%include file="components/files.mako" />
+  <%include file="components/calendar.mako" />
 
 </div>

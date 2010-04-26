@@ -27,7 +27,7 @@ function confirm_delete_announce()
 
 <form action='/chapter_info' method='POST'>
   
-  <h2>Chapter Announcements</h2>
+  <h2>Announcements</h2>
   
   <table class="datatable" style="width:100%">
       % if (chapter.link or chapter).announcements.count() == 0:
