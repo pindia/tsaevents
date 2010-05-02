@@ -197,6 +197,8 @@ def system_log(request):
         logs = SystemLog.objects.filter(user=request.user)
     else:
         logs = SystemLog.objects.filter(affected=request.user)
+    request.user.last_login = datetime.datetime.now()
+    request.user.save()
     return render_template('system_log.mako', request, logs=logs.order_by('-date'))
     
 @system_admin_required

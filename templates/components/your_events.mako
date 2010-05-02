@@ -50,7 +50,12 @@ function confirmRemove(name, target)
   <tr class="${cycle.next()}">
     <td><img src="/static/tsa/icons/group.png" title="Team"></td>
     <td>${team.event.name}</td>
-    <td>${team.members_list('<br>')}</td>
+    <td>
+      ${team.members_list('<br>')}
+      % if team.members.count() < team.event.min_team_size:
+          <br><b>(Requires&nbsp;${team.event.min_team_size})</b>
+      % endif
+    </td>
     <td><a href="/teams/${team.id}/">View</a></td>
   </tr>
   % endfor

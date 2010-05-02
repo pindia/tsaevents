@@ -30,15 +30,16 @@
   
   % for event in events:
     <%
-      if MODE == 'nation' and event.max_nation == 0:
-        continue
     
     
       if event.is_team:
         n = event.teams.filter(chapter=chapter).count()
       else:
         n = event.entrants.filter(profile__chapter=chapter).count()
-             
+         
+      if MODE == 'nation' and event.max_nation == 0 and n == 0:
+        continue       
+      
       max = getattr(event, 'max_%s' % MODE)
       if MODE == 'region' and max == 0:
         max = event.max_state
@@ -59,10 +60,12 @@
     %>
     <tr class='${rowclass}'>
       <td>
-        % if max > 0 and n > max:
+        % if max == 0 and n > 0:
           <img src="/static/tsa/icons/exclamation.png">
         % elif event.is_locked(user):
           <img src="/static/tsa/icons/lock.png">
+        % elif max >= 0 and n > max:
+          <img src="/static/tsa/icons/exclamation.png">
         % else:
           &nbsp;
         % endif

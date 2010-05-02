@@ -85,6 +85,8 @@ class ChapterMiddleware(object):
             if request.user.profile.chapter.name.startswith('State High') and request.user.profile.is_admin and not request.user.profile.is_member:
                 request.user.profile.chapter = request.user.profile.chapter.__class__.objects.exclude(id=request.user.profile.chapter.id).get(name__istartswith='State High')
                 request.user.profile.save()
+                from django.http import HttpResponseRedirect
+                return HttpResponseRedirect(request.path)
         try:
             if request.user.is_authenticated():
                 request.chapter = request.user.profile.chapter

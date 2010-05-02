@@ -302,7 +302,7 @@ class TeamPost(models.Model):
     
 class SystemLog(models.Model):
     user = models.ForeignKey(User, related_name='log_actions')
-    chapter = models.ForeignKey(Chapter, null=True, blank=True, default=None)
+    chapter = models.ForeignKey(Chapter, null=True, blank=True, default=None, related_name="logs")
     affected = models.ForeignKey(User, related_name='log_entries', null=True, blank=True)
     type = models.CharField(max_length='20')
     text = models.CharField(max_length='100')

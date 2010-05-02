@@ -155,6 +155,10 @@ function confirmDeletePost(target)
         <span style="font-size:0.7em; font-style:italic;">
         % if msg.author.is_superuser:
           Site Admin
+        % elif msg.author.profile.is_admin and not msg.author.profile.is_member:
+          Chapter Advisor
+        % elif msg.author.profile.is_admin:
+          Chapter Officer       
         % elif team.captain == msg.author:
           Team Captain
         % elif msg.author in team.members.all():

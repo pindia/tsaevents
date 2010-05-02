@@ -17,7 +17,8 @@
   
   % else:
   
-    You cannot sign up for events because you are a chapter advisor.
+    <!--You cannot sign up for events because you are a chapter advisor.-->
+    <%include file="components/chapter_summary.mako" />
   
   % endif
 
