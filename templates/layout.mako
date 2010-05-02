@@ -32,6 +32,27 @@
 
   </div>
   
+% if (DEPLOYED) and (not user or not user.is_superuser):
+  
+    <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+    try {
+    var pageTracker = _gat._getTracker("UA-195288-7");
+    % if chapter:
+        pageTracker._setCustomVar(1,"chapter","${chapter.name}",3);
+    % endif
+    % if user:
+        pageTracker._setCustomVar(1,"username","${user.username}",3);
+    % endif
+    pageTracker._trackPageview();
+    } catch(err) {}</script>
+    
+% endif
+  
+  
 </body>
 </html>
 
