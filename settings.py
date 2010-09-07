@@ -100,7 +100,13 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'tsa.settings.ChapterMiddleware',
+    #'johnny.middleware.QueryCacheMiddleware',
+    #'johnny.middleware.LocalStoreClearMiddleware',
 )
+
+#CACHE_BACKEND = 'johnny.backends.locmem://'
+#JOHNNY_MIDDLEWARE_KEY_PREFIX='jc_myproj'
+
 
 ROOT_URLCONF = 'tsa.urls'
 

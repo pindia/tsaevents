@@ -66,7 +66,9 @@
   <h1>TSA Events - ${self.title()}</h1>
   % if messages:
     % for message in messages:
-      <div align="center" class="${'error' if message.startswith('Error:') else 'info'}">${message}</div>
+      <div align="center" class="${'error' if message.startswith('Error:') else 'info'}">
+        ${message}
+      </div>
     % endfor
   % endif
   ${next.body()}

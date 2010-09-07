@@ -57,7 +57,7 @@ else:
         % if t > 0:
             <b><a href="/team_list/">${t} teams</a></b>
         % else:
-            Teams OK &bull;
+            Teams OK
         % endif
         </td>
     </tr>

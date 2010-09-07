@@ -66,8 +66,8 @@ def render_template(name,request,**kwds):
         t = get_template(name)
         txt = t.render(**kwds)
     except:
-        return HttpResponse(exceptions.html_error_template().render() )
-    return HttpResponse(txt)
+        return HttpResponse(exceptions.html_error_template().render())
+    return HttpResponse(txt, mimetype=kwds.get('mimetype','text/html'))
     
 def message(request, msg):
     request.user.message_set.create(message=msg)
@@ -114,6 +114,10 @@ def index(request):
     if not request.chapter:
         return HttpResponseRedirect('/config/chapter_list')
     return render_template('index.mako',request, events=Event.objects.all())
+    
+@login_required
+def xml(request):
+    return render_template('xml.mako', request, mimetype='text/xml')
 
 
 def help_viewer(request, page='index'):
@@ -199,18 +203,35 @@ def update_indi(request):
 
 @login_required 
 def settings(request):
-    fields = Field.objects.filter(chapter=request.chapter, view_perm=1)
+    viewable_fields = request.chapter.get_fields().filter(view_perm=Field.USER_OR_ADMIN)
+    category_names = set(viewable_fields.values_list('category', flat=True))
+    categories = {}
+    for name in category_names:
+        fields = viewable_fields.filter(category=name)
+        if fields:
+            categories[name] = fields
+    
     if request.method == 'POST':
+        # Update fields
+        editable_fields = viewable_fields.filter(edit_perm=Field.USER_OR_ADMIN)
+        for field in editable_fields:
+            if field.type == Field.BOOLEAN:
+                request.user.profile.set_field(field, ('field_%d' % field.id) in request.POST)
+            else:
+                request.user.profile.set_field(field, request.POST['field_%d' % field.id])
+        # Update email settings
         p = request.user.profile
         if 'posts_email' in request.POST:
             p.posts_email = 2
         else:
             p.posts_email = 0
         p.save()
+        # Update user information (name + email)
         u = request.user
         u.first_name = escape(request.POST['first_name'])
         u.last_name = escape(request.POST['last_name'])
         u.email = request.POST['email']
+        # Update user passwod
         if request.POST['new_password'] and not u.check_password(request.POST['old_password']):
             message(request, 'Error: Old password is not correct.')
         elif request.POST['new_password'] != request.POST['confirm_password']:
@@ -221,7 +242,7 @@ def settings(request):
             log(request, 'password_change', '%s changed their password.' % (name(request.user)))
         u.save()
         message(request, 'Your settings have been updated.')
-    return render_template('settings.mako',request, url=login_url(request.user), fields=fields)
+    return render_template('settings.mako',request, url=login_url(request.user), categories=categories)
 
 def reset_password(request):
     if request.method == 'POST':
@@ -302,6 +323,7 @@ def create_account(request):
     if 'chapter' not in request.REQUEST or request.REQUEST['chapter'] == '-1':
         return HttpResponseRedirect('/accounts/login')
     chapter = Chapter.objects.get(id=int(request.REQUEST['chapter']))
+    fields = chapter.get_fields().filter(edit_perm=Field.USER_OR_ADMIN)
 
     class NewUserForm(forms.Form):
             if chapter.key:
@@ -349,6 +371,12 @@ def create_account(request):
             u.save()
             profile = UserProfile(is_member=True, chapter=chapter, user=u)
             profile.save()
+            
+            for field in fields:
+                if field.type == Field.BOOLEAN:
+                    profile.set_field(field, ('field_%d' % field.id) in request.POST)
+                else:
+                    profile.set_field(field, request.POST['field_%d' % field.id])
         
                 
             SystemLog(chapter=chapter, user=u, affected=u, type='new_user', text='New user %s registered.' % name(u)).save()
@@ -364,7 +392,7 @@ def create_account(request):
     
     
         
-    return render_template('registration/register.mako', request, form=form, chapter=chapter)
+    return render_template('registration/register.mako', request, form=form, chapter=chapter, fields=fields)
     
 execfile(paths(APP_DIR, 'views_lists.py'))
 execfile(paths(APP_DIR, 'views_team.py'))

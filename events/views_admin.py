@@ -7,23 +7,28 @@ def member_fields(request, category):
     categories = set(fields.values_list('category', flat=True))
     fields = fields.filter(category=category)
     if request.method == 'POST':
-        i = 0
-        for member in members:
-            for field in fields:
-                key = '%d_%d' % (member.id, field.id)
-                fv = member.profile.get_field(field)
-                if field.type == 0:
-                    if fv and key not in request.POST:
-                        member.profile.set_field(field, False)
-                        i += 1
-                    if not fv and key in request.POST:
-                        member.profile.set_field(field, True)
-                        i += 1
-                else:
-                    if fv != request.POST[key]:
-                        member.profile.set_field(field, request.POST[key])
-                        i += 1
-        message(request, '%d fields updated.' % i)
+        if str(request.chapter.id) != request.POST.get('chapter'): # Sanity check; are we updating the right chapter?
+            message(request, 'Error: Chapter was changed before form was submitted.')
+        else:
+            i = 0
+            for member in members:
+                for field in fields:
+                    if field.edit_perm == 3: #Skip fields that are edit-locked
+                        continue
+                    key = '%d_%d' % (member.id, field.id)
+                    fv = member.profile.get_field(field)
+                    if field.type == 0:
+                        if fv and key not in request.POST:
+                            member.profile.set_field(field, False)
+                            i += 1
+                        if not fv and key in request.POST:
+                            member.profile.set_field(field, True)
+                            i += 1
+                    else:
+                        if fv != request.POST[key]:
+                            member.profile.set_field(field, request.POST[key])
+                            i += 1
+            message(request, '%d fields updated.' % i)
                         
                     
     return render_template('chapadmin/member_fields.mako', request, members=members, fields=fields, categories=categories, category=category)

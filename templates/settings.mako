@@ -27,24 +27,39 @@
 <tr><th>Chapter:</th><td>${chapter}</td></tr>
 </table>
 
-% if user.profile.is_member and fields.count() != 0:
+% if user.profile.is_member and categories:
 
 <h2>Fields</h2>
 
-<table class="aligner layouttable">
-% for field in fields:
-    <tr>
-        <td>${field.name}:</td>
-        <td>
-        % if field.type == 0:
-            ${'Yes' if user.profile.get_field(field) else 'No'}
-        % else:
-            ${user.profile.get_field(field)}
-        % endif
-        </td>
-    </tr>
+% for name, fields in categories.items():
+
+    % if len(categories):
+        <h3>${name}</h3>
+    % endif
+    <table class="aligner layouttable" style="min-width: 300px">
+    % for field in fields:
+        <tr>
+            <td style="width:50%;"><b>${field.name}:</b></td>
+            <td>
+            % if field.type == 0:
+                % if field.is_user_editable():
+                    <input type="checkbox" name="field_${field.id}" ${'checked="yes"' if user.profile.get_field(field) else ''}>
+                % else:
+                    ${'Yes' if user.profile.get_field(field) else 'No'}
+                % endif
+            % else:
+                % if field.is_user_editable():
+                    <input type="entry" name="field_${field.id}" value="${user.profile.get_field(field)}">
+                % else:
+                    ${user.profile.get_field(field)}
+                % endif
+            % endif
+            </td>
+        </tr>
+    % endfor
+    </table>
+
 % endfor
-</table>
 
 % endif
 
@@ -58,8 +73,8 @@
 
 
 <h3>Change Password</h3>
-<table class="layouttable aligner">
-    <tr><th>Old:</th><td><input type="password" name="old_password"></td></tr>
+<table class="layouttable aligner" style="min-width: 300px">
+    <tr><th style="width:50%">Old:</th><td><input type="password" name="old_password"></td></tr>
     <tr><th>New:</th><td><input type="password" name="new_password"></td></tr>
     <tr><th>Confirm:</th><td><input type="password" name="confirm_password"></td></tr>
 </table>

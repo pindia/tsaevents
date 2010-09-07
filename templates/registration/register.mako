@@ -26,8 +26,28 @@
         
         <table class="layouttable aligner">
             ${form.as_table()}
-          <tr ><td colspan="2"><div align="center"><input type="submit" value="Create" /></div></td></tr>
         </table>
+        
+        % if fields:
+            <p>The following additional information is requested by your chapter:</p>
+            <table class="aligner layouttable">
+            % for field in fields:
+                <tr>
+                    <td><b>${field.name}:</b></td>
+                    <td>
+                    % if field.type == 0:
+                        <input type="checkbox" name="field_${field.id}" >
+                    % else:
+                        <input type="entry" name="field_${field.id}" >
+                    % endif
+                    </td>
+                </tr>
+            % endfor
+            </table>
+        
+        % endif
+        
+        <div align="center"><input type="submit" value="Create" />
 
     </form>
     

@@ -137,7 +137,10 @@ class UserProfile(models.Model):
         return fv.get_value(field.type)
         
     def set_field(self, field, val):
-        fv = FieldValue.objects.get(user=self.user, field=field)
+        try:
+            fv = FieldValue.objects.get(user=self.user, field=field)
+        except FieldValue.DoesNotExist:
+            fv = FieldValue(user=self.user, field=field, raw_value=val)
         fv.set_value(field.type, val)
         
     def get_id(self):
@@ -152,9 +155,17 @@ class UserProfile(models.Model):
 
 TYPE_CHOICES = zip(range(2),['Boolean', 'Text'])
 VIEW_CHOICES = zip(range(3),['Admin only', 'User or Admin', 'Everyone'])
-EDIT_CHOICES = zip(range(2),['Admin only', 'User or Admin', 'Admin (logged)', 'Editing locked'])
+EDIT_CHOICES = zip(range(4),['Admin only', 'User or Admin', 'Admin (logged)', 'Editing locked'])
 
 class Field(models.Model):
+    BOOLEAN = 0
+    TEXT = 1
+    ADMIN_ONLY = 0
+    USER_OR_ADMIN = 1
+    ADMIN_LOGGED = 2
+    EVERYONE = 2
+    NOBODY = 3
+    
     name = models.CharField(max_length=50)
     short_name = models.CharField(max_length=20)
     chapter = models.ForeignKey(Chapter, related_name='fields')
@@ -173,6 +184,10 @@ class Field(models.Model):
             return '-'
         else:
             return val
+        
+    def is_user_editable(self):
+        return self.edit_perm == 1
+    
     
 class FieldValue(models.Model):
     field = models.ForeignKey(Field)
@@ -240,6 +255,21 @@ class Event(models.Model):
             return '%d/s' % -self.max_nation
         return self.max_nation
     render_nation.short_description='Max nation'
+    
+    def get_max(self, mode):
+        return getattr(self, 'max_%s' % mode)
+        
+    def render_max(self, mode):
+        return getattr(self, 'render_%s' % mode)()
+        
+    def get_num(self, chapter):
+        if self.is_team:
+            return self.teams.filter(chapter=chapter).count()
+        else:
+            return self.entrants.filter(profile__chapter=chapter).count()
+        
+    def is_exceeded(self, mode, chapter):
+        return self.get_max(mode) > 0 and self.get_num(chapter) > self.get_max(mode)
     
     def is_locked(self, user):
         return self in user.profile.chapter.locked_events.all()

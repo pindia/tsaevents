@@ -56,7 +56,7 @@ def sel(cond):
 
 
 % if chapter.link:
-    Switch to master chapter to view and edit fields.
+    <p>Switch to master chapter to view and edit fields.</p>
 % else:
 
 <h2>Fields</h2>
@@ -85,15 +85,15 @@ def sel(cond):
         <td>
             <select name="${field.id}_view_perm">
                 <option value="0" ${sel(field.view_perm == 0)}>Admin only</option>
-                <option value="1" ${sel(field.view_perm == 1)}>Admin or user</option>
+                <option value="1" ${sel(field.view_perm == 1)}>User or admin</option>
             </select>
         </td>
         <td>
             <select name="${field.id}_edit_perm">
-                <option value="3" disabled ${sel(field.edit_perm == 3)}>Editing locked</option>
-                <option value="2" disabled ${sel(field.edit_perm == 2)}>Admin only (logged)</option>
+                <option value="3" ${sel(field.edit_perm == 3)}>Nobody</option>
+                <option value="2" ${sel(field.edit_perm == 2)}>Admin only (logged)</option>
                 <option value="0" ${sel(field.edit_perm == 0)}>Admin only</option>
-                <option value="1" disabled ${sel(field.edit_perm == 1)}>Admin or user</option>
+                <option value="1" ${sel(field.edit_perm == 1)}>User or admin</option>
             </select>
         </td>
         
@@ -115,8 +115,7 @@ def sel(cond):
         <tr><td>Default:</td><td><input type="entry" name="default"></td>
     </table>
 % endif
-
-
 <input type="submit" value="Submit">
+
 
 </form>

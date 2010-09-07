@@ -14,7 +14,7 @@ function confirmRemove(name, target)
 
 <form action="update_indi" method="post">
 <h3>Individual events</h3>
-<table class="tabular_list" align="center">
+<table class="tabular_list" align="center" style="width:100%; margin:0px">
   <tr>
     <th>&nbsp;</th><th>Event</th><th>Del</th>
   </tr>
