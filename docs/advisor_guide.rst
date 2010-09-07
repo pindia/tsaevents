@@ -55,12 +55,11 @@ Event List
     :align: right
     :target: /static/tsa/docs/raw/event_list_advisor.png
     
-As an advisor, the information displayed on the `event list <member_guide#event_list>`_ page is identical to that shown to members. However, there is an additional column of checkboxes on the left side of the list where you can lock events. After you edit the chackboxes, make sure to click 'Submit' at the bottom of the page to save your changes.
+As an advisor, the information displayed on the `event list <member_guide#event-list>`_ page is identical to that shown to members. However, there is an additional column of checkboxes on the left side of the list where you can lock events. After you edit the checkboxes, make sure to click 'Submit' at the bottom of the page to save your changes.
 
 Members cannot sign up for locked individual events or create new teams for locked team events, but can join and leave existing teams in the event. You are always able to manually add individual events and create teams through the advisor interface, even for locked events.
 
-Locking events is useful when an event has filled up, is qualification-only, or when the registration deadline has passed. See the `suggested workflow <suggested_workflow>`_ page for the method we at State High use for locking events.
-
+Locking events is useful when an event has filled up, is qualification-only, or when the registration deadline has passed.
 
 
 Chapter Log

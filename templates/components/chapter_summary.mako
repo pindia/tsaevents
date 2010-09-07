@@ -14,7 +14,7 @@ else:
 <table class="datatable" style="width:100%">
 
     <tr>
-        <td>Members:</td>
+        <td style="width:30%">Members:</td>
         <td><a href="/member_list/${s}">${chapter.members.filter(is_member=True).count()}</a></td>
     </tr>
     <tr>

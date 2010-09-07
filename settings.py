@@ -15,6 +15,8 @@ MODE_ABBR =dict(
 DEBUG = not config.DEPLOYED
 TEMPLATE_DEBUG = DEBUG
 
+PREPEND_WWW = True
+
 ADMINS = (
     ('Pindi Albert', 'pindi.albert@gmail.com'),
     # ('Your Name', 'your_email@domain.com'),

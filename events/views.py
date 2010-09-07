@@ -267,7 +267,7 @@ def reset_password(request):
             password = request.POST['password']
             confirm_password = request.POST['confirm_password']
             if password != confirm_password:
-                return render_template('registration/perform_reset.mako', request, user=uid, auth=auth , error_msg='Error: passwords do not match.')
+                return render_template('registration/perform_reset.mako', request, uid=uid, auth=auth , error_msg='Error: passwords do not match.')
             user.set_password(password)
             user.save()
             user = authenticate(username=user.username, password=password)
@@ -304,6 +304,8 @@ def request_chapter(request):
             d = form.cleaned_data
             if d['admin_password'] != d['confirm_password']:
                 return render_template('registration/request_chapter.mako', request, form=form, error_msg = 'Passwords do not match.')
+            if User.objects.filter(username=d['admin_username']).count() != 0:
+                return render_template('registration/request_chapter.mako', request, form=form, error_msg = 'Username is already in use.')
             t = get_template('email/request_chapter.mako')
             body = t.render(**d)
             send_mail('TSAEvents Chapter Request', body, 'TSAEvents <system@tsaevents.com>', ['pindi.albert@gmail.com'], fail_silently=False)

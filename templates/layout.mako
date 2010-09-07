@@ -45,7 +45,7 @@
         pageTracker._setCustomVar(1,"chapter","${chapter.name}",3);
     % endif
     % if user:
-        pageTracker._setCustomVar(1,"username","${user.username}",3);
+        pageTracker._setCustomVar(2,"username","${user.username}",3);
     % endif
     pageTracker._trackPageview();
     } catch(err) {}</script>
