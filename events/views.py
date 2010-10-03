@@ -129,7 +129,7 @@ def calendar(request):
         return HttpResponse('Invalid key specified.')
     cal = vobject.iCalendar()
     cal.add('method').value = 'PUBLISH'  # IE/Outlook needs this
-    for event in chapter.calendar_events.filter(date__gte=datetime.date.today()):
+    for event in (chapter.link or chapter).calendar_events.filter(date__gte=datetime.date.today()):
         vevent = cal.add('vevent')
         vevent.add('summary').value = event.name
         vevent.add('dtstart').value = event.date
