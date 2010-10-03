@@ -17,7 +17,8 @@ urlpatterns = patterns('tsa.events.views',
     
     (r'^contact/$', 'contact'),
 
-    (r'^xml$','xml'),
+    (r'^api/xml$','xml'),
+    (r'^calendar(?:.ics)?$','calendar'),
 
     # Account/Event Management Views
     (r'^$', 'index'),

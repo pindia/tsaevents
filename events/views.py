@@ -18,7 +18,7 @@ from mako import exceptions
 from mako.lookup import TemplateLookup
 
 # Standard library imports
-import time, datetime, os, timeit, string, random
+import time, datetime, os, timeit, string, random, hashlib, vobject
 from itertools import *
 from smtplib import SMTPException
 
@@ -118,6 +118,27 @@ def index(request):
 @login_required
 def xml(request):
     return render_template('xml.mako', request, mimetype='text/xml')
+    
+
+    
+def calendar(request):
+    if 'chapter' not in request.GET:
+        return HttpResponse('No chapter specified.')
+    chapter = Chapter.objects.get(id=int(request.GET['chapter']))
+    if 'key' not in request.GET or chapter.calendar_key != request.GET['key']:
+        return HttpResponse('Invalid key specified.')
+    cal = vobject.iCalendar()
+    cal.add('method').value = 'PUBLISH'  # IE/Outlook needs this
+    for event in chapter.calendar_events.filter(date__gte=datetime.date.today()):
+        vevent = cal.add('vevent')
+        vevent.add('summary').value = event.name
+        vevent.add('dtstart').value = event.date
+    icalstream = cal.serialize()
+    response = HttpResponse(icalstream)#, mimetype='text/calendar')
+    response['Filename'] = 'calendar.ics'  # IE needs this
+    response['Content-Disposition'] = 'attachment; filename=calendar.ics'
+    return response
+
 
 
 def help_viewer(request, page='index'):

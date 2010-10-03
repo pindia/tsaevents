@@ -1,4 +1,4 @@
-import os 
+import os, sys
 
 def paths( *args ):
     "Returns normalized paths"
@@ -23,4 +23,8 @@ DOCS_DIR = paths( _CURR_DIR, 'docs')
 TEMPLATE_DIR = paths( _CURR_DIR, 'templates' )
 
 DATABASE_FILE = paths( _CURR_DIR, 'db-tsa.db' )
+
+LIB_DIR = paths( _CURR_DIR, 'lib')
+
+sys.path.append(LIB_DIR)
 

@@ -95,6 +95,7 @@ function confirm_delete_event(ename)
               % if user.profile.is_admin:
                 [<a href="javascript:begin_edit('ecreate')">Create new event</a>]
               % endif
+          <div style="float: right"><a href="/calendar.ics?chapter=${chapter.id}&key=${chapter.calendar_key}"><img src="/static/tsa/icons/ical.gif"></a></div>
           </td>
           % if user.profile.is_admin:
             <td id="edit-ecreate" style="display:none;" colspan="10">
@@ -105,5 +106,6 @@ function confirm_delete_event(ename)
           % endif
       </tr>
   </table>
+  
   
   </form>

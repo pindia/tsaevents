@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from tsa import settings
+import hashlib
+
 # Create your models here.
 
 EMAIL_CHOICES = (
@@ -64,6 +67,12 @@ class Chapter(models.Model):
         if category:
             f = f.filter(category=category)
         return f.order_by('category','weight')
+        
+    
+    @property    
+    def calendar_key(self):
+        return hashlib.sha1('28@73r%y2n0d#mxh@we*yfd8' + settings.SECRET_KEY + str(self.id)).hexdigest()
+        
     def __str__(self):
         return self.name
 
