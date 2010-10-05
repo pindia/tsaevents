@@ -32,8 +32,8 @@ Min N,Max N,Event ,Region ,State ,National,Short Name
 1,1,Transportation Modeling ,5,2,1,Trans Modeling
 2,6,Video Game Design,4,2,3/s,Game Design
 3,5,Webmaster,3,1,1,Webmaster
-1,1,PA CAD 2D Architecture,,,,PA CAD 2D
-1,1,PA CAD 2D Architecture,,,,PA CAD 3D
+1,1,PA CAD 2D Architecture,3,1,,PA CAD 2D
+1,1,PA CAD 3D Engineering,3,1,,PA CAD 3D
 2,2,PA Computer Systems Troubleshooting , ,2, ,PA Comp Sys Troub
 2,6,PA Electronic Research,,2,,
 1,1,PA Material Process ,5,2, ,PA Mat Process
