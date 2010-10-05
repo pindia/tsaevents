@@ -1,40 +1,43 @@
 Min N,Max N,Event ,Region ,State ,National,Short Name
-2,6,Animatronics , ,2,1,Animatronics
+2,6,Animatronics ,3,2,1,Animatronics
 1,6,Architectural Model ,4,Q ,1,Arch Model
 2,6,Biotechnology Design,4,2,3/s,Biotech
 1,1,CAD 2D Architecture,3,3,2/s,CAD Anim Arch
 1,1,CAD 3D Engineering,3,3,2/s,CAD Anim Eng
-1,1,Career Comparisons , ,2,1,Career Comp
+1,1,Career Comparisons ,5,2,1,Career Comp
 6,6,Chapter Team , ,1,1,Chapter Team
 2,5,Construction Renovation, ,2,1,Construction
-2,2,Debating Technological Issues,,1,3/s,Debate
+2,2,Debating Technological Issues,4,1,3/s,Debate
 1,1,Desktop Publishing ,3,Q ,1/s,Desktop Pub
 2,6,Digital Video Production,3,1,3/s,Digital Video
 1,1,Dragster Design ,7,Q ,2,Dragster Design
 3,5,Engineering Design ,3,2,1,Eng Design
 1,1,Essays on Technology,,1,3/s,Essays on Tech
 1,1,Extemporaneous Speech,5,Q ,3/s,Extemp Pres
-2,4,Fashion Design,2,2,1,Fashion Design
+2,4,Fashion Design,3,2,1,Fashion Design
 1,1,Flight Endurance ,5,2,2,Flight End
-1,1,Future Technology Teacher,,2,3,Future Tech Teacher
-2,6,Manufacturing Prototype ,5,2,1,Manufact Prototype
+1,1,Future Technology Teacher,5,2,3,Future Tech Teacher
+2,6,Manufacturing Prototype ,2,2,1,Manufact Prototype
 1,6,Music Production,,2,3/s,Music Production
 2,6,On Demand Video,3,1,1,On Demand Video
-1,1,Photographic Technology,5,Q ,1,Imaging Tech
+1,1,Photographic Technology,5,Q ,1,Photo Tech
 1,1,Prepared Presentation ,5,Q ,3/s,Prepared Pres
 1,1,Promotional Graphics ,5,1,2,Promo Graphics
 1,6,SciVis, ,2,3/s,SciViz
 2,2,Structural Engineering ,4,Q ,1,Struct Engineering
 3,3,System Control Technology ,2,1,1/s,System Control
 1,1,Technical Sketching and Application , ,2,2,Tech Sketching
-3,3,Technology Bowl ,3,2,1,Tech Bowl
-2,2,Technology Problem Solving ,4,Q ,1,Problem Solving
+3,3,Technology Bowl ,2,2,1,Tech Bowl
+2,2,Technology Problem Solving ,3,Q ,1,Problem Solving
 1,1,Transportation Modeling ,5,2,1,Trans Modeling
 2,6,Video Game Design,4,2,3/s,Game Design
-3,5,Webmaster,3,1,1,Cyberspace Pur
+3,5,Webmaster,3,1,1,Webmaster
+1,1,PA CAD 2D Architecture,,,,PA CAD 2D
+1,1,PA CAD 2D Architecture,,,,PA CAD 3D
 2,2,PA Computer Systems Troubleshooting , ,2, ,PA Comp Sys Troub
+2,6,PA Electronic Research,,2,,
 1,1,PA Material Process ,5,2, ,PA Mat Process
 2,2,PA RC Vehicle , ,1, ,PA RC Vehicle
-1,1,PA Safety Illustration Computer Graphics ,5,1, ,PA Safety Illus
+1,1,PA Safety Illustration Computer Generated,5,1, ,PA Safety Illus
 1,1,PA Stencil Logo Design , ,2,,PA Stencil Logo
 1,1,Biomedical Research Essay,5,Q,,Biomed Essay
