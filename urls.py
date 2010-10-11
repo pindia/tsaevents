@@ -43,6 +43,7 @@ urlpatterns = patterns('tsa.events.views',
     (r'^edit_chapter$', 'edit_chapter'),
     (r'^chapter_info$', 'chapter_info'),
     (r'^member_fields/(\w+)?$', 'member_fields'),
+    (r'^attendance$', 'attendance'),
     
     # System Admin
     (r'^config/chapter_list$', 'chapter_list'),

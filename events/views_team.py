@@ -1,7 +1,11 @@
 @login_required
 def join_team(request):
     eid = request.REQUEST['event_id']
-    e = Event.objects.get(id=eid)
+    try:
+        e = Event.objects.get(id=eid)
+    except Event.DoesNotExist:
+        message(request, 'Error: invalid event selected')
+        return HttpResponseRedirect('/')
     if request.method == 'POST':
         t = Team(event=e)
         t.captain = request.user

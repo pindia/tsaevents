@@ -25,17 +25,22 @@
     import tsa.config
     rules = os.listdir(tsa.config.paths(tsa.config.STATIC_DIR, 'HSrules'))
 
+    locked_events = list(chapter.locked_events.all())
+
     
   %>
   
   % for event in events:
     <%
     
+      event.locked = event in locked_events
     
       if event.is_team:
         n = event.teams.filter(chapter=chapter).count()
       else:
         n = event.entrants.filter(profile__chapter=chapter).count()
+        
+        
          
       if MODE == 'nation' and event.max_nation == 0 and n == 0:
         continue       
@@ -54,7 +59,7 @@
         rowclass = 'yellowback'
       if MODE == 'state' and event.max_nation < 0:
         rowclass = 'yellowback'
-      if event.is_locked(user):
+      if event.locked:
         rowclass = 'redback'
         
     %>
@@ -62,7 +67,7 @@
       <td>
         % if max == 0 and n > 0:
           <img src="/static/tsa/icons/exclamation.png">
-        % elif event.is_locked(user):
+        % elif event.locked:
           <img src="/static/tsa/icons/lock.png">
         % elif max >= 0 and n > max:
           <img src="/static/tsa/icons/exclamation.png">
@@ -72,7 +77,7 @@
       </td>
       % if user.profile.is_admin:
       <td>
-          <input type="checkbox" name="lock_${event.id}" ${'checked="true"' if event.is_locked(user) else ''}>
+          <input type="checkbox" name="lock_${event.id}" ${'checked="true"' if event.locked else ''}>
       </td>
       % endif
       <td>${event.name}</td>

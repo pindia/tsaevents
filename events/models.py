@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from tsa import settings
-import hashlib
+import hashlib, re
 
 # Create your models here.
 
@@ -95,6 +95,13 @@ class Announcement(models.Model):
         t = t.replace('>','&gt;')
         t = t.replace('"','&quot;')
         t = t.replace('\n', '<br>')
+        
+        # Linkify URLs
+        r1 = r"(\b(http|https)://([-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]))"
+        #r2 = r"((^|\b)www\.([-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]))"
+        #t = re.sub(r2,r'<a rel="nofollow" target="_blank" href="http://\1">\1</a>',re.sub(r1,r'<a rel="nofollow" target="_blank" href="\1">\1</a>',t))
+        t = re.sub(r1, r'<a rel="nofollow" target="_blank" href="\1">\1</a>', t)
+
         return t
     
 def get_upload_path(instance, filename):
@@ -120,6 +127,15 @@ class CalendarEvent(models.Model):
     text = models.TextField()
     date = models.DateField()
     active = models.BooleanField(default=True)
+
+class ChapterMeeting(models.Model):
+    chapter = models.ForeignKey(Chapter, related_name='meetings')
+    #name = models.CharField(max_length=100)
+    #text = models.TextField()
+    date = models.DateField()
+    attendees = models.ManyToManyField(User, related_name='attended_meetings')
+    mandatory = models.BooleanField(default=False)
+    type = models.IntegerField(default=0)
 
 
 class UserProfile(models.Model):

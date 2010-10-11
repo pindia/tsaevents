@@ -186,7 +186,10 @@ def logout_view(request):
 
 
 def quick_login(request):
-    user = User.objects.get(id=int(request.GET['user']))
+    try:
+        user = User.objects.get(id=int(request.GET['user']))
+    except (ValueError, User.DoesNotExist):
+        return HttpResponse('Error: Invalid user specified. Perhaps your account has been deleted?')
     if user.is_superuser and DEPLOYED:  
         return HttpResponse('Error: Admins cannot login using the quick links for security reasons.')
     if user.password.split('$')[2] == request.GET['auth']:
@@ -365,7 +368,7 @@ def create_account(request):
         form = NewUserForm(request.POST)
         
         def show_error(msg):
-            return render_template('registration/register.mako', request, form=form, chapter=chapter, error_msg=msg)
+            return render_template('registration/register.mako', request, form=form, chapter=chapter, fields=fields, error_msg=msg)
             
         if form.is_valid():
             d = form.cleaned_data
@@ -399,7 +402,7 @@ def create_account(request):
                 if field.type == Field.BOOLEAN:
                     profile.set_field(field, ('field_%d' % field.id) in request.POST)
                 else:
-                    profile.set_field(field, request.POST['field_%d' % field.id])
+                    profile.set_field(field, request.POST.get('field_%d' % field.id, field.default_value))
         
                 
             SystemLog(chapter=chapter, user=u, affected=u, type='new_user', text='New user %s registered.' % name(u)).save()

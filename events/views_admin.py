@@ -1,4 +1,50 @@
 
+
+@chapter_admin_required
+def attendance(request):
+    c = request.chapter
+    
+    meetings = list(ChapterMeeting.objects.filter(chapter=(c.link or c)).order_by('date'))
+    members = list(User.objects.filter(profile__chapter=c, profile__is_member=True).order_by('last_name'))
+    if c.link:
+        members += list(User.objects.filter(profile__chapter=c.link, profile__is_member=True).order_by('last_name'))
+    if c.reverselink:
+        members = list(User.objects.filter(profile__chapter=c.reverselink, profile__is_member=True).order_by('last_name')) + members
+    attendees = {}
+    for meeting in meetings:
+        attendees[meeting] = list(meeting.attendees.all())
+    for member in members:
+        total = len(meetings)
+        if total == 0:
+            member.percent = 100
+        else:
+            num = len([meeting for meeting in meetings if member in attendees[meeting]])
+            member.percent = int(num*100/total)
+        
+    
+    
+    if request.method == 'POST':
+        action = request.POST['action']
+        if action == 'Create':
+            d = datetime.datetime.strptime(request.POST['date'],'%m/%d/%y').date()
+            m = ChapterMeeting(chapter=(c.link or c), date=d)
+            m.save()
+        elif action == 'X':
+            m = ChapterMeeting.objects.get(id=int(request.POST['meeting']))
+            m.delete()
+        else:
+            for meeting in meetings:
+                for member in members:
+                    key = '%d-%d' % (meeting.id, member.id)
+                    if member in attendees[meeting] and key not in request.POST:
+                        meeting.attendees.remove(member)
+                    if member not in attendees[meeting] and key in request.POST:
+                        meeting.attendees.add(member)
+        return HttpResponseRedirect('/attendance')
+
+    return render_template('chapadmin/attendance.mako', request, members=members, meetings=meetings, attendees = attendees)
+
+
 @chapter_admin_required
 def member_fields(request, category):
     category = category or 'Main'
