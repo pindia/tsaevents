@@ -8,16 +8,14 @@
       <b>[SA]</b>
     % elif user.profile.is_admin:
       <b>[A]</b>
-    % elif hasattr(user,'admin_disabled'):
-      <i>[<a href="?ENABLE_ADMIN">E</a>]</i>
     % endif
     &bull;
     ${user.profile.chapter}
     % if not user.profile.is_member:
       (N)
     % endif
-    % if user.profile.chapter and user.profile.chapter.name.startswith('State High') and user.profile.is_admin and not user.profile.is_member:
-      [<a href="?STATEHIGH_SWITCH">Switch</a>]
+    % if user.profile.chapter and (user.profile.chapter.link or user.profile.chapter.reverselink) and user.profile.is_admin:
+      [<a href="?SWITCH_CHAPTER">Switch</a>]
     % endif
     &bull;
     Events: ${user.events.all().count()} Teams: ${user.teams.all().count()}
@@ -55,6 +53,7 @@
         <ul>
           <li> <a href='/event_log?type=system'>System&nbsp;Log</a></li>
           <li> <a href='/config/chapter_list'>Chapter&nbsp;List</a></li>
+          <li> <a href='/config/events/HS/'>Events</a></li>
           <li> <a href='/config/eventsets/'>Event&nbsp;Sets</a></li>
         </ul>
       </li>

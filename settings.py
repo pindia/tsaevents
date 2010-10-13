@@ -83,16 +83,27 @@ TEMPLATE_LOADERS = (
 
 class ChapterMiddleware(object):
     def process_request(self, request):
-        if 'STATEHIGH_SWITCH' in request.GET:
-            if request.user.profile.chapter.name.startswith('State High') and request.user.profile.is_admin and not request.user.profile.is_member:
-                request.user.profile.chapter = request.user.profile.chapter.__class__.objects.exclude(id=request.user.profile.chapter.id).get(name__istartswith='State High')
-                request.user.profile.save()
-                from django.http import HttpResponseRedirect
-                return HttpResponseRedirect(request.path)
         try:
             if request.user.is_authenticated():
-                request.chapter = request.user.profile.chapter
-        except:
+                user = request.user
+                if 'CURRENT_CHAPTER' in request.session:
+                    target_chapter = user.profile.chapter.__class__.objects.get(id=int(request.session['CURRENT_CHAPTER']))
+                    if target_chapter != user.profile.chapter:
+                        user.profile.is_member = False
+                        user.profile.chapter = target_chapter
+                if 'SWITCH_CHAPTER' in request.GET:
+                    chapter = user.profile.chapter
+                    if chapter and (chapter.link or chapter.reverselink) and user.profile.is_admin:
+                        target_chapter = chapter.link or chapter.reverselink
+                        request.session['CURRENT_CHAPTER'] = target_chapter.id
+                        from django.http import HttpResponseRedirect
+                        return HttpResponseRedirect(request.path)
+                request.chapter = user.profile.chapter
+    
+            else:
+                request.chapter = None
+        except Exception as e:
+            print 'EXCEPTION: %s' % e
             request.chapter = None
 
 

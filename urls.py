@@ -47,6 +47,7 @@ urlpatterns = patterns('tsa.events.views',
     
     # System Admin
     (r'^config/chapter_list$', 'chapter_list'),
+    (r'^config/events/(MS|HS)/$', 'edit_events'),
     (r'^config/eventsets/$', 'eventset_list'),
     (r'^config/eventsets/(\d+)/$', 'edit_eventset')
 )

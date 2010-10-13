@@ -311,3 +311,37 @@ def edit_eventset(request, esid):
             
     return render_template('sysadmin/edit_eventset.mako', request, es = es)
     
+    
+@system_admin_required
+def edit_events(request, level):
+    def remove_duplicates(events):
+        names = set()
+        out = []
+        for event in events:
+            if event.name not in names:
+                names.add(event.name)
+                out.append(event)
+        return out
+        
+    events = remove_duplicates(Event.objects.filter(event_set__level=level).exclude(max_nation=0))
+    state_list = EventSet.objects.filter(level=level).values_list('state', flat=True)
+    states = {}
+    for state in state_list:
+        states[state] = remove_duplicates(Event.objects.filter(event_set__level=level, event_set__state=state, max_nation=0))
+    
+    if request.method == 'POST':
+        for event in events:
+            name, short_name, min_team_size, team_size = request.POST.get('%d_name' % event.id), request.POST.get('%d_short_name' % event.id), int(request.POST.get('%d_min_team_size' % event.id)), int(request.POST.get('%d_team_size' % event.id))
+            if not name or not short_name or not min_team_size or not team_size:
+                continue
+            if (name, short_name, min_team_size, team_size) != (event.name, event.short_name, event.min_team_size, event.team_size):
+                qs = Event.objects.filter(event_set__level=event.event_set.level, name=event.name)
+                num = qs.count()
+                qs.update(name=name, short_name=short_name, min_team_size=min_team_size, team_size=team_size)
+                message(request, '%s modified. %d events affected.' % (event.name, num))
+        return HttpResponseRedirect('/config/events/%s/' % level)
+    
+    return render_template('sysadmin/edit_events.mako', request, national_events=events, states=states, level=level)
+    
+    
+    

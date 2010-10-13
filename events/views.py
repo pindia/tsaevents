@@ -157,10 +157,13 @@ def login_view(request):
     class LoginForm(forms.Form):
             username = forms.CharField()
             password = forms.CharField(widget=forms.PasswordInput)
+            stay_signed_in = forms.BooleanField(required=False)
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
             d = form.cleaned_data
+            if not d['stay_signed_in']:
+                request.session.set_expiry(0)
             user = authenticate(username=d['username'], password=d['password'])
             if user is not None and user.is_active:
                 login(request, user)

@@ -10,7 +10,7 @@
         if(a=='delete')
             return confirm('Warning: deleting users will IRREVERSIBLY DESTROY all data relating to them, including entries, teams, and team posts. Are you sure you want to delete the selected users?');
         if(a=='promote')
-            return confirm('Warning: officers have FULL CONTROL over the entire chapter, including the ability to delete users, teams, and event entries. Are you sure you want to promote the selected users to administrators?');
+            return confirm('Warning: officers have FULL CONTROL over the entire chapter, including the ability to delete users, teams, and event entries. Are you sure you want to promote the selected users to officers?');
         if(a=='demote')
             return confirm('Normal members are able to sign up for events, but have no administrative powers. Are you sure you want to change the selected users to normal members?');
         if(a=='advisor')
@@ -48,9 +48,7 @@
 <p>See the <a href="/help/advisor_guide#user-management">advisor guide</a> for details about using this page.</p>
 % endif
 
-
-
-    <form action="/member_list" method="get">
+    <form action="/member_list/" method="get">
     Filter by Event:
     <select name="event">
         <option value="">-----All-----</option>
@@ -160,4 +158,6 @@
 % endif
 
 </form>
+
+<p>Printable views: <a href="/member_list/?checklist">Checklist</a>
 
