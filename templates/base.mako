@@ -63,7 +63,7 @@
 </div>
 
 <div id="body" class="span-20 last" align="center">
-  <h1>TSA Events - ${self.title()}</h1>
+  <h1>${self.title()}</h1>
   % if messages:
     % for message in messages:
       <div align="center" class="${'error' if message.startswith('Error:') else 'info'}">
