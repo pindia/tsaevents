@@ -44,6 +44,8 @@ urlpatterns = patterns('tsa.events.views',
     (r'^chapter_info$', 'chapter_info'),
     (r'^member_fields/(\w+)?$', 'member_fields'),
     (r'^attendance$', 'attendance'),
+    (r'^email$', 'chapter_email'),
+
     
     # System Admin
     (r'^config/chapter_list$', 'chapter_list'),
@@ -67,7 +69,7 @@ urlpatterns += patterns('',
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    (r'^admin/(.*)', admin.site.root),
+    (r'^admin/', include(admin.site.urls))
 )
 
 if not config.DEPLOYED:

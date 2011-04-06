@@ -43,6 +43,7 @@
         <ul>
           <li> <a href='/member_fields'>Member&nbsp;Fields</a></li>
           <li> <a href='/attendance'>Attendance</a></li>
+          <li> <a href='/email'>Email</a></li>
           <li> <a href='/event_log?type=chapter'>Chapter&nbsp;Log</a></li>
           <li> <a href='/edit_chapter'>Edit&nbsp;Chapter</a></li>
         </ul>

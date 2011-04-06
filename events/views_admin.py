@@ -233,6 +233,40 @@ def edit_chapter(request):
     return render_template('chapadmin/edit_chapter.mako', request, chapter=c)
 
 
+@chapter_admin_required
+def chapter_email(request):
+    c = request.chapter
+    members = c.members_with_link().select_related('user').order_by('user__last_name')
+    if request.method == 'POST':
+        target = request.POST['target']
+        subject = request.POST['subject']
+        body = request.POST['body']
+        from_email = request.user.email
+        if target == 'group':
+            groups = request.POST.getlist('groups')
+            q = Q()
+            if 'members' in groups:
+                q = q | Q(is_member=True)
+            if 'officers' in groups:
+                q = q | Q(is_member=True, is_admin=True)
+            if 'advisors' in groups:
+                q = q | Q(is_member=False, is_admin=True)
+            to = members.filter(q)
+        if target == 'specific':
+            ids = map(int, request.POST.getlist('members'))
+            to = members.filter(id__in=ids)
+        if target == 'field':
+            field = Field.objects.get(id=int(request.POST['field']))
+            qs = FieldValue.objects.filter(field=field, raw_value=request.POST['value']).select_related('user__profile')
+            to = [v.user.profile for v in qs]
+        
+        
+        data = [(subject, body, '<system@tsaevents.com>', [profile.user.email]) for profile in to]
+        send_mass_mail( data )
+        
+        message(request, '%d emails sent.' % len(data))
+        
+    return render_template('chapadmin/email.mako', request, members=members)
 
 
 @login_required

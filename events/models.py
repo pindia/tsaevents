@@ -56,6 +56,12 @@ class Chapter(models.Model):
         else:
             return None
         
+    def members_with_link(self):
+        query = models.Q(chapter=self)
+        if self.link or self.reverselink:
+            query = query | models.Q(chapter=(self.link or self.reverselink))
+        return UserProfile.objects.filter(query).filter(user__is_superuser=False)
+        
         
     def get_events(self):
         return self.event_set.events.all()
@@ -176,6 +182,9 @@ class UserProfile(models.Model):
             return id.split('-')[-1]
         else:
             return id
+        
+    def __str__(self):
+        return self.name()
         
 
 TYPE_CHOICES = zip(range(2),['Boolean', 'Text'])

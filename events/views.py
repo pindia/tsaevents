@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
 from django.db import connection
 from django import forms
-from django.core.mail import send_mail, mail_admins
+from django.core.mail import send_mail, send_mass_mail, mail_admins
 from django.utils.html import escape
 
 # Mako imports
