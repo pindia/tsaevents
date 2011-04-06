@@ -260,11 +260,21 @@ def chapter_email(request):
             qs = FieldValue.objects.filter(field=field, raw_value=request.POST['value']).select_related('user__profile')
             to = [v.user.profile for v in qs]
         
+        connection = get_connection()
+        from_name = '%s %s' % (request.user.first_name, request.user.last_name)
+        from_email = request.user.email
+        system_email = 'system@tsaevents.com'
         
-        data = [(subject, body, '<system@tsaevents.com>', [profile.user.email]) for profile in to]
-        send_mass_mail( data )
+        messages = []
         
-        message(request, '%d emails sent.' % len(data))
+        for profile in to:
+            to_email = profile.user.email
+            messages.append(EmailMessage(subject, body, '%s <%s>' % (from_name, system_email), [to_email],
+                               headers={'Reply-To': from_email}))
+            
+        connection.send_messages(messages)
+        
+        message(request, '%d emails sent.' % len(to))
         
     return render_template('chapadmin/email.mako', request, members=members)
 
