@@ -30,7 +30,6 @@ def member_list(request, eid=None):
             if e.is_team:
                 t = Team(event=e, chapter=request.chapter)
                 new_members = []
-                message(request, 'A new %s team was created.' % e.name)
         else:
             e = None
         for key, val in request.POST.items():
@@ -88,8 +87,9 @@ def member_list(request, eid=None):
                         log(request, 'event_add', '%s added %s to %s\'s events.' % (name(request.user), e.name, name(u)), affected=u) 
                 else:
                     pass
-        if e and e.is_team == True:
+        if e and e.is_team == True and new_members:
             t.captain = new_members[0]
+            message(request, 'A new %s team was created.' % e.name)
             message(request, '%s was selected to be the team captain.' % name(t.captain))
             t.save()
             for member in new_members:

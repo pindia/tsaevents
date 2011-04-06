@@ -62,7 +62,7 @@ Filter by Event:
         <tr><td colspan="99">No teams matching filters found. <a href="/team_list/">View all</a></td></tr>
     % endif
 </table>
-% if user.profile.is_admin and teams:
+% if user.profile.is_admin and teams and MODE != 'nation':
     <input type="submit" value="Update IDs">
 % endif
 </form>
