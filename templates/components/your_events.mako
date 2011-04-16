@@ -20,7 +20,15 @@ function confirmRemove(name, target)
   </tr>
   % for event in user.events.all():
   <tr class="${cycle.next()}">
-    <td><img src="/static/tsa/icons/user.png" title="Individual"></td>
+    <td>
+      % if event.is_locked(user):
+        <img src="/static/tsa/icons/user-tick.png" title="Individual">
+      % elif event.is_exceeded(MODE, chapter):
+        <img src="/static/tsa/icons/user-exclamation.png" title="Individual">
+      % else:
+        <img src="/static/tsa/icons/user.png" title="Individual">
+      % endif
+    </td>
     <td>${event.name}</td>
     <td><a onclick="confirmRemove('${event.name}','/update_indi?delete_event=${event.id}')" href="javascript:void(0)"><img src="/static/tsa/icons/delete.png" title="Remove Event"></a></td>
   </tr>
@@ -48,7 +56,15 @@ function confirmRemove(name, target)
   </tr>
   % for team in user.teams.all():
   <tr class="${cycle.next()}">
-    <td><img src="/static/tsa/icons/group.png" title="Team"></td>
+    <td>
+      % if event.is_locked(user):
+        <img src="/static/tsa/icons/group-tick.png" title="Team">
+      % elif event.is_exceeded(MODE, chapter):
+        <img src="/static/tsa/icons/group-exclamation.png" title="Team">
+      % else:
+        <img src="/static/tsa/icons/group.png" title="Team">
+      % endif
+    </td>
     <td>${team.event.name}</td>
     <td>
       ${team.members_list('<br>')}
