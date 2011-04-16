@@ -57,9 +57,9 @@ function confirmRemove(name, target)
   % for team in user.teams.all():
   <tr class="${cycle.next()}">
     <td>
-      % if event.is_locked(user):
+      % if team.event.is_locked(user):
         <img src="/static/tsa/icons/group-tick.png" title="Team">
-      % elif event.is_exceeded(MODE, chapter):
+      % elif team.event.is_exceeded(MODE, chapter):
         <img src="/static/tsa/icons/group-exclamation.png" title="Team">
       % else:
         <img src="/static/tsa/icons/group.png" title="Team">
