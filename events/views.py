@@ -233,19 +233,20 @@ def settings(request):
     viewable_fields = request.chapter.get_fields().filter(view_perm=Field.USER_OR_ADMIN)
     category_names = set(viewable_fields.values_list('category', flat=True))
     categories = {}
-    for name in category_names:
-        fields = viewable_fields.filter(category=name)
+    for cname in category_names:
+        fields = viewable_fields.filter(category=cname)
         if fields:
-            categories[name] = fields
+            categories[cname] = fields
     
     if request.method == 'POST':
         # Update fields
-        editable_fields = viewable_fields.filter(edit_perm=Field.USER_OR_ADMIN)
-        for field in editable_fields:
-            if field.type == Field.BOOLEAN:
-                request.user.profile.set_field(field, ('field_%d' % field.id) in request.POST)
-            else:
-                request.user.profile.set_field(field, request.POST['field_%d' % field.id])
+        if request.user.profile.is_member:
+            editable_fields = viewable_fields.filter(edit_perm=Field.USER_OR_ADMIN)
+            for field in editable_fields:
+                if field.type == Field.BOOLEAN:
+                    request.user.profile.set_field(field, ('field_%d' % field.id) in request.POST)
+                else:
+                    request.user.profile.set_field(field, request.POST['field_%d' % field.id])
         # Update email settings
         p = request.user.profile
         if 'posts_email' in request.POST:

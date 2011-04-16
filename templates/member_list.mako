@@ -101,10 +101,10 @@
             % endif
             <td>${member.events.count() + member.teams.count()}</td>
             <td>
-                  ${'&bull'.join([render_indi_event(event, member) for event in member.events.all()]) or '&nbsp;'}
+                  ${'&bull;'.join([render_indi_event(event, member) for event in member.events.all()]) or '&nbsp;'}
             </td>
             <td>
-                  ${'&bull'.join([render_team_event(team) for team in member.teams.all()]) or '&nbsp;'}
+                  ${'&bull;'.join([render_team_event(team) for team in member.teams.all()]) or '&nbsp;'}
             </td>
           % endif
       </tr>

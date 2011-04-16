@@ -25,13 +25,21 @@ ADMINS = (
 SERVER_EMAIL = 'system@tsaevents.com'
 
 MANAGERS = ADMINS
-
+'''
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 DATABASE_NAME = config.DATABASE_FILE             # Or path to database file if using sqlite3.
 DATABASE_USER = ''             # Not used with sqlite3.
 DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+'''
+
+DATABASES = {
+	'default': {
+		'ENGINE': 'django.db.backends.sqlite3',
+		'NAME': config.DATABASE_FILE
+	}
+}
 
 if DEBUG:
     EMAIL_HOST = 'localhost'
@@ -106,7 +114,7 @@ class ChapterMiddleware(object):
     
             else:
                 request.chapter = None
-        except Exception as e:
+        except Exception, e:
             print 'EXCEPTION: %s' % e
             request.chapter = None
 

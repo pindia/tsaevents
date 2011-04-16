@@ -10,11 +10,11 @@ lock_events.short_description = 'Lock selected events'
 class EventAdmin(admin.ModelAdmin):
      fieldsets = (
         (None, {
-            'fields': ('name',)
+            'fields': ('name','short_name','event_set')
         }),
         ('Eligibility', {
             #'classes': ('collapse',),
-            'fields': ('is_team', 'team_size', 'max_region', 'max_state', 'max_nation')
+            'fields': ('is_team', 'team_size','min_team_size', 'max_region', 'max_state', 'max_nation')
         }),
         ('Entrants', {
             'description' : 'Only use for individual events!',

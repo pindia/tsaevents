@@ -1,17 +1,21 @@
 import os, random, csv
+import sys
+sys.path.append('../..')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'tsa.settings'
 from tsa.config import *
 
 from tsa.events.models import Event, EventSet
 
-EventSet.objects.all().delete()
-Event.objects.all().delete()
+#EventSet.objects.all().delete()
+#Event.objects.all().delete()
 
-hs = EventSet(level='HS', state='PA', region='Region 8')
-hs.save()
-ms = EventSet(level='MS', state='PA', region='Region 8')
-ms.save()
+#hs = EventSet(level='HS', state='PA', region='Region 8')
+#hs.save()
+#ms = EventSet(level='MS', state='PA', region='Region 8')
+#ms.save()
 
+hs = EventSet.objects.get(level='HS', region='Region 8')
+ms = EventSet.objects.get(level='MS', region='Region 8')
 
 
 def perform_import(fname, es):
@@ -47,6 +51,8 @@ def perform_import(fname, es):
         e = Event(event_set = es, name=name, is_team = team, team_size=n, max_region=reg, max_state=state, max_nation=nation, short_name=short_name)
         e.save()
    
-   
+ 
+hs.events.all().delete()
+  
 perform_import('events_hs.csv', hs)
-perform_import('events_ms.csv', ms)
+#perform_import('events_ms.csv', ms)

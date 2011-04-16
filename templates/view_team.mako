@@ -114,7 +114,7 @@ function confirmDeletePost(target)
       <p>Add member:
         <select name="user_id">
             <option value="-1" selected="true"> ----- Select member -----</option>
-          % for u in user.__class__.objects.filter(profile__chapter=team.chapter,profile__is_member=True):
+          % for u in user.__class__.objects.filter(profile__chapter=team.chapter,profile__is_member=True).order_by('last_name'):
             <option value="${u.id}">${u.first_name} ${u.last_name}</option>
           % endfor
         </select>

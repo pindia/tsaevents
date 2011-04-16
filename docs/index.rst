@@ -11,4 +11,4 @@ Some other miscellaneous topics covered:
 
 If your questions are not answered in the help pages or you need something in your chapter's system changed, contact one of your chapter advisors. Their email addresses are listed on the `contact page </contact/>`_ (you must be logged in).
 
-If you have technical issues using the system or your chapter advisor is unable to answer you question, you may contact the site administrator at `admin@tsaevents.com <admin@tsaevents.com>`_
+If you have technical issues using the system or your chapter advisor is unable to answer your question, you may contact the site administrator at `admin@tsaevents.com <admin@tsaevents.com>`_.
