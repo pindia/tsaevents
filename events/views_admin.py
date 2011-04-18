@@ -241,6 +241,9 @@ def chapter_email(request):
         target = request.POST['target']
         subject = request.POST['subject']
         body = request.POST['body']
+        if not subject or not body:
+            message(request, 'Error: Must specify subject and body')
+            return render_template('chapadmin/email.mako', request, members=members)
         from_email = request.user.email
         if target == 'group':
             groups = request.POST.getlist('groups')

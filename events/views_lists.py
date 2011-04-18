@@ -74,6 +74,15 @@ def member_list(request, eid=None):
                         return HttpResponseRedirect('/member_list')
                     message(request, '%s deleted.' % name(u))
                     log(request, 'user_delete', "%s deleted %s's account." % (name(request.user), name(u)))
+                    for team in Team.objects.filter(captain=u):
+                        team.members.remove(u)
+                        if team.members.count():
+                            team.captain = team.members.all()[0]
+                            message(request, '%s is the new team captain of %s\'s %s team.' % (name(team.captain), name(u), team.event.name))
+                            team.save()
+                        else:
+                            team.delete()
+                            message(request, '%s\'s %s team was dissolved.' % (name(u), team.event.name))
                     u.delete()
                 elif request.POST.get('eid','') != "-1":
                     #u = User.objects.get(id=int(request.GET['uid']))

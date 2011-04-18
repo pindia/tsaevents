@@ -74,9 +74,9 @@ $(document).ready(function(){
     </div>
     
     <div>
-        From: ${user.email}<br>
-        Subject: <input type="entry" name="subject"><br>
-        Body: <textarea name="body"></textarea><br>
+        <b>From:</b> ${user.first_name} ${user.last_name} &lt;${user.email}&gt;<br>
+        <b>Subject:</b> <input type="entry" name="subject"><br>
+        <b>Body:</b> <textarea name="body"></textarea><br>
         <input type="submit" value="Send">
     </div>
 
