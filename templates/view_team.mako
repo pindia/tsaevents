@@ -74,9 +74,9 @@ function confirmDeletePost(target)
     <h2>Members</h2>
         Team size: ${team.event.min_team_size} - ${team.event.team_size}
         % if team.members.count() < team.event.min_team_size:
-            <div class="label label-important">Event requires at least ${team.event.min_team_size} members. </div>
+            <p><span class="label label-important">Event requires at least ${team.event.min_team_size} members. </span></p>
         % elif team.members.count() > team.event.team_size:
-            <div class="label label-important">Team exceeds maximum of ${team.event.team_size} members. </div>
+            <p><span class="label label-important">Team exceeds maximum of ${team.event.team_size} members. </span></p>
         % endif
     <table class="table table-condensed table-bordered table-striped" align="center">
       <tr>
@@ -111,7 +111,7 @@ function confirmDeletePost(target)
     % if team.members.count() >= team.event.team_size:
         <p>Team is full.</p>
     % elif team.can_invite(user):
-      <div class="well form-inline">
+      <div class="well well-condensed form-inline">
         Add member:
         <select name="user_id">
             <option value="-1" selected="true"> ----- Select member -----</option>
@@ -137,7 +137,7 @@ function confirmDeletePost(target)
     
     <h2>Message Board</h2>
 
-     <div class="well form-inline" style="vertical-align: bottom;">
+     <div class="well well-condensed form-inline" style="vertical-align: bottom;">
         % if team.can_post_board(user):
             <textarea name="message" rows="2" style="width: 90%; height:auto; margin:0;"></textarea>
             <input type="submit" name="action" value="Post" class="btn btn-success">
@@ -169,13 +169,13 @@ function confirmDeletePost(target)
         </span><br>
           
         ${frmt_datetime(msg.date)}<br>
-        % if msg.author == user or user == team.captain or user.is_superuser:
-        <span style="font-size:0.75em;">
-          <a href="javascript:confirmDeletePost('/teams/${team.id}/update?action=delete_post&id=${msg.id}');">Delete</a>
-        </span>
-        % endif
         </td>
-        <td style="text-align: left;">${msg.text | h}</td>
+        <td style="text-align: left;">
+            % if msg.author == user or user == team.captain or user.is_superuser:
+                <a class="icon-remove" style="float: right;" href="javascript:confirmDeletePost('/teams/${team.id}/update?action=delete_post&id=${msg.id}');"></a>
+            % endif
+            ${msg.text | h}
+        </td>
       </tr>
     % endfor
     % if not team.posts.count():
