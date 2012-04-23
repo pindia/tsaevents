@@ -15,7 +15,7 @@ EMAIL_CHOICES = (
 
 class Chapter(models.Model):
     name = models.CharField(max_length=100)
-    event_set = models.ForeignKey('EventSet')
+    event_set = models.ForeignKey('EventSet', on_delete=models.PROTECT)
     locked_events = models.ManyToManyField('Event', blank=True)
     register_open = models.BooleanField(default=True)
     

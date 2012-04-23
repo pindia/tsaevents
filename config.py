@@ -4,13 +4,11 @@ def paths( *args ):
     "Returns normalized paths"
     return os.path.abspath( os.path.join( *args) )
 
-if os.name == 'posix':
-    DEPLOYED = True
-else:
-    DEPLOYED = False
-
 
 _CURR_DIR = paths( os.path.dirname(__file__) )
+
+DEPLOYED = not os.path.exists(paths(_CURR_DIR, 'develop.txt'))
+
 
 CURR_DIR = _CURR_DIR
 

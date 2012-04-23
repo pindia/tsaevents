@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%def name="footer()">Copyright &copy; <a href="http://www.pindi.us">Pindi Albert</a></%def>
 <%def name="header()">Welcome to TSAEvents.com</%def>
 <%def name="title()"></%def>
@@ -9,29 +10,34 @@
 <head>
     <title>TSA Events - ${self.title()}</title>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
-    <link rel="stylesheet" href="/static/tsa/blueprint/screen.css" type="text/css" media="screen, projection">
-    <link rel="stylesheet" href="/static/tsa/blueprint/print.css" type="text/css" media="print">	
-    <!--[if lt IE 8]><link rel="stylesheet" href="/static/tsa/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+
+    <link rel="stylesheet" href="/static/tsa/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/tsa/bootstrap/bootstrap-responsive.min.css">
+
     <link rel="stylesheet" href="/static/tsa/style.css"> 
     ${self.scripts()}
 </head>
 <body>
-  
   <div class="container">
+      <div class="row">
 
+        <div class="row">
+            <div id="header" class="span12" align="center">
+                ${self.header()}
+            </div>
+        </div>
 
-    <div id="header" class="span-24 last ui-widget-header" align="center">
-        ${self.header()}    
-    </div>
+        ${next.body()}
 
-    ${next.body()}
+        <div class="row">
+            <div class="span12" id="footer">
+              ${self.footer()}
+            </div>
+        </div>
 
-    <div class="span-24 last" id="footer">
-      ${self.footer()}  
-    </div>
+      </div>
+   </div>
 
-  </div>
-  
 % if (DEPLOYED) and (not user or not user.is_superuser):
   
     <script type="text/javascript">

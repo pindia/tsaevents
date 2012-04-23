@@ -2,7 +2,7 @@
 
 
 <%def name="header()">
-  <div id="infobar" class="span-24 last">
+    <div id="infobar" class="span-24 last" xmlns="http://www.w3.org/1999/html">
     Logged in as ${user.first_name} ${user.last_name} (${user.username})
     % if user.is_superuser:
       <b>[SA]</b>
@@ -28,51 +28,49 @@
   </div>
 </%def>
 
-<div id="navigation-container" class="span-4">
-  <div id="navigation" class="datatable">
-    <h2>Navigation</h2>
-    <ul class="text">
-      % if user.profile.chapter:
-        <li> <a href='/'>Your&nbsp;Events</a></li>
-        <li> <a href='/event_list'>Event&nbsp;List</a></li>
-        <li> <a href='/member_list/'>Member&nbsp;List</a></li>
-        <li> <a href='/team_list/'>Team&nbsp;List</a></li>
-      % endif
-      % if user.profile.chapter and user.profile.is_admin:
-      <li> Chapter&nbsp;Admin
-        <ul>
-          <li> <a href='/member_fields'>Member&nbsp;Fields</a></li>
-          <li> <a href='/attendance'>Attendance</a></li>
-          <li> <a href='/email'>Email</a></li>
-          <li> <a href='/event_log?type=chapter'>Chapter&nbsp;Log</a></li>
-          <li> <a href='/edit_chapter'>Edit&nbsp;Chapter</a></li>
-        </ul>
-      </li>
-      % endif
-      % if user.is_superuser:
-      <li> System&nbsp;Admin
-        <ul>
-          <li> <a href='/event_log?type=system'>System&nbsp;Log</a></li>
-          <li> <a href='/config/chapter_list'>Chapter&nbsp;List</a></li>
-          <li> <a href='/config/events/HS/'>Events</a></li>
-          <li> <a href='/config/eventsets/'>Event&nbsp;Sets</a></li>
-        </ul>
-      </li>
-      % endif
-    </ul>
-  </div>
-</div>
+<div class="row">
 
-<div id="body" class="span-20 last" align="center">
-  <h1>${self.title()}</h1>
-  % if messages:
-    % for message in messages:
-      <div align="center" class="${'error' if message.startswith('Error:') else 'info'}">
-        ${message}
+    <div id="navigation-container" class="span2">
+      <div id="navigation" class="datatable">
+        <ul class="nav nav-list">
+          <li class="nav-header">Navigation</li>
+          % if user.profile.chapter:
+            <li> <a href='/'><i class="icon-home"></i>Home</a></li>
+            <li> <a href='/event_list'><i class="icon-book"></i>Event&nbsp;List</a></li>
+            <li> <a href='/member_list/'><i class="icon-user"></i>Member&nbsp;List</a></li>
+            <li> <a href='/team_list/'><i class="icon-th-list"></i>Team&nbsp;List</a></li>
+          % endif
+          % if user.profile.chapter and user.profile.is_admin:
+          <li class="nav-header"> Chapter&nbsp;Admin</li>
+              <li> <a href='/member_fields'><i class="icon-list-alt"></i>Member&nbsp;Fields</a></li>
+              <li> <a href='/attendance'><i class="icon-check"></i>Attendance</a></li>
+              <li> <a href='/email'><i class="icon-envelope"></i>Email</a></li>
+              <li> <a href='/event_log?type=chapter'><i class="icon-info-sign"></i>Chapter&nbsp;Log</a></li>
+              <li> <a href='/edit_chapter'><i class="icon-cog"></i>Edit&nbsp;Chapter</a></li>
+          % endif
+          % if user.is_superuser:
+              <li class="nav-header"> System&nbsp;Admin</li>
+              <li> <a href='/event_log?type=system'>System&nbsp;Log</a></li>
+              <li> <a href='/config/chapter_list'>Chapter&nbsp;List</a></li>
+              <li> <a href='/config/events/HS/'>Events</a></li>
+              <li> <a href='/config/eventsets/'>Event&nbsp;Sets</a></li>
+          % endif
+        </ul>
       </div>
-    % endfor
-  % endif
-  ${next.body()}
+    </div>
+
+    <div id="body" class="span10" align="center">
+      <h1>${self.title()}</h1>
+      % if messages:
+        % for message in messages:
+          <div align="center" class="${'error' if message.startswith('Error:') else 'info'}">
+            ${message}
+          </div>
+        % endfor
+      % endif
+      ${next.body()}
+    </div>
+
 </div>
 
 <%def name="footer()">

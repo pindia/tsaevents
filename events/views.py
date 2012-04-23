@@ -11,6 +11,7 @@ from django.db import connection
 from django import forms
 from django.core.mail import send_mail, send_mass_mail, mail_admins, EmailMessage, get_connection
 from django.utils.html import escape
+from django.contrib import messages
 
 # Mako imports
 from mako.template import Template
@@ -55,7 +56,7 @@ def render_template(name,request,**kwds):
             kwds.update(dict(
                 user=request.user,
                 chapter=request.user.profile.chapter,
-                messages=request.user.get_and_delete_messages(),
+                messages=messages.get_messages(request),
             ))
         kwds.update(dict(
             MODE = tsa.settings.MODE,
