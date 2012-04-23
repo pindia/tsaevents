@@ -2,28 +2,43 @@
 
 
 <%def name="header()">
-    Logged in as ${user.first_name} ${user.last_name} (${user.username})
-    % if user.is_superuser:
-      <b>[SA]</b>
-    % elif user.profile.is_admin:
-      <b>[A]</b>
-    % endif
-    &bull;
-    ${user.profile.chapter}
-    % if not user.profile.is_member:
-      (N)
-    % endif
-    % if user.profile.chapter and (user.profile.chapter.link or user.profile.chapter.reverselink) and user.profile.is_admin:
-      [<a href="?SWITCH_CHAPTER">Switch</a>]
-    % endif
-    &bull;
-    Events: ${user.events.all().count()} Teams: ${user.teams.all().count()}
-    &bull;
-    <a href="/help">Help</a>
-    &bull;
-    <a href="/settings">Settings</a>
-    &bull;
-    <a href="/accounts/logout">Logout</a>
+    <div class="hidden-phone">
+        Logged in as ${user.first_name} ${user.last_name} (${user.username})
+        % if user.is_superuser:
+          <b>[SA]</b>
+        % elif user.profile.is_admin:
+          <b>[A]</b>
+        % endif
+        &bull;
+        ${user.profile.chapter}
+        % if not user.profile.is_member:
+          (N)
+        % endif
+        % if user.profile.chapter and (user.profile.chapter.link or user.profile.chapter.reverselink) and user.profile.is_admin:
+          [<a href="?SWITCH_CHAPTER">Switch</a>]
+        % endif
+        &bull;
+        Events: ${user.events.all().count()} Teams: ${user.teams.all().count()}
+        &bull;
+        <a href="/help">Help</a>
+        &bull;
+        <a href="/settings">Settings</a>
+        &bull;
+        <a href="/accounts/logout">Logout</a>
+    </div>
+    <div class="visible-phone">
+        ${user.first_name} ${user.last_name} &bull;
+        ${user.profile.chapter}
+            % if user.profile.chapter and (user.profile.chapter.link or user.profile.chapter.reverselink) and user.profile.is_admin:
+                    [<a href="?SWITCH_CHAPTER">Switch</a>]
+            % endif
+        <br>
+        <a href="/help">Help</a>
+        &bull;
+        <a href="/settings">Settings</a>
+        &bull;
+        <a href="/accounts/logout">Logout</a>
+    </div>
 </%def>
 
 <div class="row">

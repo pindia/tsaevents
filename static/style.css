@@ -222,6 +222,20 @@ table.tabular_list {
 
 /* Bootstrap overrides */
 
+@media (max-width: 767px) {
+
+    body{ /* Remove body padding for extra space */
+        padding: 0px;
+    }
+
+    body > .container{ /* Add tiny padding to the actual content */
+        padding: 0px 2px;
+    }
+
+    #header{
+        margin-top: 2px;
+    }
+}
 
 
 
