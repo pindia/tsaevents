@@ -87,7 +87,8 @@
       <h1>${self.title()}</h1>
       % if messages:
         % for message in messages:
-          <div align="center" class="${'error' if str(message).startswith('Error:') else 'info'}">
+          <div align="center" class="alert ${'alert-error' if str(message).startswith('Error:') else 'alert-success'}">
+            <a class="close" data-dismiss="alert">&times;</a>
             ${message}
           </div>
         % endfor
