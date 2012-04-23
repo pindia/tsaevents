@@ -92,7 +92,7 @@ function confirmDeletePost(target)
         </td>
         <td>
           % if member == user:
-            <a onclick="confirmLeave('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=remove_member&user_id=${member.id}')" href="javascript:void(0)" class="btn btn-mini"> Leave</a>
+            <a onclick="confirmLeave('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=remove_member&user_id=${member.id}')" href="javascript:void(0)" class="btn btn-mini"><i class="icon-remove"></i> Leave</a>
           % elif team.captain == user or user.profile.is_admin:
             <a onclick="confirmRemove('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=remove_member&user_id=${member.id}')" href="javascript:void(0)" class="btn btn-mini"><i class="icon-remove"></i> Remove</a>
             % if team.captain != member:
@@ -128,7 +128,7 @@ function confirmDeletePost(target)
     % elif not team.can_join(user):
       <p>This team is not accepting new members.</p>
     % else:
-      <p><a href="/teams/${team.id}/update?action=join">Join this team</a></p>
+      <p><a href="/teams/${team.id}/update?action=join" class="btn btn-primary btn-small">Join this team</a></p>
     % endif
 </div>
 

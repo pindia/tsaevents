@@ -55,7 +55,7 @@ function confirm_delete_file(fname)
           <td id="edit-fcreate" style="display:none;" colspan="10">
               <a href="javascript:cancel_edit('fcreate')"><i class="icon-ban-circle"></i></a>
               <input type="file" name="new_file">
-              <input type="submit" value="Upload">
+              <input type="submit" value="Upload" class="btn btn-success btn-small">
           </td>
       </tr>
   </table>

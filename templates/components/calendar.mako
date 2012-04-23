@@ -101,7 +101,7 @@ function confirm_delete_event(ename)
             <td id="edit-ecreate" style="display:none;" colspan="10">
                 <a href="javascript:cancel_edit('ecreate')"><i class="icon-ban-circle"></i></a>
                 ${edit_form()}
-                <input type="submit" value="Create" name="create_event">
+                <input type="submit" value="Create" name="create_event" class="btn btn-success btn-small">
             </td>
           % endif
       </tr>

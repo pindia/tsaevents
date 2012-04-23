@@ -59,9 +59,9 @@ function confirm_delete_announce()
               % endif
           </td>
           <td id="edit-acreate" style="display:none;">
-              <a href="javascript:cancel_edit('acreate')"><i class="icon-ban-circle"</i></a>
-              <textarea name="new_announce" style="width:100%; height:200px;"></textarea><br>
-              <input type="submit" value="Create">
+              <a href="javascript:cancel_edit('acreate')"><i class="icon-ban-circle"></i></a>
+              <textarea name="new_announce" style="width:95%; height:200px;"></textarea><br>
+              <input type="submit" value="Create" class="btn btn-success btn-small">
           </td>
       </tr>
   </table>

@@ -19,12 +19,6 @@
         % endif
         &bull;
         Events: ${user.events.all().count()} Teams: ${user.teams.all().count()}
-        &bull;
-        <a href="/help">Help</a>
-        &bull;
-        <a href="/settings">Settings</a>
-        &bull;
-        <a href="/accounts/logout">Logout</a>
     </div>
     <div class="visible-phone">
         ${user.first_name} ${user.last_name} &bull;
@@ -32,12 +26,6 @@
             % if user.profile.chapter and (user.profile.chapter.link or user.profile.chapter.reverselink) and user.profile.is_admin:
                     [<a href="?SWITCH_CHAPTER">Switch</a>]
             % endif
-        <br>
-        <a href="/help">Help</a>
-        &bull;
-        <a href="/settings">Settings</a>
-        &bull;
-        <a href="/accounts/logout">Logout</a>
     </div>
 </%def>
 
@@ -79,11 +67,15 @@
               % endif
               % if user.is_superuser:
                   <li class="nav-header"> System&nbsp;Admin</li>
-                  <li> <a href='/event_log?type=system'><i class="icon-info-sign"></i>System&nbsp;Log</a></li>
+                  <li> <a href='/event_log?type=all'><i class="icon-info-sign"></i>System&nbsp;Log</a></li>
                   <li> <a href='/config/chapter_list'><i class="icon-th-list"></i>Chapter&nbsp;List</a></li>
                   <li> <a href='/config/events/HS/'><i class="icon-book"></i>Events</a></li>
                   <li> <a href='/config/eventsets/'><i class="icon-book"></i>Event&nbsp;Sets</a></li>
               % endif
+
+              <li class="nav-header">Account</li>
+              <li><a href="/settings"><i class="icon-cog"></i>Settings</a></li>
+              <li><a href="/accounts/logout"><i class="icon-off"></i>Logout</a></li>
 
             </ul>
           </div>
@@ -106,7 +98,7 @@
 </div>
 
 <%def name="footer()">
-${parent.footer()} &bull; <a href="/contact/">Contact admin</a>
+${parent.footer()} &bull; <a href="/contact/">Contact </a> &bull; <a href="/help/">Help</a>
 % if not DEPLOYED:
   <div align="center">${len(connection.queries)} SQL queries executed</div>
   <!--<ol>

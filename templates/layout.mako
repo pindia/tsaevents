@@ -23,7 +23,6 @@
 </head>
 <body>
   <div class="container">
-      <div class="row">
 
         <div class="row">
             <div id="header" class="span12" align="center">
@@ -39,7 +38,6 @@
             </div>
         </div>
 
-      </div>
    </div>
 
 % if (DEPLOYED) and (not user or not user.is_superuser):
