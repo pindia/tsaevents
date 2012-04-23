@@ -29,12 +29,13 @@ class Chapter(models.Model):
     #mode = models.IntegerField(choices=((0,'region'), (1,'state'), (2,'nation')), default=0)
     
     key = models.CharField(max_length=100, default='', blank=True, db_column='extra_char1')
+    mode = models.CharField(max_length=100, default='region', db_column='extra_char2')
     
     # Link to another chapter. The "child" chapter has a link to the parent and not vice versa
     #link = models.ForeignKey('Chapter', db_column='extra_int1', null=True, blank=True) 
     
     #extra_char1 = models.CharField(max_length=100, default='', blank=True)
-    extra_char2 = models.CharField(max_length=100, default='', blank=True)
+    #extra_char2 = models.CharField(max_length=100, default='', blank=True)
     extra_char3 = models.CharField(max_length=100, default='', blank=True)
     extra_bool1 = models.BooleanField(default=False, blank=True)
     extra_bool2 = models.BooleanField(default=False, blank=True)

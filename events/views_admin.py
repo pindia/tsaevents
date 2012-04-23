@@ -179,6 +179,7 @@ def chapter_info(request):
 def edit_chapter(request):
     c = request.chapter
     if request.method == 'POST':
+        c.mode = request.POST['mode']
         c.register_open = 'register_open' in request.POST
         c.info = request.POST['info']
         c.key = request.POST['key']

@@ -57,9 +57,9 @@ def render_template(name,request,**kwds):
                 user=request.user,
                 chapter=request.chapter,
                 messages=messages.get_messages(request),
+                MODE = request.chapter.mode,
             ))
         kwds.update(dict(
-            MODE = tsa.settings.MODE,
             DEPLOYED = DEPLOYED,
             connection = connection,
             cycle = cycle(['odd','even'])

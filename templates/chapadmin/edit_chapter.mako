@@ -24,34 +24,56 @@ def sel(cond):
 
 <p>See the <a href="/help/advisor_guide#chapter-settings">advisor guide</a> for details about chapter settings.</p>
 
-<table class="layouttable aligner">
-    <tr>
-        <th>Chapter ID:</th>
-        <td>
-            <input type="entry" name="chapter_id" value=${chapter.chapter_id}><br>
-            <span style="font-size:smaller;">Prefix for all IDs; like <b>2045</b>-xxxx</span>
-        </td>
-    </tr>
-    <tr>
-        <th>Allow new users:</th>
-        <td><input type="checkbox" name="register_open" ${'checked="yes"' if chapter.register_open else ''}></td>
-    </tr>
-    <tr>
-        <th>Key:</th>
-        <td>
-            <input type="entry" name="key" value=${chapter.key}><br>
-            <span style="font-size:smaller;">Optional; new users must enter this key to register</span>
-        </td>
-    </tr>
-    <tr>
-        <th>Info:</th>
-        <td>
-            <textarea name="info" style="width:300px; height:100px;">${chapter.info}</textarea><br>
-            <span style="font-size:smaller;">Displayed to new users on registration screen</span>
-        </td>
-    </tr>
 
-</table>
+
+    <div class="form-horizontal well well-condensed">
+
+        <fieldset>
+
+            <div class="control-group">
+                <label class="control-label" for="mode">Mode</label>
+                <div class="controls">
+                    <select name="mode" id="mode" class="input-medium">
+                        <option value="region" ${'selected' if chapter.mode == 'region' else ''}>Region</option>
+                        <option value="state" ${'selected' if chapter.mode == 'state' else ''}>State</option>
+                        <option value="nation" ${'selected' if chapter.mode == 'nation' else ''}>Nation</option>
+                    </select>
+                    <p class="help-block">Conference to calculate qualification information for</p>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="chapter_id">Chapter ID</label>
+                <div class="controls">
+                    <input type="entry" id="chapter_id" name="chapter_id" value=${chapter.chapter_id}>
+                    <p class="help-block">Prefix for all IDs; like <b>2045</b>-xxxx</p>
+                </div>
+
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="chapter_id">Allow new users</label>
+                <div class="controls">
+                    <input type="checkbox" name="register_open" ${'checked="yes"' if chapter.register_open else ''}>
+                </div>
+
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="key">Key</label>
+                <div class="controls">
+                    <input type="entry" name="key" id="key" value=${chapter.key}>
+                    <p class="help-block">Optional; new users must enter this key to register</p>
+                </div>
+
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="info">Info</label>
+                <div class="controls">
+                    <textarea name="info" id="info" style="width:300px; height:100px;">${chapter.info}</textarea>
+                    <p class="help-block">Displayed to new users on registration screen</p>
+                </div>
+            </div>
+        </fieldset>
+    </div>
 
 
 
@@ -64,7 +86,7 @@ def sel(cond):
 <p>See the <a href="/help/advisor_guide#fields">advisor guide</a> for details about fields.</p>
 
 
-<table align="center" class="tabular_list">
+<table align="center" class="table table-striped table-condensed">
     <tr>
         <th>Name</th>
         <th>Short Name</th>
@@ -77,19 +99,19 @@ def sel(cond):
     </tr>
     % for field in chapter.get_fields():
     <tr>
-        <td><input type="entry" size="15" name="${field.id}_name" value="${field.name}"></td>
-        <td><input type="entry" size="6" name="${field.id}_short_name" value="${field.short_name}"></td>
-        <td><input type="entry" size="6" name="${field.id}_category" value="${field.category}"></td>
-        <td><input type="entry" size="2" name="${field.id}_weight" value="${field.weight}"></td>
+        <td><input type="entry" size="input-medium" name="${field.id}_name" value="${field.name}"></td>
+        <td><input type="entry" class="input-small" name="${field.id}_short_name" value="${field.short_name}"></td>
+        <td><input type="entry" class="input-small" name="${field.id}_category" value="${field.category}"></td>
+        <td><input type="entry" class="input-mini" name="${field.id}_weight" value="${field.weight}"></td>
         
         <td>
-            <select name="${field.id}_view_perm">
+            <select name="${field.id}_view_perm" class="input-small">
                 <option value="0" ${sel(field.view_perm == 0)}>Admin only</option>
                 <option value="1" ${sel(field.view_perm == 1)}>User or admin</option>
             </select>
         </td>
         <td>
-            <select name="${field.id}_edit_perm">
+            <select name="${field.id}_edit_perm" class="input-small">
                 <option value="3" ${sel(field.edit_perm == 3)}>Nobody</option>
                 <option value="2" ${sel(field.edit_perm == 2)}>Admin only (logged)</option>
                 <option value="0" ${sel(field.edit_perm == 0)}>Admin only</option>
@@ -115,7 +137,7 @@ def sel(cond):
         <tr><td>Default:</td><td><input type="entry" name="default"></td>
     </table>
 % endif
-<input type="submit" value="Submit">
+<input type="submit" value="Submit" class="btn btn-primary">
 
 
 </form>

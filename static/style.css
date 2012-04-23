@@ -241,5 +241,8 @@ table.tabular_list {
     padding: 5px;
 }
 
+.form-horizontal {
+    text-align: left;
+}
 
 
