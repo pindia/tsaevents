@@ -49,9 +49,9 @@
           % if user.is_superuser:
               <li class="nav-header"> System&nbsp;Admin</li>
               <li> <a href='/event_log?type=system'><i class="icon-info-sign"></i>System&nbsp;Log</a></li>
-              <li> <a href='/config/chapter_list'>Chapter&nbsp;List</a></li>
-              <li> <a href='/config/events/HS/'>Events</a></li>
-              <li> <a href='/config/eventsets/'>Event&nbsp;Sets</a></li>
+              <li> <a href='/config/chapter_list'><i class="icon-th-list"></i>Chapter&nbsp;List</a></li>
+              <li> <a href='/config/events/HS/'><i class="icon-book"></i>Events</a></li>
+              <li> <a href='/config/eventsets/'><i class="icon-book"></i>Event&nbsp;Sets</a></li>
           % endif
         </ul>
       </div>

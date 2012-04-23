@@ -73,7 +73,7 @@ function confirm_delete_event(ename)
       % for event in calendar:
           <tr id="view-e${event.id}">
             % if user.profile.is_admin:
-                <td>[<a href="javascript:begin_edit('e${event.id}')">Edit</a>]</td>
+                <td><a href="javascript:begin_edit('e${event.id}')"><i class="icon-edit"></i></a></td>
             % endif     
             <td>${event.name}</td>
             <td style="white-space:nowrap;">${frmt_date(event.date)}</td>
@@ -82,10 +82,10 @@ function confirm_delete_event(ename)
           % if user.profile.is_admin:
             <tr id="edit-e${event.id}" style="display:none;">
                 <td colspan="10">
-                    [<a href="javascript:cancel_edit('e${event.id}')">Cancel</a>]
+                    <a href="javascript:cancel_edit('e${event.id}')"><i class="icon-ban-circle"></i></a>
                     ${edit_form(event)}
-                    <input type="submit" value="Save">
-                    <input type="submit" name="deleteevent_${event.id}" value="Delete" onclick="return confirm_delete_event('${event.name}');">
+                    <input type="submit" value="Save" class="btn btn-success btn-small">
+                    <input type="submit" name="deleteevent_${event.id}" value="Delete" onclick="return confirm_delete_event('${event.name}');" class="btn btn-danger btn-small">
                 </td>          
             </tr>
           % endif
@@ -93,13 +93,13 @@ function confirm_delete_event(ename)
       <tr>
           <td id="view-ecreate" colspan="10">
               % if user.profile.is_admin:
-                [<a href="javascript:begin_edit('ecreate')">Create new event</a>]
+                <a href="javascript:begin_edit('ecreate')"><i class="icon-plus-sign"></i></a>
               % endif
           <div style="float: right"><a href="/calendar.ics?chapter=${chapter.id}&key=${chapter.calendar_key}"><img src="/static/tsa/icons/ical.gif"></a></div>
           </td>
           % if user.profile.is_admin:
             <td id="edit-ecreate" style="display:none;" colspan="10">
-                [<a href="javascript:cancel_edit('ecreate')">Cancel</a>]
+                <a href="javascript:cancel_edit('ecreate')"><i class="icon-ban-circle"></i></a>
                 ${edit_form()}
                 <input type="submit" value="Create" name="create_event">
             </td>

@@ -30,7 +30,7 @@ function confirmRemove(name, target)
       % endif
     </td>
     <td>${event.name}</td>
-    <td><a onclick="confirmRemove('${event.name}','/update_indi?delete_event=${event.id}')" href="javascript:void(0)"><img src="/static/tsa/icons/delete.png" title="Remove Event"></a></td>
+    <td><a onclick="confirmRemove('${event.name}','/update_indi?delete_event=${event.id}')" href="javascript:void(0)"><i class="icon-remove" title="Remove Event"></i></a></td>
   </tr>
   % endfor
 </table>

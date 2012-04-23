@@ -32,28 +32,28 @@ function confirm_delete_file(fname)
       % for file in (chapter.link or chapter).files.order_by('-create_date'):
           <tr id="view-f${file.id}">
             % if user.profile.is_admin:
-                <td>[<a href="javascript:begin_edit('f${file.id}')">Edit</a>]</td>
+                <td><a href="javascript:begin_edit('f${file.id}')"><i class="icon-edit"></i></a></td>
             % endif     
             <td><a href="${file.file.url}">${file.name}</a></td>
             <td>${humanize_filesize(file.size)}</td>
           </tr>
           <tr id="edit-f${file.id}" style="display:none;">
               <td colspan="10">
-                  [<a href="javascript:cancel_edit('f${file.id}')">Cancel</a>]
+                  <a href="javascript:cancel_edit('f${file.id}')"><i class="icon-ban-circle"></i></a>
                   <input type="entry" name="editfile_${file.id}" value="${file.name}">
-                  <input type="submit" value="Save">
-                  <input type="submit" name="deletefile_${file.id}" value="Delete" onclick="return confirm_delete_file('${file.name}');">
+                  <input type="submit" value="Save" class="btn btn-success btn-small">
+                  <input type="submit" name="deletefile_${file.id}" value="Delete" onclick="return confirm_delete_file('${file.name}');" class="btn btn-small btn-danger">
               </td>          
           </tr>
       % endfor
       <tr>
           <td id="view-fcreate" colspan="10">
               % if user.profile.is_admin:
-                [<a href="javascript:begin_edit('fcreate')">Upload new file</a>]
+                <a href="javascript:begin_edit('fcreate')"><i class="icon-plus-sign"></i></a>
               % endif
           </td>
           <td id="edit-fcreate" style="display:none;" colspan="10">
-              [<a href="javascript:cancel_edit('fcreate')">Cancel</a>]
+              <a href="javascript:cancel_edit('fcreate')"><i class="icon-ban-circle"></i></a>
               <input type="file" name="new_file">
               <input type="submit" value="Upload">
           </td>

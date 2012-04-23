@@ -53,7 +53,8 @@
 
     <div class="span4" align="center">
 
-      <form action='/accounts/login/' method='post'>
+      <form action='/accounts/login/' method='post' class="form-horizontal">
+
 
       <table class="layouttable aligner">
 
@@ -68,7 +69,7 @@
         <tr>
           <td>&nbsp;</td>
           <td>
-            <input type="submit" value="Log in" />
+            <input type="submit" value="Log in" class="btn btn-primary"/>
             <input type="hidden" name="next" value="${next or '/'}"/>
           </td>
         </tr>
