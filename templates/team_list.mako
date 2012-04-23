@@ -2,19 +2,18 @@
 
 <%def name="title()">Team List</%def>
 
-<form action="/team_list" method="get">
-Filter by Event:
+<form action="/team_list" method="get" class="form-inline">
 <select name="event">
-    <option value="">-----All-----</option>
+    <option value="">--- Filter by event ---</option>
     % for event in events:
         <option value="${event.id}" ${'selected="yes"' if str(event.id) == selected_event else ''}>${event.name}</option>
     % endfor
 </select>
-<input type="submit" value="Filter">
+<input type="submit" value="Filter" class="btn">
 </form>
 
 <form action="" method="post">
-<table class="table table-condensed table-striped table-bordered">
+<table class="table table-condensed table-striped">
     <tr>
         <!--<th>&nbsp;</th>-->
         <th>Event</th>
@@ -39,7 +38,7 @@ Filter by Event:
             <td><a href="/teams/${team.id}/">${team.event.name}</a></td>
             % if MODE != 'nation':
                 % if user.profile.is_admin:
-                    <td>${chapter.chapter_id}-<input type="entry" value="${team.get_id()}" name="${team.id}_id" size="1"></td>
+                    <td>${chapter.chapter_id}-<input type="entry" class="input-mini" value="${team.get_id()}" name="${team.id}_id" size="1"></td>
                 % else:
                     <td>${'%s-%s' % (chapter.chapter_id, team.get_id()) if team.team_id else '-'}</td>
                 % endif
@@ -59,6 +58,6 @@ Filter by Event:
     % endif
 </table>
 % if user.profile.is_admin and teams and MODE != 'nation':
-    <input type="submit" value="Update IDs">
+    <input type="submit" value="Update IDs" class="btn btn-primary">
 % endif
 </form>

@@ -25,7 +25,7 @@ from tsa.events.views import login_url
 
 <form action="/member_fields/${category}" method="post">
 
-<table class="table table-bordered table-striped table-condensed" align="center">
+<table class="table table-striped table-condensed" align="center">
     <tr>
       <th>Name</th>
       % for field in fields:

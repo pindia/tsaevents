@@ -44,24 +44,19 @@
     <a href="/teams/${team.id}">${team.event.short_name.replace(' ','&nbsp;')}</a>
 </%def>
 
-% if user.profile.is_admin:
-<p>See the <a href="/help/advisor_guide#user-management">advisor guide</a> for details about using this page.</p>
-% endif
-
-    <form action="/member_list/" method="get">
-    Filter by Event:
+    <form action="/member_list/" method="get" class="form-inline">
     <select name="event">
-        <option value="">-----All-----</option>
+        <option value="">--- Filter by event ---</option>
         % for event in events.filter(is_team=False):
             <option value="${event.id}" ${'selected="yes"' if str(event.id) == selected_event else ''}>${event.name}</option>
         % endfor
     </select>
-    <input type="submit" value="Filter">
+    <input type="submit" value="Filter" class="btn">
     </form>
 
 <form action="?" method="post">
 
-<table class="table table-condensed table-striped table-bordered" align="center">
+<table class="table table-condensed table-striped" align="center">
     <tr>
       % if user.profile.is_admin:
         <th>&nbsp;</th>
@@ -95,7 +90,7 @@
             % if MODE != 'nation':
               <td style="white-space: nowrap;">
                 % if user.profile.is_admin:
-                    ${chapter.chapter_id}-<input type="entry" name="id_${member.id}" value="${member.profile.get_id()}" size="1">
+                    ${chapter.chapter_id}-<input type="entry" class="input-mini" name="id_${member.id}" value="${member.profile.get_id()}" size="1">
                 % else:
                     ${'%s-%s' % (chapter.chapter_id, member.profile.get_id()) if member.profile.indi_id else '-'}
                 % endif
@@ -123,10 +118,9 @@
     <table class="aligner">
 
     <tr>
-        <td>Add event/Create team:</td>
         <td>
-            <select name="eid">
-                <option value="-1"> --- Select event ---</option>
+            <select name="eid" class="input-xxlarge">
+                <option value="-1"> --- Add event / create team ---</option>
                 <optgroup label="Add events to all selected:">
                     % for e in events.filter(is_team=False):
                         <option value="${e.id}">${e.name}</option>
@@ -142,10 +136,9 @@
     </tr>
     
     <tr>
-        <td>Administer Users:</td>
         <td>
-            <select name="action" id="action_select">
-                <option value="none"> --- Select action --- </option>
+            <select name="action" id="action_select" class="input-xxlarge">
+                <option value="none"> --- Administer selected users --- </option>
                 <option value="delete">Delete selected users</option>
                 <option value="promote">Change selected users to officers</option>
                 <option value="demote">Change selected users to normal members</option>
@@ -154,7 +147,7 @@
         </td>
     </tr>
     <tr>
-        <td colspan="2" style="text-align: center;"><input type="submit" value="Update Users" onclick="return confirmSubmit(); "></td></td>
+        <td colspan="2" style="text-align: center;"><input type="submit" value="Update Users" onclick="return confirmSubmit(); " class="btn btn-primary"></td></td>
     
     </table>
 % endif

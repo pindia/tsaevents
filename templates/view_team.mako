@@ -78,9 +78,9 @@ function confirmDeletePost(target)
         % elif team.members.count() > team.event.team_size:
             <p><span class="label label-important">Team exceeds maximum of ${team.event.team_size} members. </span></p>
         % endif
-    <table class="table table-condensed table-bordered table-striped" align="center">
+    <table class="table table-condensed table-striped" align="center">
       <tr>
-        <th>Name</th><th>Actions</th>
+        <th>Name</th><th>&nbsp;</th>
       </tr>
       % for member in team.members.all():
       <tr>
@@ -112,9 +112,8 @@ function confirmDeletePost(target)
         <p>Team is full.</p>
     % elif team.can_invite(user):
       <div class="well well-condensed form-inline">
-        Add member:
-        <select name="user_id">
-            <option value="-1" selected="true"> ----- Select member -----</option>
+        <select name="user_id" class="input-large">
+            <option value="-1" selected="true"> ----- Add new member -----</option>
           % for u in user.__class__.objects.filter(profile__chapter=team.chapter,profile__is_member=True).order_by('last_name'):
             <option value="${u.id}">${u.first_name} ${u.last_name}</option>
           % endfor
