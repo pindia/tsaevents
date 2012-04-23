@@ -73,6 +73,10 @@ tr.even td{
 	font-weight:bold;
 }
 
+.datatable td{
+    padding: 5px;
+}
+
 input[type="checkbox"], input[type="radio"], input.checkbox, input.radio {
 	position: static;
 }
@@ -144,7 +148,7 @@ td.errorback, .errorback td{
 	border-bottom:1px solid #666666;
 	font-size:smaller;
 	margin-top:10px;
-	padding:1px;
+	padding:1px 0px;
 	text-align:center;
 }
 
@@ -153,7 +157,7 @@ td.errorback, .errorback td{
 	border-top:1px solid #666666;
 	font-size:small;
 	margin-top:10px;
-	padding:5px;
+	padding:5px 0px;
 	text-align:center;
 }
 
@@ -178,14 +182,6 @@ a:visited{
 	color:blue;
 }
 */
-
-
-
-
-
-
-
-
 
 
 .bold {
@@ -223,6 +219,7 @@ table.tabular_list {
 }
 
 
+/* Bootstrap overrides */
 
 
 

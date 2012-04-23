@@ -14,7 +14,7 @@ function confirmRemove(name, target)
 
 <form action="update_indi" method="post">
 <h3>Individual events</h3>
-<table class="tabular_list" align="center" style="width:100%; margin:0px">
+<table class="table table-condensed table-striped table-bordered" align="center" style="width:100%; margin:0px">
   <tr>
     <th>&nbsp;</th><th>Event</th><th>Del</th>
   </tr>
@@ -42,12 +42,12 @@ function confirmRemove(name, target)
       <option ${"disabled='yes'" if event.is_locked(user) else ''} value="${event.id}">${event.name}</option>
     % endfor
   </select>
-  <input type="submit" value="Submit">
+  <input type="submit" value="Submit" class="btn">
 </p>
 </form>
 <form action="join_team" method="get">
 <h3>Teams</h3>
-<table class="tabular_list" align="center" style="width:100%; margin:0px">
+<table class="table table-condensed table-striped table-bordered" align="center" style="width:100%; margin:0px">
   <tr>
     <th>&nbsp;</th>
     <th>Event</th>
@@ -69,7 +69,7 @@ function confirmRemove(name, target)
     <td>
       ${team.members_list('<br>')}
       % if team.members.count() < team.event.min_team_size:
-          <br><b>(Requires&nbsp;${team.event.min_team_size})</b>
+          <span class="label label-important">Requires&nbsp;${team.event.min_team_size}</span>
       % endif
     </td>
     <td><a href="/teams/${team.id}/">View</a></td>
@@ -84,6 +84,6 @@ function confirmRemove(name, target)
       <option value="${event.id}">${event.name}</option>
     % endfor
   </select>
-  <input type="submit" value="Submit">
+  <input type="submit" value="Submit" class="btn">
 </p>
 </form>

@@ -78,7 +78,7 @@ function confirmDeletePost(target)
         % elif team.members.count() > team.event.team_size:
             <div class="label label-important">Team exceeds maximum of ${team.event.team_size} members. </div>
         % endif
-    <table class="table table-condensed table-bordered" align="center">
+    <table class="table table-condensed table-bordered table-striped" align="center">
       <tr>
         <th>Name</th><th>Actions</th>
       </tr>

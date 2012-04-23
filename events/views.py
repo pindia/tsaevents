@@ -55,7 +55,7 @@ def render_template(name,request,**kwds):
         if request.user.is_authenticated():
             kwds.update(dict(
                 user=request.user,
-                chapter=request.user.profile.chapter,
+                chapter=request.chapter,
                 messages=messages.get_messages(request),
             ))
         kwds.update(dict(

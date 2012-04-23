@@ -87,11 +87,11 @@ ADMIN_MEDIA_PREFIX = '/static/admin_media/'
 SECRET_KEY = '__+4i=^h3icf6_=m6houa$&h(t2#yunsj9&b@t7e!^-6*u!!-d'
 
 # List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
+#TEMPLATE_LOADERS = (
+#    'django.template.loaders.filesystem.load_template_source',
+#    'django.template.loaders.app_directories.load_template_source',
 #     'django.template.loaders.eggs.load_template_source',
-)
+#)
 
 class ChapterMiddleware(object):
     def process_request(self, request):
@@ -99,6 +99,11 @@ class ChapterMiddleware(object):
             if request.user.is_authenticated():
                 user = request.user
                 if 'CURRENT_CHAPTER' in request.session:
+                    if request.session['CURRENT_CHAPTER'] is None:
+                        user.profile.chapter = None
+                        user.profile.is_member = False
+                        request.chapter = None
+                        return
                     target_chapter = user.profile.chapter.__class__.objects.get(id=int(request.session['CURRENT_CHAPTER']))
                     if target_chapter != user.profile.chapter:
                         user.profile.is_member = False

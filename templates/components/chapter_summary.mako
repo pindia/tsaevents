@@ -50,14 +50,14 @@ else:
         % endif
         <td>
         % if e > 0:
-            <b><a href="/event_list">${e} events</a></b> &bull;
+            <a href="/event_list" class="label label-important">${e} events</a> &bull;
         % else:
-            Events OK &bull;
+            <span class="label label-success">Events OK</span> &bull;
         % endif
         % if t > 0:
-            <b><a href="/team_list/">${t} teams</a></b>
+            <a href="/team_list/" class="label label-important">${t} teams</a>
         % else:
-            Teams OK
+            <span class="label label-success">Teams OK</span>
         % endif
         </td>
     </tr>

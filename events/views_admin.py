@@ -303,13 +303,11 @@ def system_log(request):
 def chapter_list(request):
     if 'switch_chapter' in request.GET:
         if request.GET['switch_chapter'] == '-1':
-            request.user.profile.chapter = None
+            request.session['CURRENT_CHAPTER'] = None
         else:
             c = Chapter.objects.get(pk=int(request.GET['switch_chapter']))
-            request.user.profile.chapter = c
-        request.user.profile.is_member = False
-        request.user.profile.is_admin = True
-        request.user.profile.save()
+            request.session['CURRENT_CHAPTER'] = c.id
+        return HttpResponseRedirect('/config/chapter_list')
     return render_template('sysadmin/chapter_list.mako', request, chapters=Chapter.objects.all())
     
 from django.db.models import AutoField

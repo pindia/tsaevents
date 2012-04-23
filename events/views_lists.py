@@ -116,7 +116,7 @@ def member_list(request, eid=None):
         members = e.entrants
     else:
         members = User.objects.all()
-    members = members.filter(profile__chapter=request.chapter, is_superuser=False)
+    members = members.filter(profile__chapter=request.chapter)
     members = members.order_by('-profile__is_member', '-profile__is_admin', 'last_name')
     if 'checklist' in request.REQUEST:
         return render_template('chapadmin/member_checklist.mako', request, members=members)

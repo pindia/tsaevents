@@ -36,7 +36,7 @@
 <%def name="render_indi_event(event, member)" buffered="True">
     ${event.short_name.replace(' ','&nbsp;')}
     % if user.profile.is_admin:
-      <a href="javascript:void(0)" onclick="confirmRemove('${event.name}', '${member.first_name} ${member.last_name}', '?action=remove_event&uid=${member.id}&eid=${event.id}');"><img src="/static/tsa/icons/delete.png" border="0"></a>
+      <a href="javascript:void(0)" title="Remove event" onclick="confirmRemove('${event.name}', '${member.first_name} ${member.last_name}', '?action=remove_event&uid=${member.id}&eid=${event.id}');"><i class="icon-remove"></i><!--<img src="/static/tsa/icons/delete.png" border="0">--></a>
     % endif
 </%def>
 
@@ -80,8 +80,10 @@
             <td><input type="checkbox" name="edit_${member.id}"></td>
           % endif
           <td>
-          % if member.profile.is_admin:
-            <i>${member.first_name} ${member.last_name}</i>
+          % if member.is_superuser:
+             ${member.first_name} ${member.last_name} <span title="System administrator">&diams;&diams;</span>
+        % elif member.profile.is_admin:
+            ${member.first_name} ${member.last_name} <span title="Chapter administrator">&diams;</span>
           % else:
             ${member.first_name} ${member.last_name}
           % endif  
