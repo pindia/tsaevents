@@ -9,7 +9,9 @@
 <html>
 <head>
     <title>TSA Events - ${self.title()}</title>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/tsa/bootstrap/bootstrap.min.js"></script>
+
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
