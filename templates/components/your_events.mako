@@ -52,7 +52,6 @@ function confirmRemove(name, target)
     <th>&nbsp;</th>
     <th>Event</th>
     <th>Members</th>
-    <th>View</th>
   </tr>
   % for team in user.teams.all():
   <tr class="${cycle.next()}">
@@ -65,15 +64,15 @@ function confirmRemove(name, target)
         <img src="/static/tsa/icons/group.png" title="Team">
       % endif
     </td>
-    <td>${team.event.name}</td>
+    <td>  <a href="/teams/${team.id}/">${team.event.name}</a></td>
     <td>
       ${team.members_list('<br>')}
       % if team.members.count() < team.event.min_team_size:
           <span class="label label-important">Requires&nbsp;${team.event.min_team_size}</span>
       % endif
     </td>
-    <td><a href="/teams/${team.id}/">View</a></td>
   </tr>
+  </a>
   % endfor
 </table>
  <p>

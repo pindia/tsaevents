@@ -22,7 +22,6 @@ Filter by Event:
             <th>TSA ID</th>
         % endif
         <th>Members</th>
-        <th>View</th>
     </tr>
     % for team in teams:
         <%
@@ -37,7 +36,7 @@ Filter by Event:
                     <img src="/static/tsa/icons/exclamation.png">
                 % endif
             </td>-->
-            <td>${team.event.name}</td>
+            <td><a href="/teams/${team.id}/">${team.event.name}</a></td>
             % if MODE != 'nation':
                 % if user.profile.is_admin:
                     <td>${chapter.chapter_id}-<input type="entry" value="${team.get_id()}" name="${team.id}_id" size="1"></td>
@@ -52,9 +51,6 @@ Filter by Event:
                 % elif n > max:
                     <b>(Maximum ${max})</b>
                 % endif
-            </td>
-            <td>
-                <a href="/teams/${team.id}/">View</a>
             </td>
         </tr>
     % endfor
