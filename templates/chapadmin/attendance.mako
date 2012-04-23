@@ -25,7 +25,7 @@ function confirm_delete_announce()
 }
 </script>
 
-    <table class="tabular_list" align="center">
+    <table class="table table-bordered table-striped table-condensed" align="center">
         <tr>
           <th>Name</th>
           <th>Perc</th>

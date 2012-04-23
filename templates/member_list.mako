@@ -61,7 +61,7 @@
 
 <form action="?" method="post">
 
-<table class="datatable" align="center">
+<table class="table table-condensed table-striped table-bordered" align="center">
     <tr>
       % if user.profile.is_admin:
         <th>&nbsp;</th>

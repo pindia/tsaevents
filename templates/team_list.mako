@@ -14,7 +14,7 @@ Filter by Event:
 </form>
 
 <form action="" method="post">
-<table class="datatable">
+<table class="table table-condensed table-striped table-bordered">
     <tr>
         <!--<th>&nbsp;</th>-->
         <th>Event</th>

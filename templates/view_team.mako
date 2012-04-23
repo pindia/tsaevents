@@ -32,7 +32,7 @@ function confirmPromote(name, target)
 }
 function confirmDelete(id)
 {
-  var ok = confirm('Are you sure you want to delete this team?');
+  var ok = confirm('Are you sure you want to delete this team? This action cannot be undone.');
   if(ok)
     location.href='/teams/'+ id + '/update?action=delete_team';
 
@@ -74,29 +74,29 @@ function confirmDeletePost(target)
     <h2>Members</h2>
         Team size: ${team.event.min_team_size} - ${team.event.team_size}
         % if team.members.count() < team.event.min_team_size:
-            <br><span class="error">Event requires at least ${team.event.min_team_size} members. </span>
+            <div class="label label-important">Event requires at least ${team.event.min_team_size} members. </div>
         % elif team.members.count() > team.event.team_size:
-            <br><span class="error">Team exceeds maximum of ${team.event.team_size} members. </span>
+            <div class="label label-important">Team exceeds maximum of ${team.event.team_size} members. </div>
         % endif
-    <table class="tabular_list" align="center">
+    <table class="table table-condensed table-bordered" align="center">
       <tr>
         <th>Name</th><th>Actions</th>
       </tr>
       % for member in team.members.all():
       <tr>
         <td>
-        % if member == team.captain:
-          <b>[C]</b>
-        % endif
           ${member.first_name} ${member.last_name}
+          % if member == team.captain:
+                  <i class="icon-star" title="Team captain"></i>
+          % endif
         </td>
         <td>
           % if member == user:
-            <a onclick="confirmLeave('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=remove_member&user_id=${member.id}')" href="javascript:void(0)">Leave</a>      
+            <a onclick="confirmLeave('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=remove_member&user_id=${member.id}')" href="javascript:void(0)" class="btn btn-mini"> Leave</a>
           % elif team.captain == user or user.profile.is_admin:
-            <a onclick="confirmRemove('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=remove_member&user_id=${member.id}')" href="javascript:void(0)">Remove</a>
+            <a onclick="confirmRemove('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=remove_member&user_id=${member.id}')" href="javascript:void(0)" class="btn btn-mini"><i class="icon-remove"></i> Remove</a>
             % if team.captain != member:
-                <a onclick="confirmPromote('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=promote_member&user_id=${member.id}')" href="javascript:void(0)">Promote</a>
+                <a onclick="confirmPromote('${member.first_name} ${member.last_name}','/teams/${team.id}/update/?action=promote_member&user_id=${member.id}')" href="javascript:void(0)" class="btn btn-mini"><i class="icon-star"></i> Promote</a>
             % endif
           % else:
             &nbsp;
@@ -111,15 +111,16 @@ function confirmDeletePost(target)
     % if team.members.count() >= team.event.team_size:
         <p>Team is full.</p>
     % elif team.can_invite(user):
-      <p>Add member:
+      <div class="well form-inline">
+        Add member:
         <select name="user_id">
             <option value="-1" selected="true"> ----- Select member -----</option>
           % for u in user.__class__.objects.filter(profile__chapter=team.chapter,profile__is_member=True).order_by('last_name'):
             <option value="${u.id}">${u.first_name} ${u.last_name}</option>
           % endfor
         </select>
-        <input type="submit" name="action" value="Add Member">
-      </p>
+        <input type="submit" name="action" value="Add Member" class="btn btn-success">
+      </div>
     % elif user in team.members.all():
         <p>You do not have permission to invite new members.</p>
     % elif not user.profile.is_member:
@@ -135,18 +136,17 @@ function confirmDeletePost(target)
     % if team.can_view_board(user):
     
     <h2>Message Board</h2>
+
+     <div class="well form-inline" style="vertical-align: bottom;">
+        % if team.can_post_board(user):
+            <textarea name="message" rows="2" style="width: 90%; height:auto; margin:0;"></textarea>
+            <input type="submit" name="action" value="Post" class="btn btn-success">
+        % else:
+            You do not have permission to post to this board.
+        % endif
+     </div>
     
-    <table border=1 width="100%" cellpadding=5 align="center" id="team-board-table" class="datatable">
-        <tr>
-            <td colspan="2">
-                % if team.can_post_board(user):
-                    <textarea name="message" rows="2" style="width: 90%; height:auto; margin:0;"></textarea>
-                    <input type="submit" name="action" value="Post">
-                % else:
-                    You do not have permission to post to this board.
-                % endif
-            </td>
-        </tr>
+    <table class="table table-bordered table-striped">
     % for msg in team.posts.order_by('-date'):
       <tr>
         <td width="20%">
@@ -217,9 +217,9 @@ function confirmDeletePost(target)
     </td></tr>
   </table>
   
-    <input type="submit" name="action" value="Update Settings">
+  <p><input type="submit" name="action" value="Update Settings" class="btn btn-primary"></p>
  
-  <p><input id="delete_button" onclick="confirmDelete(${team.id})" type="button" value="Delete Team"></p>
+  <p><a id="delete_button" onclick="confirmDelete(${team.id})" type="button" class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete Team</a></p>
   </form>
 </div>
 % endif

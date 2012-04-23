@@ -3,7 +3,7 @@
 <%def name='title()'>Event List</%def>
 <%def name='render_table(events)'><%%>
 
-<table class="tabular_list">
+<table class="table table-bordered table-condensed">
   <tr>
     <th>S</th>
     % if user.profile.is_admin:

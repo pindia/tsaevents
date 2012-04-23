@@ -2,7 +2,6 @@
 
 
 <%def name="header()">
-    <div id="infobar" class="span-24 last" xmlns="http://www.w3.org/1999/html">
     Logged in as ${user.first_name} ${user.last_name} (${user.username})
     % if user.is_superuser:
       <b>[SA]</b>
@@ -25,7 +24,6 @@
     <a href="/settings">Settings</a>
     &bull;
     <a href="/accounts/logout">Logout</a>
-  </div>
 </%def>
 
 <div class="row">
@@ -42,7 +40,7 @@
           % endif
           % if user.profile.chapter and user.profile.is_admin:
           <li class="nav-header"> Chapter&nbsp;Admin</li>
-              <li> <a href='/member_fields'><i class="icon-list-alt"></i>Member&nbsp;Fields</a></li>
+              <li> <a href='/member_fields'><i class="icon-list-alt"></i>Fields</a></li>
               <li> <a href='/attendance'><i class="icon-check"></i>Attendance</a></li>
               <li> <a href='/email'><i class="icon-envelope"></i>Email</a></li>
               <li> <a href='/event_log?type=chapter'><i class="icon-info-sign"></i>Chapter&nbsp;Log</a></li>
@@ -50,7 +48,7 @@
           % endif
           % if user.is_superuser:
               <li class="nav-header"> System&nbsp;Admin</li>
-              <li> <a href='/event_log?type=system'>System&nbsp;Log</a></li>
+              <li> <a href='/event_log?type=system'><i class="icon-info-sign"></i>System&nbsp;Log</a></li>
               <li> <a href='/config/chapter_list'>Chapter&nbsp;List</a></li>
               <li> <a href='/config/events/HS/'>Events</a></li>
               <li> <a href='/config/eventsets/'>Event&nbsp;Sets</a></li>
@@ -63,7 +61,7 @@
       <h1>${self.title()}</h1>
       % if messages:
         % for message in messages:
-          <div align="center" class="${'error' if message.startswith('Error:') else 'info'}">
+          <div align="center" class="${'error' if str(message).startswith('Error:') else 'info'}">
             ${message}
           </div>
         % endfor

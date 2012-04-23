@@ -4,7 +4,7 @@
 
 
 <%def name='events_table(events)'>
-<table class="tabular_list" align="center">
+<table class="table table-bordered table-striped" align="center">
     <tr>
         <th>Name</th>
         <th>Short name</th>

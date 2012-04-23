@@ -125,6 +125,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'tsa.settings.ChapterMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware'
     #'johnny.middleware.QueryCacheMiddleware',
     #'johnny.middleware.LocalStoreClearMiddleware',
 )

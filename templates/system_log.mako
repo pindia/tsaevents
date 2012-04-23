@@ -48,7 +48,7 @@ ICONS = {
 
 
 
-<table class="tabular_list" align="center">
+<table class="table table-bordered table-striped table-condensed" align="center">
     <tr>
         <th>&nbsp;</th>
         <th>Date</th>

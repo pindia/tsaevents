@@ -71,7 +71,8 @@ def render_template(name,request,**kwds):
     return HttpResponse(txt, mimetype=kwds.get('mimetype','text/html'))
     
 def message(request, msg):
-    request.user.message_set.create(message=msg)
+    messages.info(request, msg)
+#    request.user.message_set.create(message=msg)
 
 def log(request, type, text, affected=None, c=None):
     SystemLog(chapter=(c or request.chapter), user=request.user, type=type, text=text, affected=affected).save()

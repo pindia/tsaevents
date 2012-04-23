@@ -54,13 +54,13 @@ h1.title{
 	margin-top: 10px;
 	text-align: center;
 }
-
+/*
 tr.odd td{
 	background-color: #E0E0E0;
 }
 tr.even td{
 	background-color: #F0F0F0;
-}
+}*/
 
 
 .datatable, .layouttable {
@@ -162,13 +162,14 @@ td.errorback, .errorback td{
 	padding:5px;
 }
 
+/*
 #team-board > table {
 	border: 1px solid gray;
 	border-spacing: 2px;
 }
 #team-board > table td{
 	border: 1px solid gray;	
-}
+}*/
 
 
 /*

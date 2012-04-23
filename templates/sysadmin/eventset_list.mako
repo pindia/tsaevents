@@ -2,7 +2,7 @@
 
 <%def name='title()'>Event Set List</%def>
 
-<table class="tabular_list" align="center">
+<table class="table table-bordered table-striped" align="center">
     <tr>
         <th>Region</th><th>State</th><th>Level</th><th>View</th>
     </tr>

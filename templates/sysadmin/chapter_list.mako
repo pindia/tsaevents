@@ -2,7 +2,7 @@
 
 <%def name='title()'>Chapter List</%def>
 
-<table class="tabular_list" align="center">
+<table class="table table-bordered table-striped" align="center">
     <tr>
         <th>Name</th><th>Level</th><th>State</th><th>Region</th><th>Activate</th>
     </tr>
