@@ -61,7 +61,7 @@ class Chapter(models.Model):
         query = models.Q(chapter=self)
         if self.link or self.reverselink:
             query = query | models.Q(chapter=(self.link or self.reverselink))
-        return UserProfile.objects.filter(query).filter(user__is_superuser=False)
+        return UserProfile.objects.filter(query)
         
         
     def get_events(self):

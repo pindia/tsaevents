@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from django.contrib.auth.views import login, logout, password_reset
+7from django.contrib.auth.views import login, logout, password_reset
 import config
 
 # Uncomment the next two lines to enable the admin:
@@ -72,7 +72,7 @@ urlpatterns += patterns('',
     (r'^admin/', include(admin.site.urls))
 )
 
-if not config.DEPLOYED:
+if True or not config.DEPLOYED:
     urlpatterns += patterns('',
     (r'^static/tsa/(.*)$', 'django.views.static.serve', {'document_root': config.STATIC_DIR }),
     )
