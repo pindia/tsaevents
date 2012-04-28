@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<%def name="footer()">Copyright &copy; <a href="http://www.pindi.us">Pindi Albert</a></%def>
+<%def name="footer()">By <a href="http://www.pindi.us">Pindi Albert</a> &bull; <a href="http://www.github.com/pindia/tsaevents">Open source</a></%def>
 <%def name="header()">Welcome to TSAEvents.com</%def>
 <%def name="title()"></%def>
 <%def name="bigtitle()"></%def>

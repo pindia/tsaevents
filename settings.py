@@ -1,4 +1,4 @@
-import config
+import config, os
 # Django settings for tsa project.
 
 MODE = 'nation'
@@ -46,9 +46,11 @@ if DEBUG:
     EMAIL_PORT = '1025'
 else:
     EMAIL_HOST = 'smtp.webfaction.com'
-    EMAIL_PORT = 25
     EMAIL_HOST_USER = 'pindi'
-    EMAIL_HOST_PASSWORD = open(config.paths(config.CURR_DIR,'password.txt'),'rt').read().strip()
+    if os.path.exists(config.paths(config.CURR_DIR,'password.txt')):
+        EMAIL_HOST_PASSWORD = open(config.paths(config.CURR_DIR,'password.txt'),'rt').read().strip()
+    else:
+        EMAIL_HOST_PASSWORD = ''
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
