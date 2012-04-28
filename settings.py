@@ -78,14 +78,14 @@ MEDIA_ROOT = config.paths(config.STATIC_DIR, 'uploads')
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = '/static/tsa/uploads/'
 
-STATIC_URL = '/statis/tsa/'
+STATIC_URL = '/static/tsa/'
 
 FILE_UPLOAD_PERMISSIONS = 0664
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/static/tsa/admin_media/'
+ADMIN_MEDIA_PREFIX = '/static/admin_media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '__+4i=^h3icf6_=m6houa$&h(t2#yunsj9&b@t7e!^-6*u!!-d'
@@ -120,7 +120,7 @@ class ChapterMiddleware(object):
                         from django.http import HttpResponseRedirect
                         return HttpResponseRedirect(request.path)
                 request.chapter = user.profile.chapter
-    
+
             else:
                 request.chapter = None
         except Exception, e:
