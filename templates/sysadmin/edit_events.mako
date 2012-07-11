@@ -40,5 +40,18 @@ ${events_table(events)}
 
 % endfor
 
+<p>
+    Add event:
+    <input type="text" placeholder="Event name" name="add-event-name">
+    of type
+    <select name="add-event-type">
+        <option value=''>--- Select ---</option>
+        <option value="National">National</option>
+        % for state in states:
+            <option value="${state}">${state}</option>
+        % endfor
+    </select>
+</p>
+
 <input type="submit" value="Save">
 </form>

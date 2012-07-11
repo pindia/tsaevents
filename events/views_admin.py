@@ -380,11 +380,31 @@ def edit_events(request, level):
             name, short_name, min_team_size, team_size = request.POST.get('%d_name' % event.id), request.POST.get('%d_short_name' % event.id), int(request.POST.get('%d_min_team_size' % event.id)), int(request.POST.get('%d_team_size' % event.id))
             if not name or not short_name or not min_team_size or not team_size:
                 continue
+            if name == 'DELETE':
+                qs = Event.objects.filter(event_set__level=event.event_set.level, name=event.name)
+                num = qs.count()
+                qs.delete()
+                message(request, '%s deleted. %d events affected.' % (event.name, num))
             if (name, short_name, min_team_size, team_size) != (event.name, event.short_name, event.min_team_size, event.team_size):
                 qs = Event.objects.filter(event_set__level=event.event_set.level, name=event.name)
                 num = qs.count()
-                qs.update(name=name, short_name=short_name, min_team_size=min_team_size, team_size=team_size)
+                qs.update(name=name, short_name=short_name, min_team_size=min_team_size, team_size=team_size, is_team=(team_size > 1))
                 message(request, '%s modified. %d events affected.' % (event.name, num))
+        add_type, add_name = request.POST.get('add-event-type'), request.POST.get('add-event-name')
+        if add_name and add_type:
+            i = 0
+            max_nation = 0
+            if add_type == 'National':
+                eventsets = EventSet.objects.filter(level=level)
+                max_nation = 1
+            else:
+                eventsets = EventSet.objects.filter(level=level, state=add_type)
+            for eventset in eventsets:
+                Event.objects.create(event_set=eventset, name=add_name, short_name=add_name, min_team_size=2, team_size=6, is_team=True, max_region=0, max_state=0, max_nation=max_nation)
+                i += 1
+            message(request, '%s created. %d events created.' % (add_name, i))
+
+
         return HttpResponseRedirect('/config/events/%s/' % level)
     
     return render_template('sysadmin/edit_events.mako', request, national_events=events, states=states, level=level)
