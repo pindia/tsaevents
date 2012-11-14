@@ -370,13 +370,14 @@ def edit_events(request, level):
         return out
         
     events = remove_duplicates(Event.objects.filter(event_set__level=level).exclude(max_nation=0))
+    all_events = remove_duplicates(Event.objects.filter(event_set__level=level))
     state_list = EventSet.objects.filter(level=level).values_list('state', flat=True)
     states = {}
     for state in state_list:
         states[state] = remove_duplicates(Event.objects.filter(event_set__level=level, event_set__state=state, max_nation=0))
     
     if request.method == 'POST':
-        for event in events:
+        for event in all_events:
             name, short_name, min_team_size, team_size = request.POST.get('%d_name' % event.id), request.POST.get('%d_short_name' % event.id), int(request.POST.get('%d_min_team_size' % event.id)), int(request.POST.get('%d_team_size' % event.id))
             if not name or not short_name or not min_team_size or not team_size:
                 continue
